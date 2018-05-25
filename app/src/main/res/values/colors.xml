@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#ff7044</color>
+    <color name="colorPrimaryDark">#161c16</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="theme_color">#51A6E6</color>
+
+    <color name="home_read">#ff0000</color>
+    <!-- 文字颜色  红色 -->
+    <color name="text_color_red">#fa3333</color>
+    <!-- 文字颜色  浅红色 -->
+    <color name="text_RedDauk">#ff3838</color>
+
+
+    <!-- 钱的颜色 -->
+    <color name="textMoney">#ff6130</color>
+
+    <!-- 文字的颜色 -->
+    <color name="textBlack">#161c16</color>
+    <color name="textDarkGray">#737773</color>
+    <color name="textGray">#999999</color>
+    <color name="textLightGray">#aaaaaa</color>
+
+    <!-- 颜色  白色 -->
+    <color name="white">#fefefe</color>
+
+    <!--分割线-->
+    <color name="fengexian">#eeeeee</color>
+    <color name="line_color">#eeeeee</color>
+
+    <color name="home_bule">#005FBB</color>
+
+    <!-- 标题栏颜色 -->
+    <color name="titlebar_color">#fefefe</color>
+    <!-- 标题栏文字颜色 -->
+    <color name="titlebar_txt_color">#1f1f1f</color>
+    <!-- 背景颜色 -->
+    <color name="bg_color">#f5f5f5</color>
+    <!--背景色-->
+    <color name="board">#efeff4</color>
+    <!-- 透明背景 黑色 -->
+    <color name="black_trans">#881f1f1f</color>
+    <!-- 标题颜色 深色文字 -->
+    <color name="title_color">#1f1f1f</color>
+    <!-- 提示文字颜色  浅灰文字 -->
+    <color name="hint_color">#a9a9a9</color>
+    <!-- 提示文字颜色  中灰文字 -->
+    <color name="hint_middle_color">#6c6c6c</color>
+
+    <!-- 提示文字颜色  中灰文字 -->
+    <color name="btn_addshopcar">#666666</color>
+    <!-- 订单背景  中灰文字 -->
+    <color name="btn_orderall">#E2E2E2</color>
+
+    <!-- 申请按钮背景 -->
+    <color name="btn_orange">#FE7E11</color>
+
+
 </resources>
