@@ -56,5 +56,7 @@
     <!-- 申请按钮背景 -->
     <color name="btn_orange">#FE7E11</color>
 
+    <!-- 开始练习按钮背景 -->
+    <color name="btn_view_blue">#B3F4F8</color>
 
 </resources>

@@ -15,6 +15,7 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
+import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
 import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
 import com.xingguang.master.util.AppManager;
@@ -77,6 +78,9 @@ public class MainActivity extends BaseActivity {
     private FragmentManager fm;
 
     public static MainActivity instance;
+
+    //考试宝典
+    BaodianFragment baodianFragment;
 
     @Override
     protected int getLayoutId() {
@@ -171,6 +175,22 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
+     * 设置当前的Fragment 为考试宝典
+     */
+    public void setToBaodianFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (baodianFragment != null) {///
+            transaction.show(baodianFragment);
+        } else {
+            baodianFragment = new BaodianFragment();
+            transaction.add(R.id.main_frame, baodianFragment, "baodianFragment");
+        }
+        transaction.commit();
+    }
+
+    /**
      * 设置当前的Fragment 为首页
      */
     public void setToNewsFragment() {
@@ -239,6 +259,9 @@ public class MainActivity extends BaseActivity {
     private void hideAll(FragmentTransaction transaction) {
         if (homeFragment != null) {
             transaction.hide(homeFragment);
+        }
+        if (baodianFragment != null) {
+            transaction.hide(baodianFragment);
         }
         if (classifFragment != null) {
             transaction.hide(classifFragment);

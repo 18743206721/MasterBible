@@ -26,6 +26,8 @@ public abstract class ToolBarFragment extends BaseFragment {
     TextView mToolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+    @BindView(R.id.toolbar_back)
+    ImageView mToolbarBack;
 
     // 是否显示返回按钮
     private Boolean backFlag = true;
@@ -158,4 +160,15 @@ public abstract class ToolBarFragment extends BaseFragment {
     public Toolbar getToolbar() {
         return mToolbar;
     }
+    /**
+     * 设置返回按钮显示
+     *
+     * @return
+     */
+    public ImageView getToolbarBack() {
+        mToolbarBack.setVisibility(View.VISIBLE);
+        return mToolbarBack;
+    }
+
+
 }

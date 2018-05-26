@@ -21,7 +21,7 @@
             android:gravity="center_vertical" />
 
         <TextView
-            android:id="@+id/item_tv_weldertitle"
+            android:id="@+id/item_tv_weldertitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -34,7 +34,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/item_tv_welder_content"
+        android:id="@+id/item_tv_welder_content1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

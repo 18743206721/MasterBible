@@ -27,13 +27,13 @@
 
         <ImageView
             android:id="@+id/toolbar_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="@dimen/outside_margin"
             android:lines="1"
             android:paddingRight="14dp"
-            android:src="@mipmap/back_black"
+            android:src="@mipmap/back_finish"
             android:textColor="@color/white"
             android:visibility="gone" />
 

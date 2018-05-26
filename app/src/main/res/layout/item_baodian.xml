@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_marginBottom="6dp"
+    android:layout_marginTop="6dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:layout_height="wrap_content">
+
+    <com.xingguang.master.util.RoundRectImageView
+        android:id="@+id/iv_typeofwork"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/classif_gong"
+        android:layout_width="160dp"
+        android:layout_height="160dp" />
+
+</LinearLayout>
