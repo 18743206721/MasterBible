@@ -2,9 +2,9 @@ package com.xingguang.master.maincode.home.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
@@ -14,29 +14,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 /**
- * 创建日期：2018/5/26
- * 描述:考试宝典
+ * 创建日期：2018/5/28
+ * 描述:模拟考试
  * 作者:LiuYu
  */
-public class ExamBaoDianActivity extends ToolBarActivity {
+public class ExamChapterActivity extends ToolBarActivity {
 
-    @BindView(R.id.title)
-    RelativeLayout title;
     @BindView(R.id.iv_extersices)
     ImageView ivExtersices;
     @BindView(R.id.tv_zhonglei)
     TextView tvZhonglei;
-    @BindView(R.id.tv_count)
-    TextView tvCount;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.tv_fenshu)
+    TextView tvFenshu;
     @BindView(R.id.tv_baodian_jieshao)
     TextView tvBaodianJieshao;
-    @BindView(R.id.tv_exercises)
-    TextView tvExercises;
+    @BindView(R.id.iv_start)
+    ImageView ivStart;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_exam_bao_dian;
+        return R.layout.activity_exam_chapter;
     }
 
     @Override
@@ -47,17 +48,16 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                 finish();
             }
         });
-        setToolBarTitle("考试宝典");
+        setToolBarTitle("模拟考试");
     }
 
-    @OnClick(R.id.tv_exercises)
+    @OnClick(R.id.iv_start)
     public void onViewClicked() {
-        startActivity(new Intent(ExamBaoDianActivity.this,DaTiActivity.class)
-                .putExtra("exam","1")
-                .putExtra("count",5)//传过去的答题数量
+        startActivity(new Intent(ExamChapterActivity.this, DaTiActivity.class)
+                .putExtra("exam", "2")
+                .putExtra("count", 3)//传过去的答题数量
         );
     }
-
 
 
 }

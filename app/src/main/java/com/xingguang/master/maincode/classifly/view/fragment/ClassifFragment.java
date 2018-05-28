@@ -2,6 +2,8 @@ package com.xingguang.master.maincode.classifly.view.fragment;
 
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarFragment;
+import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.util.ToastUtils;
 
 /**
  * 创建日期：2018/5/25
@@ -9,6 +11,7 @@ import com.xingguang.master.base.ToolBarFragment;
  * 作者:LiuYu
  */
 public class ClassifFragment extends ToolBarFragment {
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_classif;
@@ -21,7 +24,6 @@ public class ClassifFragment extends ToolBarFragment {
 
     @Override
     protected void lazyLoad() {
-
     }
 
 

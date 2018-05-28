@@ -1,6 +1,7 @@
 package com.xingguang.master.main.view.activity;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,7 @@ import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
+import com.xingguang.master.maincode.home.view.fragment.ExamChapterFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
 import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
 import com.xingguang.master.util.AppManager;
@@ -81,6 +83,8 @@ public class MainActivity extends BaseActivity {
 
     //考试宝典
     BaodianFragment baodianFragment;
+    ExamChapterFragment examchapterFragment; //模拟考试
+
 
     @Override
     protected int getLayoutId() {
@@ -181,11 +185,27 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.addToBackStack(null);
         hideAll(transaction);
-        if (baodianFragment != null) {///
+        if (baodianFragment != null) {
             transaction.show(baodianFragment);
         } else {
             baodianFragment = new BaodianFragment();
             transaction.add(R.id.main_frame, baodianFragment, "baodianFragment");
+        }
+        transaction.commit();
+    }
+
+    /**
+     * 设置当前的Fragment 为模拟考试
+     */
+    public void setToExamChapterFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (examchapterFragment != null) {
+            transaction.show(examchapterFragment);
+        } else {
+            examchapterFragment = new ExamChapterFragment();
+            transaction.add(R.id.main_frame, examchapterFragment, "examchapterFragment");
         }
         transaction.commit();
     }
@@ -272,6 +292,10 @@ public class MainActivity extends BaseActivity {
         if (myFragment != null) {
             transaction.hide(myFragment);
         }
+        if (examchapterFragment!=null){
+            transaction.hide(examchapterFragment);
+        }
+
     }
 
     /**

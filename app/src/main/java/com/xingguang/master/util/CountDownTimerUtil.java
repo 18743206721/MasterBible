@@ -17,7 +17,7 @@ public class CountDownTimerUtil {
     public CountDownTimerUtil(Context context, CountDownTimerListener listener) {
         this.listener = listener;
         this.context = context;
-        mc = new MyCountDownTimer(2500, 1000);
+        mc = new MyCountDownTimer(2000, 1000);
     }
 
     public void restart() {

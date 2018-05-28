@@ -2,20 +2,16 @@ package com.xingguang.master.maincode.home.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.github.qing.itemdecoration.GridSpaceItemDecoration;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
-import com.xingguang.master.maincode.home.view.activity.ExamBaoDianActivity;
 import com.xingguang.master.maincode.home.view.activity.ExamChapterActivity;
 import com.xingguang.master.maincode.home.view.adapter.BaoDianItemAdapter;
-import com.xingguang.master.util.AppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +20,10 @@ import butterknife.BindView;
 
 /**
  * 创建日期：2018/5/26
- * 描述:考试宝典里分类下的工种
+ * 描述:模拟考试里分类下的工种
  * 作者:LiuYu
  */
-public class BaodianItemFragment extends BaseFragment {
+public class ExamChapterItemFragment extends BaseFragment {
 
     @BindView(R.id.rv_looksp)
     RecyclerView rvLooksp;
@@ -40,8 +36,8 @@ public class BaodianItemFragment extends BaseFragment {
 
     int type;
 
-    public static BaodianItemFragment newInstance(int type) {
-        BaodianItemFragment fragment = new BaodianItemFragment();
+    public static ExamChapterItemFragment newInstance(int type) {
+        ExamChapterItemFragment fragment = new ExamChapterItemFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("type", type);
         fragment.setArguments(bundle);
@@ -82,7 +78,7 @@ public class BaodianItemFragment extends BaseFragment {
         adapter.setOnItemClickListener(new BaoDianItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                    startActivity(new Intent(getActivity(), ExamBaoDianActivity.class)); //跳转到考试宝典
+                startActivity(new Intent(getActivity(), ExamChapterActivity.class)); //跳转到模拟考试
             }
         });
     }

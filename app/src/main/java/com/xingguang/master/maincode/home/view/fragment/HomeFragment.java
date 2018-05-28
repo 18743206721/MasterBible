@@ -111,26 +111,14 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView() {
 
+        BaodianFragment  baodianFragment = (BaodianFragment) getActivity() .getSupportFragmentManager() .
+                findFragmentByTag("baodianFragment");
+
     }
 
     @Override
     protected void lazyLoad() {
 
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @OnClick({R.id.ll_sousuo_serch, R.id.ll_login, R.id.ll_main_baodian, R.id.ll_main_database, R.id.ll_home_programs, R.id.ll_online, R.id.iv_home_helpse, R.id.iv_home_botm1, R.id.iv_home_botm2})
@@ -145,6 +133,8 @@ public class HomeFragment extends BaseFragment {
                 MainActivity.instance.setToBaodianFragment();
                 break;
             case R.id.ll_main_database://考试题库
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setToExamChapterFragment();
                 break;
             case R.id.ll_home_programs://培训项目
                 break;
@@ -158,4 +148,9 @@ public class HomeFragment extends BaseFragment {
                 break;
         }
     }
+
+
+
+
+
 }
