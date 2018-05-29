@@ -56,7 +56,9 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                 .putExtra("exam","1")
                 .putExtra("count",5)//传过去的答题数量
         );
+
     }
+
 
 
 
