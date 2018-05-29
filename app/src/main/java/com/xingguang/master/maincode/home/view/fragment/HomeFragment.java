@@ -1,9 +1,7 @@
 package com.xingguang.master.maincode.home.view.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.content.Intent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -11,12 +9,12 @@ import android.widget.TextView;
 
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
+import com.xingguang.master.login.view.LoginActivity;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.util.RoundRectImageView;
 import com.youth.banner.Banner;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
@@ -127,6 +125,9 @@ public class HomeFragment extends BaseFragment {
             case R.id.ll_sousuo_serch: //搜索
                 break;
             case R.id.ll_login: //登录
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), LoginActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_main_baodian: //考试宝典
                 MainActivity.instance.setBg(1);
