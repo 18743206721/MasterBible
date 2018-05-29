@@ -80,7 +80,7 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
     private void initViewPage() {
         mFragments = new ArrayList<>();
         for (int i = 0; i < sum; i++) {
-            listFragment = new ExamBanFragment(i, sum, exam, vp_exters);
+            listFragment = new ExamBanFragment(i+1, sum, exam, vp_exters);
             mFragments.add(listFragment);
         }
         FragAdapter adapter = new FragAdapter(getSupportFragmentManager(), mFragments);

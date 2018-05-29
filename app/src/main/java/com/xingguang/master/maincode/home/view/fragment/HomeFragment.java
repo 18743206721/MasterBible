@@ -137,8 +137,12 @@ public class HomeFragment extends BaseFragment {
                 MainActivity.instance.setToExamChapterFragment();
                 break;
             case R.id.ll_home_programs://培训项目
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setOnProgramsFragment();
                 break;
             case R.id.ll_online://在线留言
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setOnLineFragment();
                 break;
             case R.id.iv_home_helpse://帮我选考点
                 break;

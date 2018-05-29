@@ -19,6 +19,8 @@ import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
 import com.xingguang.master.maincode.home.view.fragment.ExamChapterFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
+import com.xingguang.master.maincode.home.view.fragment.OnlineFragment;
+import com.xingguang.master.maincode.home.view.fragment.ProgramsFragment;
 import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
 import com.xingguang.master.util.AppManager;
 import com.xingguang.master.util.AppUtil;
@@ -81,9 +83,11 @@ public class MainActivity extends BaseActivity {
 
     public static MainActivity instance;
 
-    //考试宝典
-    BaodianFragment baodianFragment;
+
+    BaodianFragment baodianFragment;  //考试宝典
     ExamChapterFragment examchapterFragment; //模拟考试
+    ProgramsFragment programsFragment;//培训项目
+    OnlineFragment onlineFragment;//在线留言
 
 
     @Override
@@ -178,6 +182,36 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    /**
+     * 设置当前的Fragment 为在线留言
+     */
+    public void setOnProgramsFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (programsFragment != null) {
+            transaction.show(programsFragment);
+        } else {
+            programsFragment = new ProgramsFragment();
+            transaction.add(R.id.main_frame, programsFragment, "programsFragment");
+        }
+        transaction.commit();
+    }
+    /**
+     * 设置当前的Fragment 为在线留言
+     */
+    public void setOnLineFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (onlineFragment != null) {
+            transaction.show(onlineFragment);
+        } else {
+            onlineFragment = new OnlineFragment();
+            transaction.add(R.id.main_frame, onlineFragment, "onlineFragment");
+        }
+        transaction.commit();
+    }
     /**
      * 设置当前的Fragment 为考试宝典
      */
@@ -294,6 +328,12 @@ public class MainActivity extends BaseActivity {
         }
         if (examchapterFragment!=null){
             transaction.hide(examchapterFragment);
+        }
+        if (onlineFragment!=null){
+            transaction.hide(onlineFragment);
+        }
+        if (programsFragment!=null){
+            transaction.hide(programsFragment);
         }
 
     }

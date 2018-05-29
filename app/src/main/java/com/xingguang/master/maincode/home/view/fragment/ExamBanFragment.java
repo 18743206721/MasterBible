@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
+import com.xingguang.master.maincode.home.view.activity.ExamResultActivity;
 import com.xingguang.master.maincode.home.view.activity.FiBaodianActivity;
 import com.xingguang.master.util.CountDownTimerUtil;
 
@@ -165,9 +166,19 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     @Override
     public void countDownTimerFinish() {
         viewPager.setCurrentItem(a + 1);
-        if (type+1 == sum-1){
-           startActivity(new Intent(getActivity(),FiBaodianActivity.class));
-           getActivity().finish();
+        if (type == sum){
+
+            if ("1".equals(exam)) { //跳转到练习完成页面
+
+                startActivity(new Intent(getActivity(),FiBaodianActivity.class));
+                getActivity().finish();
+
+            } else { //跳转到考试完成页面
+                startActivity(new Intent(getActivity(),ExamResultActivity.class));
+                getActivity().finish();
+
+            }
+
         }
 
     }

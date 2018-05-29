@@ -32,7 +32,8 @@
         <activity android:name=".maincode.home.view.activity.ExamBaoDianActivity" />
         <activity android:name=".maincode.home.view.activity.DaTiActivity" />
         <activity android:name=".maincode.home.view.activity.ExamChapterActivity" />
-        <activity android:name=".maincode.home.view.activity.FiBaodianActivity"></activity>
+        <activity android:name=".maincode.home.view.activity.FiBaodianActivity" />
+        <activity android:name=".maincode.home.view.activity.ExamResultActivity"></activity>
     </application>
 
 </manifest>
