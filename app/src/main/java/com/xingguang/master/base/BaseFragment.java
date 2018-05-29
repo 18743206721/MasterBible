@@ -1,11 +1,15 @@
 package com.xingguang.master.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.xingguang.master.app.MyApplication;
 
 import butterknife.ButterKnife;
 
@@ -18,6 +22,21 @@ public abstract class BaseFragment extends Fragment {
      */
     protected boolean isInit = false;
     protected boolean isLoad = false;
+
+    private Activity activity;
+
+    public Context getContext() {
+        if (activity == null) {
+            return MyApplication.getInstance();
+        }
+        return activity;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        activity = getActivity();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

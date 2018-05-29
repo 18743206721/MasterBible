@@ -14,6 +14,8 @@ import com.xingguang.master.base.BaseApplication;
 
 public class MyApplication extends BaseApplication {
 
+    private static MyApplication mInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,6 +27,16 @@ public class MyApplication extends BaseApplication {
 //        SMSSDK.initSDK(this, "ee879aa47de7", "29bda79d5acb507531eba66ffe8d9abf");
     }
 
+    /**
+     * 获取context
+     * @return
+     */
+    public static Context getInstance() {
+        if (mInstance == null) {
+            mInstance = new MyApplication();
+        }
+        return mInstance;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {

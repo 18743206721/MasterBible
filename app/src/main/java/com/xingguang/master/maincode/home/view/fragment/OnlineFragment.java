@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.xingguang.master.R;
@@ -28,7 +29,7 @@ public class OnlineFragment extends ToolBarFragment {
     @BindView(R.id.et_phone)
     ClearEditText etPhone;
     @BindView(R.id.ed_content)
-    ClearEditText edContent;
+    EditText edContent;
     @BindView(R.id.id_editor_detail_font_count)
     ImageView idEditorDetailFontCount;
     @BindView(R.id.btn_commit)
@@ -80,6 +81,7 @@ public class OnlineFragment extends ToolBarFragment {
         MainActivity.instance.setBg(1);
         MainActivity.instance.setToNewsFragment();
     }
+
     public Boolean validate() {
         if (etName.getText().length() == 0) {
             ToastUtils.showToast(getActivity(), "请填写名字");

@@ -32,4 +32,11 @@
         <item name="colorControlActivated">@color/home_read</item>
     </style>
 
+    <style name="MyEditTextdown" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/textBlack</item>
+        <item name="colorControlActivated">@color/textBlack</item>
+    </style>
+
+
+
 </resources>

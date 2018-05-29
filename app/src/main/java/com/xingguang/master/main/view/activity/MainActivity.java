@@ -2,6 +2,8 @@ package com.xingguang.master.main.view.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +18,7 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
+import com.xingguang.master.maincode.home.model.MessageEvent;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
 import com.xingguang.master.maincode.home.view.fragment.ExamChapterFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
@@ -25,7 +28,13 @@ import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
 import com.xingguang.master.util.AppManager;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Observable;
@@ -83,12 +92,10 @@ public class MainActivity extends BaseActivity {
 
     public static MainActivity instance;
 
-
     BaodianFragment baodianFragment;  //考试宝典
     ExamChapterFragment examchapterFragment; //模拟考试
     ProgramsFragment programsFragment;//培训项目
     OnlineFragment onlineFragment;//在线留言
-
 
     @Override
     protected int getLayoutId() {
@@ -100,8 +107,14 @@ public class MainActivity extends BaseActivity {
         instance = this;
         fm = getSupportFragmentManager();
         setToNewsFragment();
-        setThemeColor(tabOneImg,R.drawable.home_icon);
+        setThemeColor(tabOneImg, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @OnClick({R.id.tab_one, R.id.tab_two, R.id.tab_three, R.id.tab_four})
@@ -134,22 +147,22 @@ public class MainActivity extends BaseActivity {
         switch (id) {
             case 1: // 首页
                 setAllToGrey();
-                setThemeColor(tabOneImg,R.drawable.home_icon);
+                setThemeColor(tabOneImg, R.drawable.home_icon);
                 tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
                 break;
             case 2: // 分类
                 setAllToGrey();
-                setThemeColor(tabTwoImg,R.drawable.classif_icon);
+                setThemeColor(tabTwoImg, R.drawable.classif_icon);
                 tabTwoTxt.setTextColor(getResources().getColor(R.color.text_color_red));
                 break;
             case 3: // 购物车
                 setAllToGrey();
-                setThemeColor(tabThreeImg,R.drawable.enter_icon);
+                setThemeColor(tabThreeImg, R.drawable.enter_icon);
                 tabThreeTxt.setTextColor(getResources().getColor(R.color.text_color_red));
                 break;
             case 4: // 我的
                 setAllToGrey();
-                setThemeColor(tabFourImg,R.drawable.mine_icon);
+                setThemeColor(tabFourImg, R.drawable.mine_icon);
                 tabFourTxt.setTextColor(getResources().getColor(R.color.text_color_red));
                 break;
             default:
@@ -161,7 +174,7 @@ public class MainActivity extends BaseActivity {
         //利用ContextCompat工具类获取drawable图片资源
         Drawable drawable = ContextCompat.getDrawable(this, icon);
         //简单的使用tint改变drawable颜色
-        Drawable drawable1 = AppUtil.tintDrawable(drawable,ContextCompat.getColor(this, R.color.home_read));
+        Drawable drawable1 = AppUtil.tintDrawable(drawable, ContextCompat.getColor(this, R.color.home_read));
         mImage.setImageDrawable(drawable1);
     }
 
@@ -197,6 +210,7 @@ public class MainActivity extends BaseActivity {
         }
         transaction.commit();
     }
+
     /**
      * 设置当前的Fragment 为在线留言
      */
@@ -212,6 +226,7 @@ public class MainActivity extends BaseActivity {
         }
         transaction.commit();
     }
+
     /**
      * 设置当前的Fragment 为考试宝典
      */
@@ -326,13 +341,13 @@ public class MainActivity extends BaseActivity {
         if (myFragment != null) {
             transaction.hide(myFragment);
         }
-        if (examchapterFragment!=null){
+        if (examchapterFragment != null) {
             transaction.hide(examchapterFragment);
         }
-        if (onlineFragment!=null){
+        if (onlineFragment != null) {
             transaction.hide(onlineFragment);
         }
-        if (programsFragment!=null){
+        if (programsFragment != null) {
             transaction.hide(programsFragment);
         }
 
@@ -363,8 +378,6 @@ public class MainActivity extends BaseActivity {
 
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
 }

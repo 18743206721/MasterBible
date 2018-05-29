@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/board"
+    android:paddingBottom="10dp"
+    android:layout_height="wrap_content">
+
+
+    <!--验证码-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_sms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="验证码*"
+            android:textColor="@color/textBlack"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:background="@drawable/bg_editgrey"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="38dp">
+
+            <EditText
+                android:id="@+id/register_mss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/rl_get_messs"
+                android:inputType="number"
+                android:lines="1"
+                android:hint="请输入验证码"
+                android:maxLines="6"
+                android:background="@null"
+                android:padding="@dimen/outside_margin"
+                android:textColor="@color/title_color"
+                android:textColorHint="@color/hint_color"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14sp"
+                android:theme="@style/MyEditText" />
+
+            <View
+                android:layout_toRightOf="@+id/register_mss"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/textGray"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/rl_get_messs"
+                android:layout_width="85dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_getmss"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:text="获取验证码"
+                    android:textColor="@color/home_bule"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
