@@ -1,13 +1,18 @@
 package com.xingguang.master.maincode.home.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,8 +31,10 @@ import com.xingguang.master.base.ToolBarFragment;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.JsonBean;
 import com.xingguang.master.maincode.home.model.MessageEvent;
+import com.xingguang.master.maincode.home.view.adapter.ProjectAdapter;
 import com.xingguang.master.popwindows.WheelPopUpWindow;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.CountDownRTimerUtil;
 import com.xingguang.master.util.CountDownTimerUtil;
 import com.xingguang.master.util.GetJsonDataUtil;
 import com.xingguang.master.util.ToastUtils;
@@ -47,7 +54,7 @@ import butterknife.OnClick;
  * 描述:培训项目
  * 作者:LiuYu
  */
-public class ProgramsFragment extends ToolBarFragment implements CountDownTimerUtil.CountDownTimerListener{
+public class ProgramsFragment extends ToolBarFragment implements CountDownRTimerUtil.CountDownTimerListener{
 
     @BindView(R.id.xtab_pro)
     XTabLayout xtabPro;
@@ -103,7 +110,10 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
     private static final int MSG_LOAD_DATA = 0x0001;
     private static final int MSG_LOAD_SUCCESS = 0x0002;
     private static final int MSG_LOAD_FAILED = 0x0003;
+    private static final int REG_EMS = 0x0004;
     private Thread thread;
+    private CountDownRTimerUtil util;
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -127,9 +137,13 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
                 case MSG_LOAD_FAILED:
                     ToastUtils.showToast(getActivity(), "解析数据失败");
                     break;
+                case REG_EMS:
+                    util.restart();
+                    break;
             }
         }
     };
+    private List<String> proLists = new ArrayList<>();//项目列表数据
 
     @Override
     protected int getLayoutId() {
@@ -153,9 +167,18 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
 
 
     private void init() {
+        util = new CountDownRTimerUtil(getActivity(), this);
         mHandler.sendEmptyMessage(MSG_LOAD_DATA);
         llProject.setVisibility(View.VISIBLE);
         llBaoming.setVisibility(View.GONE);
+
+        AppUtil.addForeColorSpan(tvBumen,"选择部门*");
+        AppUtil.addForeColorSpan(tvName,"姓名*");
+        AppUtil.addForeColorSpan(tvProvince,"选择省份*");
+        AppUtil.addForeColorSpan(tvAds,"详细地址*");
+        AppUtil.addForeColorSpan(tvIdnum,"身份证*");
+        AppUtil.addForeColorSpan(tvPhone,"电话*");
+        AppUtil.addForeColorSpan(tvSms,"验证码*");
 
         xtabPro.addTab(xtabPro.newTab().setText("项目"));
         xtabPro.addTab(xtabPro.newTab().setText("培训报名"));
@@ -215,10 +238,13 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
         tvGetmss.setTextColor(Color.rgb(81, 87, 104));
         rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
         Message msgs = mHandler.obtainMessage();
-        msgs.what = 1;
+        msgs.what = REG_EMS;
         msgs.sendToTarget();
     }
 
+    /**
+     * 验证码校验
+     * */
     private boolean validates1() {
         if (TextUtils.isEmpty(etBumeng.getText().toString())) {
             ToastUtils.showToast(getActivity(), "请选择部门!");
@@ -266,8 +292,6 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
                 String tx = options1Items.get(options1).getPickerViewText() +
                         options2Items.get(options1).get(options2)
                         + options3Items.get(options1).get(options2).get(options3);
-
-
                 etProvince.setText(tx);
             }
         })
@@ -312,7 +336,11 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
 
 
     private void initProject() {
-
+        ProjectAdapter adapter = new ProjectAdapter(getActivity(),proLists);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        rvPrograms.setLayoutManager(manager);
+        rvPrograms.setAdapter(adapter);
+        rvPrograms.setNestedScrollingEnabled(false);
     }
 
     private void initBaoming() {
@@ -351,6 +379,9 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
         } else if (registerMss.getText().toString().length() == 0) {
             ToastUtils.showToast(getActivity(), "请输入验证码");
             return false;
+        } else if (registerMss.getText().length() != 6){
+            ToastUtils.showToast(getActivity(), "请输入6位验证码");
+            return false;
         } else {
             return true;
         }
@@ -365,7 +396,7 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
          * */
         String JsonData = new GetJsonDataUtil().getJson(getActivity(), "province.json");//获取assets目录下的json文件数据
         Log.e("jsonbeanqqqq", "initJsonData: " + JsonData);
-        ArrayList<JsonBean> jsonBean = parseData(JsonData);//用Gson 转成实体
+        ArrayList<JsonBean> jsonBean = AppUtil.parseData(JsonData);//用Gson 转成实体
         /**
          * 添加省份数据
          */
@@ -402,27 +433,11 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
         mHandler.sendEmptyMessage(MSG_LOAD_SUCCESS);
     }
 
-    private ArrayList<JsonBean> parseData(String jsonData) { //gson解析
-        ArrayList<JsonBean> detail = new ArrayList<>();
-        try {
-            JSONArray array = new JSONArray(jsonData);
-            Gson gson = new Gson();
-            for (int i = 0; i < array.length(); i++) {
-                JsonBean entity = gson.fromJson(array.getJSONObject(i).toString(), JsonBean.class); //转换成实体类
-                detail.add(entity);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return detail;
-    }
-
 
     @Override
     protected void lazyLoad() {
 
     }
-
 
     @Override
     public void countDownTimerListener(String time) {
@@ -432,7 +447,10 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownTimerU
     @Override
     public void countDownTimerFinish() {
         tvGetmss.setEnabled(true);
-        tvGetmss.setTextColor(Color.parseColor("#2dbe50"));
+        tvGetmss.setTextColor(Color.parseColor("#005FBB"));
         rlGetMesss.setBackgroundResource(R.drawable.btn_register_bg);
     }
+
+
+
 }

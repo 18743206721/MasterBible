@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.InputFilter;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
@@ -24,7 +25,15 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.JsonBean;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -837,6 +846,43 @@ public class AppUtil {
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
     }
+
+    /**
+     * 文字颜色
+     * */
+    public static void addForeColorSpan(TextView textView,String text) {
+        SpannableString spanString = new SpannableString(text);
+        ForegroundColorSpan span = new ForegroundColorSpan(Color.RED);
+        spanString.setSpan(span, text.length()-1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.append(spanString);
+    }
+
+    /**
+     * 解析实体类数据
+     * */
+    public static ArrayList<JsonBean> parseData(String jsonData) { //gson解析
+        ArrayList<JsonBean> detail = new ArrayList<>();
+        try {
+            JSONArray array = new JSONArray(jsonData);
+            Gson gson = new Gson();
+            for (int i = 0; i < array.length(); i++) {
+                JsonBean entity = gson.fromJson(array.getJSONObject(i).toString(), JsonBean.class); //转换成实体类
+                detail.add(entity);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return detail;
+    }
+
+    public static void setThemeColor(ImageView mImage, Context context,int icon) {
+        //利用ContextCompat工具类获取drawable图片资源
+        Drawable drawable = ContextCompat.getDrawable(context, icon);
+        //简单的使用tint改变drawable颜色
+        Drawable drawable1 = AppUtil.tintDrawable(drawable, ContextCompat.getColor(context, R.color.home_read));
+        mImage.setImageDrawable(drawable1);
+    }
+
 
 
 

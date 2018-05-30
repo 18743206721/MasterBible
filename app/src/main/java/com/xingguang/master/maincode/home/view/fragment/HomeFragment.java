@@ -1,6 +1,8 @@
 package com.xingguang.master.maincode.home.view.fragment;
 
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,8 +13,15 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
 import com.xingguang.master.login.view.LoginActivity;
 import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.maincode.home.view.adapter.OneAdapter;
+import com.xingguang.master.maincode.home.view.adapter.ThreeAdapter;
+import com.xingguang.master.maincode.home.view.adapter.TwoAdapter;
 import com.xingguang.master.util.RoundRectImageView;
+import com.xingguang.master.util.ToastUtils;
 import com.youth.banner.Banner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,63 +52,19 @@ public class HomeFragment extends BaseFragment {
     LinearLayout llOnline;
     @BindView(R.id.iv_home_helpse)
     ImageView ivHomeHelpse;
-    @BindView(R.id.ll_hworks)
-    LinearLayout llHworks;
-    @BindView(R.id.rl_home_workers)
-    RelativeLayout rlHomeWorkers;
-    @BindView(R.id.item_tv_city_title)
-    TextView itemTvCityTitle;
-    @BindView(R.id.tv_home_ads)
-    TextView tvHomeAds;
-    @BindView(R.id.tv_home_payment)
-    TextView tvHomePayment;
-    @BindView(R.id.tv_apply)
-    TextView tvApply;
-    @BindView(R.id.item_layout)
-    LinearLayout itemLayout;
-    @BindView(R.id.item_tv_city_title2)
-    TextView itemTvCityTitle2;
-    @BindView(R.id.tv_home_ads2)
-    TextView tvHomeAds2;
-    @BindView(R.id.tv_home_payment2)
-    TextView tvHomePayment2;
-    @BindView(R.id.tv_apply2)
-    TextView tvApply1;
-    @BindView(R.id.item_layout2)
-    LinearLayout itemLayout2;
-    @BindView(R.id.ll_hinformation)
-    LinearLayout llHinformation;
-    @BindView(R.id.rl_home_information)
-    RelativeLayout rlHomeInformation;
-    @BindView(R.id.item_tv_infotitle)
-    TextView itemTvInfotitle;
-    @BindView(R.id.item_tv_infortime)
-    TextView itemTvInfortime;
-    @BindView(R.id.item_tv_info_content)
-    TextView itemTvInfoContent;
-    @BindView(R.id.item_tv_infotitle2)
-    TextView itemTvInfotitle2;
-    @BindView(R.id.item_tv_infortime2)
-    TextView itemTvInfortime2;
-    @BindView(R.id.item_tv_info_content2)
-    TextView itemTvInfoContent2;
-    @BindView(R.id.ll_welder)
-    LinearLayout llWelder;
-    @BindView(R.id.rl_home_welder)
-    RelativeLayout rlHomeWelder;
-    @BindView(R.id.item_tv_weldertitle)
-    TextView itemTvWeldertitle;
-    @BindView(R.id.item_tv_welder_content)
-    TextView itemTvWelderContent;
-    @BindView(R.id.item_tv_weldertitle1)
-    TextView itemTvWeldertitle1;
-    @BindView(R.id.item_tv_welder_content1)
-    TextView itemTvWelderContent1;
     @BindView(R.id.iv_home_botm1)
     ImageView ivHomeBotm1;
     @BindView(R.id.iv_home_botm2)
     RoundRectImageView ivHomeBotm2;
-    Unbinder unbinder;
+    @BindView(R.id.rv1)
+    RecyclerView rv1;
+    @BindView(R.id.rv2)
+    RecyclerView rv2;
+    @BindView(R.id.rv3)
+    RecyclerView rv3;
+    private List<String> onelist = new ArrayList<>();
+    private List<String> twolist = new ArrayList<>();
+    private List<String> threelist = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -109,10 +74,93 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView() {
 
-        BaodianFragment  baodianFragment = (BaodianFragment) getActivity() .getSupportFragmentManager() .
-                findFragmentByTag("baodianFragment");
+        initone();
+        inittwo();
+        initthree();
+    }
+
+    private void initone() {
+        onelist.add("b");
+        onelist.add("c");
+
+        OneAdapter oneAdapter = new OneAdapter(getActivity(),onelist);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        rv1.setLayoutManager(manager);
+        rv1.setAdapter(oneAdapter);
+        rv1.setNestedScrollingEnabled(false);
+
+        oneAdapter.setOnItemClickListener(new OneAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ToastUtils.showToast(getActivity(),"click"+position);
+            }
+        });
+        oneAdapter.setmOnItemMoreClickListener(new OneAdapter.OnItemMoreClickListener() {
+            @Override
+            public void onItemMoreClick(LinearLayout onemore, int position) {
+                ToastUtils.showToast(getActivity(),"more"+position);
+            }
+        });
+
 
     }
+
+
+    private void inittwo() {
+        twolist.add("c");
+        twolist.add("c");
+        twolist.add("d");
+
+        TwoAdapter twoAdapter = new TwoAdapter(getActivity(),twolist);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        rv2.setLayoutManager(manager);
+        rv2.setAdapter(twoAdapter);
+        rv2.setNestedScrollingEnabled(false);
+
+        twoAdapter.setOnItemClickListener(new TwoAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ToastUtils.showToast(getActivity(),"click"+position);
+            }
+        });
+        twoAdapter.setmOnItemMoreClickListener(new TwoAdapter.OnItemMoreClickListener() {
+            @Override
+            public void onItemMoreClick(LinearLayout onemore, int position) {
+                ToastUtils.showToast(getActivity(),"more"+position);
+            }
+        });
+
+    }
+
+    private void initthree() {
+        threelist.add("d");
+        threelist.add("b");
+        threelist.add("c");
+        threelist.add("b");
+
+        ThreeAdapter threeAdapter = new ThreeAdapter(getActivity(),threelist);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        rv3.setLayoutManager(manager);
+        rv3.setAdapter(threeAdapter);
+        rv3.setNestedScrollingEnabled(false);
+
+        threeAdapter.setOnItemClickListener(new ThreeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ToastUtils.showToast(getActivity(),"click"+position);
+            }
+        });
+        threeAdapter.setmOnItemMoreClickListener(new ThreeAdapter.OnItemMoreClickListener() {
+            @Override
+            public void onItemMoreClick(LinearLayout onemore, int position) {
+                ToastUtils.showToast(getActivity(),"more"+position);
+            }
+        });
+
+
+    }
+
+
 
     @Override
     protected void lazyLoad() {

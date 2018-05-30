@@ -8,12 +8,35 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/fengexian" />
+        android:layout_height="10dp"
+        android:background="@color/board" />
 
-    <TextView
-        android:text="分类"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/left_listview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/bg_classif"
+            android:divider="@null"
+            android:scrollbars="none" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/right_listView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingTop="15dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:layout_weight="6"
+            android:background="@android:color/white"
+            android:divider="@null" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

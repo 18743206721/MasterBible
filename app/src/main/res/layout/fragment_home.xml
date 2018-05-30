@@ -31,7 +31,7 @@
                 android:layout_marginLeft="5dp"
                 android:src="@mipmap/steward_capital_search" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_play_serch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:layout_weight="4"
                 android:background="@null"
                 android:gravity="center|left"
-                android:hint=""
+                android:hint="请输入搜索内容"
                 android:textColor="@color/textBlack"
                 android:textColorHint="@color/textLightGray"
                 android:textCursorDrawable="@drawable/color_cursor"
@@ -211,181 +211,31 @@
             </LinearLayout>
 
             <!--招工信息-->
-            <RelativeLayout
-                android:id="@+id/rl_home_workers"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/home_bule">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
-                    android:text="招工信息"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_hworks"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:text="更多"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/more" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <!--招工信息-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
-
-                <include layout="@layout/item_home_works" />
-
-                <include layout="@layout/item_home_works2" />
-            </LinearLayout>
+                android:visibility="visible" />
 
             <!--行业资讯-->
-            <RelativeLayout
-                android:id="@+id/rl_home_information"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/home_bule">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
-                    android:text="行业资讯"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_hinformation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:text="更多"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/more" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <!--行业资讯-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
-
-                <include layout="@layout/item_home_information" />
-
-                <include layout="@layout/item_home_information2" />
-
-            </LinearLayout>
+                android:visibility="visible" />
 
             <!--焊工培训-->
-            <RelativeLayout
-                android:id="@+id/rl_home_welder"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/home_bule">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
-                    android:text="焊工培训"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:id="@+id/ll_welder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:text="更多"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/more" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <!--焊工培训-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical">
-
-                <include layout="@layout/item_home_welder" />
-
-                <include layout="@layout/item_home_welder2" />
-
-            </LinearLayout>
+                android:visibility="visible" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -399,6 +249,7 @@
                     android:id="@+id/iv_home_botm2"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
+                    android:adjustViewBounds="true"
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="8dp"

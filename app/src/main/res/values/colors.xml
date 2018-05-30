@@ -62,6 +62,9 @@
     <!-- 开始练习按钮背景 -->
     <color name="textwancehng">#00B7FF</color>
 
+    <!-- 分类背景 -->
+    <color name="bg_classif">#1DC9FB</color>
+
 
 
 

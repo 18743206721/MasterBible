@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
+import com.xingguang.master.maincode.classifly.view.fragment.ClassifExamFragment;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
 import com.xingguang.master.maincode.home.model.MessageEvent;
@@ -96,6 +97,10 @@ public class MainActivity extends BaseActivity {
     ExamChapterFragment examchapterFragment; //模拟考试
     ProgramsFragment programsFragment;//培训项目
     OnlineFragment onlineFragment;//在线留言
+    ClassifExamFragment classifExamFragment; //考试宝典
+
+    private int id = 0; //考试宝典页面用的id
+
 
     @Override
     protected int getLayoutId() {
@@ -104,11 +109,27 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        id = getIntent().getIntExtra("id", 0);
+
         instance = this;
         fm = getSupportFragmentManager();
         setToNewsFragment();
         setThemeColor(tabOneImg, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
+
+        if (id == 1) {
+//            setBg(1);
+//            setToNewsFragment();
+        } else if (id == 2) {
+            setBg(2);
+            setToProjectFragment();
+        } else if (id == 3) {
+            setBg(3);
+            setToActivityFragment();
+        } else if (id == 4){
+            setBg(4);
+            setToInvestmentFragment();
+        }
 
     }
 
@@ -194,6 +215,26 @@ public class MainActivity extends BaseActivity {
         tabFourTxt.setTextColor(getResources().getColor(R.color.textDarkGray));
 
     }
+
+
+    /**
+     * 设置当前的Fragment 为考试宝典
+     *
+     * @param position
+     */
+    public void setOnClassifExamFragment(int position) {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (classifExamFragment != null) {
+            transaction.show(classifExamFragment);
+        } else {
+            classifExamFragment = new ClassifExamFragment();
+            transaction.add(R.id.main_frame, classifExamFragment, "classifExamFragment");
+        }
+        transaction.commit();
+    }
+
 
     /**
      * 设置当前的Fragment 为在线留言
@@ -296,7 +337,7 @@ public class MainActivity extends BaseActivity {
      * 设置当前的Fragment 为购物车
      */
 
-    private void setToActivityFragment() {
+    public void setToActivityFragment() {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.addToBackStack(null);
         hideAll(transaction);
@@ -312,7 +353,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 设置当前的Fragment 为我的
      */
-    private void setToInvestmentFragment() {
+    public void setToInvestmentFragment() {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.addToBackStack(null);
         hideAll(transaction);
@@ -349,6 +390,9 @@ public class MainActivity extends BaseActivity {
         }
         if (programsFragment != null) {
             transaction.hide(programsFragment);
+        }
+        if (classifExamFragment != null) {
+            transaction.hide(classifExamFragment);
         }
 
     }
