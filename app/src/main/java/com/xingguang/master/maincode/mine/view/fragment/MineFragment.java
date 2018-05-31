@@ -58,9 +58,12 @@ public class MineFragment extends ToolBarFragment {
             case R.id.my_user_img://修改头像
                 break;
             case R.id.ll_baokao1://报考记录
-                startActivity(new Intent(getActivity(),MineBaoKaoActivity.class));
+                startActivity(new Intent(getActivity(),MineBaoKaoActivity.class)
+                        .putExtra("type",1));
                 break;
             case R.id.ll_peixun://培训记录
+                startActivity(new Intent(getActivity(),MineBaoKaoActivity.class)
+                        .putExtra("type",2));
                 break;
             case R.id.ll_person://修改个人信息
                 break;

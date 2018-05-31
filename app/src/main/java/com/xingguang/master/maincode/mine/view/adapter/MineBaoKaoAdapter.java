@@ -1,4 +1,4 @@
-package com.xingguang.master.maincode.mine.view;
+package com.xingguang.master.maincode.mine.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -43,12 +43,16 @@ public class MineBaoKaoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
     public void onBindViewHolder(final CommonViewHolder holder, final int position) {
         LinearLayout item_ll = holder.getItemView().findViewById(R.id.item_ll);
         LinearLayout item_llbaokao = holder.getItemView().findViewById(R.id.item_llbaokao);
+        View view1 = holder.getItemView().findViewById(R.id.view1);
+
         if (position == 0){
             item_ll.setVisibility(View.VISIBLE);
             item_llbaokao.setVisibility(View.GONE);
+            view1.setVisibility(View.GONE);
         }else {
             item_ll.setVisibility(View.GONE);
             item_llbaokao.setVisibility(View.VISIBLE);
+            view1.setVisibility(View.VISIBLE);
         }
 
         if (mOnItemClickListener != null) {

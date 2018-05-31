@@ -102,4 +102,11 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/view1"
+        android:visibility="visible"
+        android:background="@color/board"
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
 </LinearLayout>

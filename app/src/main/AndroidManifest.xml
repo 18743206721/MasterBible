@@ -54,7 +54,7 @@
             android:name=".maincode.classifly.view.ClassifExamActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".maincode.mine.view.activity.MineBaoKaoActivity" />
-        <activity android:name=".BaoKaoDetailsActivity"></activity>
+        <activity android:name=".maincode.mine.view.activity.BaoKaoDetailsActivity"></activity>
     </application>
 
 </manifest>

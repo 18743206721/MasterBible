@@ -1,24 +1,20 @@
 package com.xingguang.master.maincode.mine.view.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.xingguang.master.BaoKaoDetailsActivity;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
-import com.xingguang.master.maincode.mine.view.MineBaoKaoAdapter;
+import com.xingguang.master.maincode.mine.view.adapter.MineBaoKaoAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -37,6 +33,7 @@ public class MineBaoKaoActivity extends ToolBarActivity {
     MineBaoKaoAdapter adapter;
     private List<String> mList = new ArrayList<>();
 
+    int type = 0;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_mine_bao_kao;
