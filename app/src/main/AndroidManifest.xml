@@ -22,16 +22,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- 图片选择器 -->
         <activity
-            android:name=".main.view.activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <!-- 图片选择器结束 -->
+
+        <!-- android:theme="@style/AppTheme.FullScreen"-->
+        <activity
+            android:name=".main.view.activity.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".main.view.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".maincode.home.view.activity.ExamBaoDianActivity"
             android:screenOrientation="portrait" />
@@ -53,8 +68,25 @@
         <activity
             android:name=".maincode.classifly.view.ClassifExamActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".maincode.mine.view.activity.MineBaoKaoActivity" />
-        <activity android:name=".maincode.mine.view.activity.BaoKaoDetailsActivity"></activity>
+        <activity
+            android:name=".maincode.mine.view.activity.MineBaoKaoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".maincode.mine.view.activity.BaoKaoDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".maincode.mine.view.activity.MinePersonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".maincode.mine.view.activity.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".maincode.mine.view.activity.WebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".maincode.home.view.activity.OneDetailsActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

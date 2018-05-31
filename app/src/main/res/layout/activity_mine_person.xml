@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/board"
+    tools:context=".maincode.mine.view.activity.MinePersonActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <View
+        android:background="@color/fengexian"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--头像-->
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="头像"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:src="@mipmap/mine_header"
+                android:id="@+id/mine_iv"
+                android:text="h-zy8888"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp" />
+
+        </RelativeLayout>
+
+        <!--昵称-->
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="昵称"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/mine_tvname"
+                    android:visibility="visible"
+                    android:text="h-zy8888"
+                    android:gravity="right"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textBlack"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/mine_etname"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:lines="1"
+                    android:maxLength="10"
+                    android:ellipsize="end"
+                    android:padding="@dimen/outside_margin"
+                    android:textColor="@color/title_color"
+                    android:textColorHint="@color/hint_color"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--性别-->
+        <RelativeLayout
+            android:id="@+id/rl_sex"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="性别"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/mine_tvsex"
+                android:text="男"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <!--地区-->
+        <RelativeLayout
+            android:id="@+id/mine_rlarea"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="地区"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/mine_tvarea"
+                android:text="吉林长春"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

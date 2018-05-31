@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarFragment;
 import com.xingguang.master.maincode.mine.view.activity.MineBaoKaoActivity;
+import com.xingguang.master.maincode.mine.view.activity.MinePersonActivity;
+import com.xingguang.master.maincode.mine.view.activity.SettingActivity;
 import com.xingguang.master.util.RoundImageView;
 
 import butterknife.BindView;
@@ -56,6 +58,7 @@ public class MineFragment extends ToolBarFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.my_user_img://修改头像
+                startActivity(new Intent(getActivity(),MinePersonActivity.class));
                 break;
             case R.id.ll_baokao1://报考记录
                 startActivity(new Intent(getActivity(),MineBaoKaoActivity.class)
@@ -66,8 +69,10 @@ public class MineFragment extends ToolBarFragment {
                         .putExtra("type",2));
                 break;
             case R.id.ll_person://修改个人信息
+                startActivity(new Intent(getActivity(),MinePersonActivity.class));
                 break;
             case R.id.ll_setting://设置
+                startActivity(new Intent(getActivity(),SettingActivity.class));
                 break;
         }
     }

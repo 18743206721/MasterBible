@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.xingguang.master.R;
 import com.xingguang.master.view.CommonViewHolder;
@@ -20,10 +21,12 @@ public class MineBaoKaoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     private Context mContext;
     private List<String> list;
+    int type;//1是报考记录，2是培训记录
 
-    public MineBaoKaoAdapter(Context mContext, List<String> list) {
+    public MineBaoKaoAdapter(Context mContext, List<String> list, int type) {
         this.mContext = mContext;
         this.list = list;
+        this.type = type;
     }
     private OnItemClickListener mOnItemClickListener = null;
 
@@ -44,11 +47,23 @@ public class MineBaoKaoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         LinearLayout item_ll = holder.getItemView().findViewById(R.id.item_ll);
         LinearLayout item_llbaokao = holder.getItemView().findViewById(R.id.item_llbaokao);
         View view1 = holder.getItemView().findViewById(R.id.view1);
+        TextView tv1 =holder.getItemView().findViewById(R.id.tv1);
+        TextView tv2 = holder.getItemView().findViewById(R.id.tv2);
+        TextView tv3 = holder.getItemView().findViewById(R.id.tv3);
 
         if (position == 0){
             item_ll.setVisibility(View.VISIBLE);
             item_llbaokao.setVisibility(View.GONE);
             view1.setVisibility(View.GONE);
+            if (type == 1){
+                tv1.setText("报考部门");
+                tv2.setText("报考职务");
+                tv3.setText("报考时间");
+            }else if (type == 2){
+                tv1.setText("培训工种");
+                tv2.setText("选择部门");
+                tv3.setText("培训时间");
+            }
         }else {
             item_ll.setVisibility(View.GONE);
             item_llbaokao.setVisibility(View.VISIBLE);

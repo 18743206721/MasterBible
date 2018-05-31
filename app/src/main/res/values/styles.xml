@@ -42,5 +42,13 @@
         <item name="colorControlActivated">@color/fengexian</item>
     </style>
 
+    <!--设置app秒开-->
+    <!--<style name="AppTheme.FullScreen">-->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!--<item name="android:windowBackground">@mipmap/welcom</item>-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
+
 
 </resources>

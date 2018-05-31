@@ -23,8 +23,12 @@ import com.xingguang.master.maincode.home.model.MessageEvent;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
 import com.xingguang.master.maincode.home.view.fragment.ExamChapterFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
+import com.xingguang.master.maincode.home.view.fragment.OneFragment;
 import com.xingguang.master.maincode.home.view.fragment.OnlineFragment;
 import com.xingguang.master.maincode.home.view.fragment.ProgramsFragment;
+import com.xingguang.master.maincode.home.view.fragment.SearchFragment;
+import com.xingguang.master.maincode.home.view.fragment.ThreeFragment;
+import com.xingguang.master.maincode.home.view.fragment.TwoFragment;
 import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
 import com.xingguang.master.util.AppManager;
 import com.xingguang.master.util.AppUtil;
@@ -98,7 +102,10 @@ public class MainActivity extends BaseActivity {
     ProgramsFragment programsFragment;//培训项目
     OnlineFragment onlineFragment;//在线留言
     ClassifExamFragment classifExamFragment; //考试宝典
-
+    OneFragment oneFragment; //更多页面的招工信息
+    TwoFragment twoFragment; // 资讯更多
+    ThreeFragment threeFragment; //焊工更多
+    SearchFragment searchFragment; //搜索页面
     private int id = 0; //考试宝典页面用的id
 
 
@@ -216,28 +223,70 @@ public class MainActivity extends BaseActivity {
 
     }
 
-
     /**
-     * 设置当前的Fragment 为考试宝典
-     *
-     * @param position
+     * 设置当前的Fragment 为搜索
      */
-    public void setOnClassifExamFragment(int position) {
+    public void setOnSearchFragment() {
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.addToBackStack(null);
         hideAll(transaction);
-        if (classifExamFragment != null) {
-            transaction.show(classifExamFragment);
+        if (searchFragment != null) {
+            transaction.show(searchFragment);
         } else {
-            classifExamFragment = new ClassifExamFragment();
-            transaction.add(R.id.main_frame, classifExamFragment, "classifExamFragment");
+            searchFragment = new SearchFragment();
+            transaction.add(R.id.main_frame, searchFragment, "searchFragment");
         }
         transaction.commit();
     }
 
+    /**
+     * 设置当前的Fragment 为招工更多
+     */
+    public void setOnOneFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (oneFragment != null) {
+            transaction.show(oneFragment);
+        } else {
+            oneFragment = new OneFragment();
+            transaction.add(R.id.main_frame, oneFragment, "oneFragment");
+        }
+        transaction.commit();
+    }
+    /**
+     * 设置当前的Fragment 为资讯更多
+     */
+    public void setOnTwoFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (twoFragment != null) {
+            transaction.show(twoFragment);
+        } else {
+            twoFragment = new TwoFragment();
+            transaction.add(R.id.main_frame, twoFragment, "twoFragment");
+        }
+        transaction.commit();
+    }
+    /**
+     * 设置当前的Fragment 为焊工更多
+     */
+    public void setOnThreeFragment() {
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.addToBackStack(null);
+        hideAll(transaction);
+        if (threeFragment != null) {
+            transaction.show(threeFragment);
+        } else {
+            threeFragment = new ThreeFragment();
+            transaction.add(R.id.main_frame, threeFragment, "threeFragment");
+        }
+        transaction.commit();
+    }
 
     /**
-     * 设置当前的Fragment 为在线留言
+     * 设置当前的Fragment 为项目培训
      */
     public void setOnProgramsFragment() {
         FragmentTransaction transaction = fm.beginTransaction();
@@ -334,7 +383,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 设置当前的Fragment 为购物车
+     * 设置当前的Fragment 为报考
      */
 
     public void setToActivityFragment() {
@@ -394,6 +443,19 @@ public class MainActivity extends BaseActivity {
         if (classifExamFragment != null) {
             transaction.hide(classifExamFragment);
         }
+        if (oneFragment != null) {
+            transaction.hide(oneFragment);
+        }
+        if (twoFragment != null) {
+            transaction.hide(twoFragment);
+        }
+        if (threeFragment != null) {
+            transaction.hide(threeFragment);
+        }
+        if (searchFragment != null) {
+            transaction.hide(searchFragment);
+        }
+
 
     }
 

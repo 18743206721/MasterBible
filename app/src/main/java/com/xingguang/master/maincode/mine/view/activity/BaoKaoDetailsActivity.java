@@ -16,7 +16,7 @@ import butterknife.OnClick;
 
 /**
  * 创建日期：2018/5/30
- * 描述:报考详情
+ * 描述:报考详情,培训详情
  * 作者:LiuYu
  */
 public class BaoKaoDetailsActivity extends ToolBarActivity {
@@ -44,6 +44,8 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
     @BindView(R.id.ll_baoming)
     LinearLayout llBaoming;
 
+    int type = 0; //1是报考记录，2是培训记录
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bao_kao_details;
@@ -51,7 +53,12 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
 
     @Override
     protected void initView() {
-        setToolBarTitle("报考详情");
+        type = getIntent().getIntExtra("type",0);
+        if (type == 1){
+            setToolBarTitle("报考记录");
+        }else if (type ==2){
+            setToolBarTitle("培训记录");
+        }
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

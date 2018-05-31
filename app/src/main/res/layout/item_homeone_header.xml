@@ -11,15 +11,16 @@
         android:background="@color/home_bule">
 
         <TextView
+            android:id="@+id/itemtv_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:paddingBottom="10dp"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
-            android:text="招工信息"
+            android:text=""
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/ll_hworks"

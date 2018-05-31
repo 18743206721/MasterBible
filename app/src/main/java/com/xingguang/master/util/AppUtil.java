@@ -17,8 +17,13 @@ import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.ScaleXSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -854,6 +859,17 @@ public class AppUtil {
         SpannableString spanString = new SpannableString(text);
         ForegroundColorSpan span = new ForegroundColorSpan(Color.RED);
         spanString.setSpan(span, text.length()-1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.append(spanString);
+    }
+
+    /**
+     * 文字大小
+     * */
+    public static void addForeSizeSpan(TextView textView,String text,Context mcontext) {
+        SpannableString spanString = new SpannableString(text);
+        spanString.setSpan(new AbsoluteSizeSpan(20,true), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //设置粗体
+        spanString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.append(spanString);
     }
 

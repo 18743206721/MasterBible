@@ -33,7 +33,8 @@ public class MineBaoKaoActivity extends ToolBarActivity {
     MineBaoKaoAdapter adapter;
     private List<String> mList = new ArrayList<>();
 
-    int type = 0;
+    int type = 0; //1是报考记录，2是培训记录
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_mine_bao_kao;
@@ -41,7 +42,13 @@ public class MineBaoKaoActivity extends ToolBarActivity {
 
     @Override
     protected void initView() {
-        setToolBarTitle("报考记录");
+        type = getIntent().getIntExtra("type",0);
+        if (type == 1){
+            setToolBarTitle("报考记录");
+        }else if (type ==2){
+            setToolBarTitle("培训记录");
+        }
+
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,7 +60,7 @@ public class MineBaoKaoActivity extends ToolBarActivity {
     }
 
     private void init() {
-        adapter = new MineBaoKaoAdapter(MineBaoKaoActivity.this,mList);
+        adapter = new MineBaoKaoAdapter(MineBaoKaoActivity.this,mList,type);
         LinearLayoutManager manager = new LinearLayoutManager(MineBaoKaoActivity.this);
         rvBaokao.setLayoutManager(manager);
         rvBaokao.setAdapter(adapter);
@@ -61,7 +68,8 @@ public class MineBaoKaoActivity extends ToolBarActivity {
         adapter.setOnItemClickListener(new MineBaoKaoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(new Intent(MineBaoKaoActivity.this,BaoKaoDetailsActivity.class));
+                startActivity(new Intent(MineBaoKaoActivity.this,BaoKaoDetailsActivity.class)
+                .putExtra("type",type));
             }
         });
 

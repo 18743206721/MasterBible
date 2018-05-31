@@ -39,7 +39,7 @@ import butterknife.Unbinder;
 
 /**
  * 创建日期：2018/5/25
- * 描述:报考
+ * 描述:考试报名
  * 作者:LiuYu
  */
 public class EnterFragment extends ToolBarFragment implements CountDownRTimerUtil.CountDownTimerListener {
@@ -131,7 +131,7 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
 
     @Override
     protected void initView() {
-        setToolBarTitle("报考");
+        setToolBarTitle("考试报名");
         init();
         initBaoming();
     }

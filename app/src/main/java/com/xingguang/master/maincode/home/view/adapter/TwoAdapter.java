@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
+import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.view.CommonViewHolder;
 
 import java.util.List;
@@ -68,6 +69,8 @@ public class TwoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                         mOnItemMoreClickListener.onItemMoreClick(ll_hworks, position);
                     }
                 });
+                TextView itemtv_info = holder.getItemView().findViewById(R.id.itemtv_info);
+                AppUtil.addForeSizeSpan(itemtv_info,"行业资讯",mContext);
 
                 break;
             case 2:
