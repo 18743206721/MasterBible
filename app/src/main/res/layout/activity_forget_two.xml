@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/board"
+    tools:context=".login.view.ForgetTwoActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <View
+        android:background="@color/fengexian"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--密码-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="请输入您的新密码"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_editgrey"
+                android:gravity="left"
+                android:hint="请输入8-12位数字、字母组合密码"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:maxLength="12"
+                android:padding="@dimen/outside_margin"
+                android:textColor="@color/title_color"
+                android:textColorHint="@color/hint_color"
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!--确认密码-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="请确认您的密码"
+                android:textColor="@color/textBlack"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:background="@drawable/bg_editgrey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_pwdtwo"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:background="@null"
+                    android:hint="请确认您的密码"
+                    android:inputType="textPassword"
+                    android:lines="1"
+                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:maxLength="12"
+                    android:padding="@dimen/outside_margin"
+                    android:textColor="@color/title_color"
+                    android:textColorHint="@color/hint_color"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/iv_visgone"
+                    android:layout_marginRight="15dp"
+                    android:src="@mipmap/login_vis"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_nosms"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="*两次密码不一致,请重新输入"
+                android:textColor="@color/home_read"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_commit"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_blue"
+        android:text="提  交"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</LinearLayout>

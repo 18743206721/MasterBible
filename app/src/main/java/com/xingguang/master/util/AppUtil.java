@@ -899,7 +899,14 @@ public class AppUtil {
         mImage.setImageDrawable(drawable1);
     }
 
-
+    /**
+     * 获得用户id
+     *
+     * @param context
+     */
+    public static String getUserId(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.USERID, "");
+    }
 
 
 }

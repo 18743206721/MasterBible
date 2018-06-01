@@ -65,6 +65,8 @@
     <!-- 分类背景 -->
     <color name="bg_classif">#1DC9FB</color>
 
+    <!-- 分类背景 -->
+    <color name="bg_logintext">#9BCADC</color>
 
 
 

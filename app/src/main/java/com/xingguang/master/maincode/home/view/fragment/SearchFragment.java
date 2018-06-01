@@ -49,6 +49,8 @@ public class SearchFragment extends BaseFragment {
     ImageView empty;
     @BindView(R.id.rlsearch)
     RelativeLayout rlsearch;
+    @BindView(R.id.tv_nicheng)
+    TextView tv_nicheng;
     private List<String> list = new ArrayList<>();
     private SearchAdapter twoAdapter;
 
