@@ -29,7 +29,6 @@
             android:id="@+id/right_listView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:paddingTop="15dp"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:layout_weight="6"

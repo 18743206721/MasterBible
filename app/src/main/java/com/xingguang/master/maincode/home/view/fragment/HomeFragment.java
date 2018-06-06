@@ -208,7 +208,7 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.ll_sousuo_serch,R.id.tv_sousuo, R.id.ll_login, R.id.ll_main_baodian, R.id.ll_main_database, R.id.ll_home_programs, R.id.ll_online, R.id.iv_home_helpse, R.id.iv_home_botm1, R.id.iv_home_botm2})
+    @OnClick({R.id.tv_sousuo, R.id.ll_login, R.id.ll_main_baodian, R.id.ll_main_database, R.id.ll_home_programs, R.id.ll_online, R.id.iv_home_helpse, R.id.iv_home_botm1, R.id.iv_home_botm2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_sousuo://搜索按钮
@@ -217,8 +217,6 @@ public class HomeFragment extends BaseFragment {
                 }else{
                     serarchload();
                 }
-                break;
-            case R.id.ll_sousuo_serch: //搜索
                 break;
             case R.id.ll_login: //登录
                 Intent intent = new Intent();

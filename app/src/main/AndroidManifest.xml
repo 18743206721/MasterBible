@@ -46,7 +46,7 @@
         <activity
             android:name=".main.view.activity.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".maincode.home.view.activity.ExamBaoDianActivity"
             android:screenOrientation="portrait" />
@@ -86,9 +86,16 @@
         <activity
             android:name=".maincode.home.view.activity.OneDetailsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".login.view.ForgetOneActivity" />
-        <activity android:name=".login.view.ForgetTwoActivity" />
-        <activity android:name=".login.view.ForgetThreeActivity"></activity>
+        <activity
+            android:name=".login.view.ForgetOneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".login.view.ForgetTwoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".login.view.ForgetThreeActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

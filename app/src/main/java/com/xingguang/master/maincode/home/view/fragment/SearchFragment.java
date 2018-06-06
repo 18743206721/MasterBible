@@ -39,8 +39,6 @@ public class SearchFragment extends BaseFragment {
     TextView tvSousuo;
     @BindView(R.id.ll_sousuo_serch)
     LinearLayout llSousuoSerch;
-    @BindView(R.id.ll_login)
-    LinearLayout llLogin;
     @BindView(R.id.rv_home)
     RecyclerView rvHome;
     @BindView(R.id.rl_baokao)

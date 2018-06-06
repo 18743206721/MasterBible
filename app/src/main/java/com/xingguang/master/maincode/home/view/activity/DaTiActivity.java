@@ -1,24 +1,20 @@
 package com.xingguang.master.maincode.home.view.activity;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.base.FragAdapter;
 import com.xingguang.master.maincode.home.view.fragment.ExamBanFragment;
 import com.xingguang.master.util.CountDownTimerUtil;
-import com.xingguang.master.util.CountDownView;
 import com.xingguang.master.view.NoScrollViewpager;
 
+import java.io.DataInput;
 import java.util.ArrayList;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-
+import cn.iwgang.countdownview.CountdownView;
 
 /**
  * 创建日期：2018/5/26
@@ -34,11 +30,10 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
     @BindView(R.id.ivback)
     ImageView ivback;
     @BindView(R.id.csv2)
-    CountDownView tvTitle;
+    CountdownView tvTitle;
 
     private ExamBanFragment listFragment;
     private int sum = 0;
-
     String exam = ""; //上个界面传来的，判断是练习1还是考试2
     private CountDownTimerUtil util;
     String date = "";
@@ -54,26 +49,35 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
         instance = this;
         exam = getIntent().getStringExtra("exam");
         sum = getIntent().getIntExtra("count",0);
-//        getToolbarBack().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
-
-        tvTitle.setStopTime(Long.valueOf("3600000"));
 
         if (exam.equals("1")) {
-//            setToolBarTitle("题库练习");
-//            tvTitle.sette
-            tvTitle.setStopTime(Long.valueOf("3600000"));
+            tvTitle.start(3600000); // Millisecond
+            for (int time=0; time<1000; time++) {
+                tvTitle.updateShow(time);
+            }
         }else {
-//            setToolBarTitle("倒计时"+date);
-            tvTitle.setStopTime(Long.valueOf("3600000"));
+            tvTitle.start(3600000); // Millisecond
+            for (int time=0; time<1000; time++) {
+                tvTitle.updateShow(time);
+            }
         }
 
         initViewPage();
         vp_exters.setScanScroll(false); //设置Viewpager禁止滑动
+
+        tvTitle.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+            @Override
+            public void onEnd(CountdownView cv) {
+                if ("1".equals(exam)) { //跳转到练习完成页面
+                    startActivity(new Intent(DaTiActivity.this,FiBaodianActivity.class));
+                    finish();
+                } else { //跳转到考试完成页面
+                    startActivity(new Intent(DaTiActivity.this,ExamResultActivity.class));
+                    finish();
+                }
+            }
+        });
+
     }
 
 

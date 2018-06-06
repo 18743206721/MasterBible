@@ -12,6 +12,8 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
 import com.xingguang.master.maincode.home.view.activity.ExamChapterActivity;
 import com.xingguang.master.maincode.home.view.adapter.BaoDianItemAdapter;
+import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.view.GridItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +66,9 @@ public class ExamChapterItemFragment extends BaseFragment {
     private void initAdapter() {
         adapter = new BaoDianItemAdapter(getActivity(), list, type);
         GridLayoutManager mgr = new GridLayoutManager(getActivity(), 2);
-//        rvLooksp.addItemDecoration(//为recycleview设置分割线
-//                new GridSpaceItemDecoration.Builder(rvLooksp)
-//                        .setColNum(2) //列数
-//                        .setSpaceSize(13) //设置间距
-//                        .build()
-//        );
+//        rvLooksp.addItemDecoration(
+//                new GridItemDecoration(AppUtil.dip2px(getActivity(),5),
+//                        AppUtil.dip2px(getActivity(),5)));
         rvLooksp.setLayoutManager(mgr);
         rvLooksp.setAdapter(adapter);
     }

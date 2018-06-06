@@ -18,7 +18,9 @@ import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
 import com.xingguang.master.maincode.classifly.view.adapter.LeftListAdapter;
 import com.xingguang.master.maincode.classifly.view.adapter.RightAdapter;
+import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.ToastUtils;
+import com.xingguang.master.view.GridItemDecoration;
 
 import butterknife.BindView;
 
@@ -59,12 +61,16 @@ public class ClassifFragment extends ToolBarFragment {
 
         rightListAdapter = new RightAdapter(getActivity(), rightStr);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
-        rightListView.addItemDecoration(//为recycleview设置分割线
-                new GridSpaceItemDecoration.Builder(rightListView)
-                        .setColNum(2) //列数
-                        .setSpaceSize(10) //设置间距
-                        .build()
-        );
+//        rightListView.addItemDecoration(//为recycleview设置分割线
+//                new GridSpaceItemDecoration.Builder(rightListView)
+//                        .setColNum(2) //列数
+//                        .setSpaceSize(10) //设置间距
+//                        .build()
+
+//        );
+
+        rightListView.addItemDecoration(new GridItemDecoration(AppUtil.dip2px(getActivity(),10),
+                AppUtil.dip2px(getActivity(),10)));
         rightListView.setLayoutManager(layoutManager);
         rightListView.setAdapter(rightListAdapter);
 
@@ -100,9 +106,9 @@ public class ClassifFragment extends ToolBarFragment {
                 //跳转到考试宝典
               startActivity(new Intent(getActivity(), ClassifExamActivity.class)
               .putExtra("classifid",position+""));
-
             }
         });
+
 
     }
 

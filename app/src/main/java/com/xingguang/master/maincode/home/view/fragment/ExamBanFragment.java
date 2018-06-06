@@ -199,7 +199,13 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                 setbg(4);
                 break;
             case R.id.ll_jiaojuan://交卷
-
+                if ("1".equals(exam)) { //跳转到练习完成页面
+                    startActivity(new Intent(getActivity(),FiBaodianActivity.class));
+                    getActivity().finish();
+                } else { //跳转到考试完成页面
+                    startActivity(new Intent(getActivity(),ExamResultActivity.class));
+                    getActivity().finish();
+                }
                 break;
         }
     }

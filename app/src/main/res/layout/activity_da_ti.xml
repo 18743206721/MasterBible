@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:countdown="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/board"
     tools:context=".maincode.home.view.activity.DaTiActivity">
@@ -18,7 +18,7 @@
             android:layout_gravity="center_vertical"
             android:id="@+id/ivback"
             android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="@dimen/outside_margin"
             android:lines="1"
@@ -26,15 +26,22 @@
             android:src="@mipmap/back_finish"
             android:textColor="@color/white" />
 
-
-        <com.xingguang.master.util.CountDownView
+        <cn.iwgang.countdownview.CountdownView
             android:id="@+id/csv2"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            countdown:text_size="15" />
-
+            app:isHideTimeBackground="true"
+            app:isShowMinute="true"
+            app:timeTextColor="#000000"
+            app:timeTextSize="15sp"
+            app:isTimeTextBold="true"
+            app:suffixGravity="bottom"
+            app:suffixTextColor="#000000"
+            app:suffixTextSize="12sp"
+            app:suffixMinute=":"
+             />
 
     </RelativeLayout>
 

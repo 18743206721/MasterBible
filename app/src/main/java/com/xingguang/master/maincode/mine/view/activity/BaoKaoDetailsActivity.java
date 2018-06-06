@@ -25,14 +25,14 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
     TextView tvName;
     @BindView(R.id.et_bumeng)
     TextView etBumeng;
-    @BindView(R.id.iv_bumen)
-    ImageView ivBumen;
+//    @BindView(R.id.iv_bumen)
+//    ImageView ivBumen;
     @BindView(R.id.tv_province)
     TextView tvProvince;
     @BindView(R.id.et_province)
     TextView etProvince;
-    @BindView(R.id.iv_province)
-    ImageView ivProvince;
+//    @BindView(R.id.iv_province)
+//    ImageView ivProvince;
     @BindView(R.id.tv_ads)
     TextView tvAds;
     @BindView(R.id.et_idnum)

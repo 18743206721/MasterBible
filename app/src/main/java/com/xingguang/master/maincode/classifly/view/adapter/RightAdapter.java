@@ -39,6 +39,7 @@ public class RightAdapter extends RecyclerView.Adapter<CommonViewHolder> {
     }
     @Override
     public void onBindViewHolder(final CommonViewHolder holder, final int position) {
+
         if (mOnItemClickListener != null) {
             holder.getItemView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -51,7 +52,7 @@ public class RightAdapter extends RecyclerView.Adapter<CommonViewHolder> {
     }
     @Override
     public int getItemCount() {
-        return 9;
+        return rightStr.length;
     }
 
     //define interface

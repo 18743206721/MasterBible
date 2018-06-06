@@ -183,7 +183,7 @@ public class MainActivity extends BaseActivity {
                 setThemeColor(tabTwoImg, R.drawable.classif_icon);
                 tabTwoTxt.setTextColor(getResources().getColor(R.color.text_color_red));
                 break;
-            case 3: // 购物车
+            case 3: // 报考
                 setAllToGrey();
                 setThemeColor(tabThreeImg, R.drawable.enter_icon);
                 tabThreeTxt.setTextColor(getResources().getColor(R.color.text_color_red));

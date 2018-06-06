@@ -119,8 +119,6 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownRTimer
             switch (msg.what) {
                 case MSG_LOAD_DATA:
                     if (thread == null) {//如果已创建就不再重新创建子线程了
-
-                        Toast.makeText(getActivity(), "开始解析数据", Toast.LENGTH_SHORT).show();
                         thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -132,10 +130,8 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownRTimer
                     }
                     break;
                 case MSG_LOAD_SUCCESS:
-                    ToastUtils.showToast(getActivity(), "解析数据成功");
                     break;
                 case MSG_LOAD_FAILED:
-                    ToastUtils.showToast(getActivity(), "解析数据失败");
                     break;
                 case REG_EMS:
                     util.restart();

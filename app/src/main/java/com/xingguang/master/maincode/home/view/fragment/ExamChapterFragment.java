@@ -41,7 +41,6 @@ public class ExamChapterFragment extends ToolBarFragment {
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                getActivity().onBackPressed();//销毁自己
                 MainActivity.instance.setBg(1);
                 MainActivity.instance.setToNewsFragment();
             }
