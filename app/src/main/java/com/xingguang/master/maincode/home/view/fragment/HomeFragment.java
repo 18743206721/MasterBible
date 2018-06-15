@@ -16,17 +16,30 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.http.TypeClassif;
+import com.xingguang.master.login.model.SmsBean;
 import com.xingguang.master.login.view.LoginActivity;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.GlideImageLoader;
+import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.maincode.home.view.activity.OneDetailsActivity;
+import com.xingguang.master.maincode.home.view.activity.ProgramsActivity;
 import com.xingguang.master.maincode.home.view.adapter.OneAdapter;
 import com.xingguang.master.maincode.home.view.adapter.ThreeAdapter;
 import com.xingguang.master.maincode.home.view.adapter.TwoAdapter;
 import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
+import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.RoundRectImageView;
 import com.xingguang.master.util.ToastUtils;
+import com.xingguang.master.view.ImageLoader;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -65,21 +78,25 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.iv_home_botm1)
     ImageView ivHomeBotm1;
     @BindView(R.id.iv_home_botm2)
-    ImageView ivHomeBotm2;
+    RoundRectImageView ivHomeBotm2;
     @BindView(R.id.rv1)
     RecyclerView rv1;
     @BindView(R.id.rv2)
     RecyclerView rv2;
     @BindView(R.id.rv3)
     RecyclerView rv3;
-    private List<String> onelist = new ArrayList<>();
-    private List<String> twolist = new ArrayList<>();
-    private List<String> threelist = new ArrayList<>();
-    private List<String> networkImages;
-    private String[] images = {"http://img2.imgtn.bdimg.com/it/u=3093785514,1341050958&fm=21&gp=0.jpg",
-            "http://img2.3lian.com/2014/f2/37/d/40.jpg",
-            "http://d.3987.com/sqmy_131219/001.jpg",
-            "http://img2.3lian.com/2014/f2/37/d/39.jpg"};
+    @BindView(R.id.tvlogined)
+    TextView tvlogined;
+
+    private List<HomeBean.DataBean.RecruitinfoBean> onelist = new ArrayList<>();
+    private List<HomeBean.DataBean.InformationBean> twolist = new ArrayList<>();
+    private List<HomeBean.DataBean.CultivateBean> threelist = new ArrayList<>();
+    private List<String> networkImages = new ArrayList<>();
+
+    //广告位
+    List<HomeBean.DataBean.Adsense1Bean> adsense1BeanList = new ArrayList<>();
+    List<HomeBean.DataBean.Adsense2Bean> adsense2BeanList = new ArrayList<>();
+    List<HomeBean.DataBean.Adsense3Bean> adsense3BeanList = new ArrayList<>();
 
     //搜索相关
     @BindView(R.id.scroll_home)
@@ -95,31 +112,67 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        load();
+    }
 
-        initpage();
-        initone();
-        inittwo();
-        initthree();
+
+    private void load() {
+        OkGo.<String>get(HttpManager.index)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        HomeBean bean = gson.fromJson(response.body().toString(), HomeBean.class);
+
+                        //设置轮播图数据
+                        for (int i = 0; i < bean.getData().getBannerimg().size(); i++) {
+                            networkImages.add(HttpManager.BASE_URL + bean.getData().getBannerimg().get(i).getImgpath());
+                        }
+                        initpage();
+
+                        //设置广告位数据1
+                        ImageLoader.getInstance().initGlide(getActivity())
+                                .loadImage(HttpManager.BASE_URL + bean.getData().getAdsense1().get(0).getColumn1(),ivHomeHelpse);
+                        //设置广告位数据2
+                        ImageLoader.getInstance().initGlide(getActivity())
+                                .loadImage(HttpManager.BASE_URL + bean.getData().getAdsense2().get(0).getColumn1(),ivHomeBotm1);
+                        //设置广告位数据3
+                        ImageLoader.loadRoundImage(getActivity(),
+                                HttpManager.BASE_URL + bean.getData().getAdsense3().get(0).getColumn1(),ivHomeBotm2,5);
+                        adsense1BeanList.addAll(bean.getData().getAdsense1());
+                        adsense2BeanList.addAll(bean.getData().getAdsense2());
+                        adsense3BeanList.addAll(bean.getData().getAdsense3());
+
+                        //招工信息数据
+                        onelist.addAll(bean.getData().getRecruitinfo());
+                        initone();
+
+                        //行业资讯
+                        twolist.addAll(bean.getData().getInformation());
+                        inittwo();
+
+                        //焊工培训
+                        threelist.addAll(bean.getData().getCultivate());
+                        initthree();
+                    }
+                });
     }
 
     private void initpage() {
-        networkImages = new ArrayList<>();
-        for (int i = 0; i < images.length; i++) {
-            networkImages.add(images[i]);
-        }
         //设置图片加载器
         banner.setImageLoader(new GlideImageLoader());
         //设置图片集合
         banner.setImages(networkImages);
+        banner.setDelayTime(3000);
         //banner设置方法全部调用完毕时最后调用
         banner.start();
 
     }
 
     private void initone() {
-        onelist.add("b");
-        onelist.add("c");
-
         OneAdapter oneAdapter = new OneAdapter(getActivity(), onelist);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         rv1.setLayoutManager(manager);
@@ -144,11 +197,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void inittwo() {
-
-        twolist.add("c");
-        twolist.add("c");
-        twolist.add("d");
-
         TwoAdapter twoAdapter = new TwoAdapter(getActivity(), twolist);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         rv2.setLayoutManager(manager);
@@ -173,17 +221,11 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initthree() {
-        threelist.add("d");
-        threelist.add("b");
-        threelist.add("c");
-        threelist.add("b");
-
         ThreeAdapter threeAdapter = new ThreeAdapter(getActivity(), threelist);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         rv3.setLayoutManager(manager);
         rv3.setAdapter(threeAdapter);
         rv3.setNestedScrollingEnabled(false);
-
         threeAdapter.setOnItemClickListener(new ThreeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -202,6 +244,15 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (AppUtil.getUserId(getActivity()).equals("")) { //为空
+            tvlogined.setText("登录/注册");
+        } else { //不为空
+            tvlogined.setText("已登录");
+        }
+    }
 
     @Override
     protected void lazyLoad() {
@@ -212,17 +263,15 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_sousuo://搜索按钮
-                if (TextUtils.isEmpty(tvPlaySerch.getText().toString())){
-                    ToastUtils.showToast(getActivity(),"请输入搜索内容！");
-                }else{
+                if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
+                    ToastUtils.showToast(getActivity(), "请输入搜索内容！");
+                } else {
                     serarchload();
                 }
                 break;
             case R.id.ll_login: //登录
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                break;
+                if (AppUtil.isExamined(getActivity()))
+                    break;
             case R.id.ll_main_baodian: //考试宝典
                 MainActivity.instance.setBg(1);
                 MainActivity.instance.setToBaodianFragment();
@@ -240,26 +289,47 @@ public class HomeFragment extends BaseFragment {
                 MainActivity.instance.setOnLineFragment();
                 break;
             case R.id.iv_home_helpse://帮我选考点
-                MainActivity.instance.setBg(3);
-                MainActivity.instance.setToActivityFragment();
+                intentclassif(adsense1BeanList.get(0).getUrl(),adsense1BeanList.get(0).getTitle());
+//                MainActivity.instance.setBg(3);
+//                MainActivity.instance.setToActivityFragment();
                 break;
             case R.id.iv_home_botm1://底部图片1
-                startActivity(new Intent(getActivity(), WebViewActivity.class)
-                        .putExtra("id", 0)
-                );
+                intentclassif(adsense2BeanList.get(0).getUrl(),adsense2BeanList.get(0).getTitle());
                 break;
             case R.id.iv_home_botm2://底部图片2
-                //先判断连接是否为空，不为空的话，才跳转到web页面
-                startActivity(new Intent(getActivity(), WebViewActivity.class)
-                        .putExtra("id", 0)
-                );
+                intentclassif(adsense3BeanList.get(0).getUrl(),adsense3BeanList.get(0).getTitle());
                 break;
         }
     }
 
     /**
-     * 跳转搜索fragment
+     * 广告位跳转界面
      * */
+    private void intentclassif(String url,String title) {
+        if (url.equals("1")){ //1招工信息
+            MainActivity.instance.setBg(1);
+            MainActivity.instance.setOnOneFragment();
+        } else if (url.equals("2")){ //2行业资讯
+            MainActivity.instance.setBg(1);
+            MainActivity.instance.setOnTwoFragment();
+        } else if ("3".equals(url)){ //3在线留言
+            MainActivity.instance.setBg(1);
+            MainActivity.instance.setOnLineFragment();
+        } else if ("4".equals(url)){//4培训报名
+            startActivity(new Intent(getActivity(),ProgramsActivity.class)
+            .putExtra("title","10"));
+        } else if ("5".equals(url)){ //5考试报名
+            MainActivity.instance.setBg(3);
+            MainActivity.instance.setToActivityFragment();
+        } else if ("6".equals(url)){ //6培训项目
+            startActivity(new Intent(getActivity(),ProgramsActivity.class)
+                    .putExtra("title",title));
+        }
+    }
+
+    /**
+     * 跳转搜索fragment
+     */
     private void serarchload() {
         MainActivity.instance.setBg(1);
         MainActivity.instance.setOnSearchFragment();

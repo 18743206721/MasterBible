@@ -2,6 +2,7 @@ package com.xingguang.master.app;
 
 import android.content.Context;
 
+import com.lzy.okgo.OkGo;
 import com.xingguang.master.base.BaseApplication;
 
 
@@ -19,6 +20,9 @@ public class MyApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        OkGo.getInstance().init(this);
+
 //        Config.DEBUG = true;
 //        UMShareAPI.get(this);
 //        PlatformConfig.setWeixin("wx84ca153aa536ac9b", "c33a2d97edd2c5bba9ff0d86b2f0fad5");

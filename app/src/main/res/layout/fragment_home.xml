@@ -59,12 +59,14 @@
 
         <LinearLayout
             android:id="@+id/ll_login"
+            android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp10"
             android:layout_marginRight="13dp">
 
             <TextView
+                android:id="@+id/tvlogined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_blue"
@@ -208,10 +210,10 @@
                 <ImageView
                     android:id="@+id/iv_home_helpse"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="85dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/home_helpse" />
+                    />
 
             </LinearLayout>
 
@@ -246,20 +248,18 @@
                 <ImageView
                     android:id="@+id/iv_home_botm1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/home_bottom1" />
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop" />
 
-                <ImageView
+                <com.xingguang.master.util.RoundRectImageView
                     android:id="@+id/iv_home_botm2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:adjustViewBounds="true"
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/home_bottom2" />
+                    android:scaleType="centerCrop"/>
             </LinearLayout>
 
 

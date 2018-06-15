@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.view.CommonViewHolder;
 
@@ -22,9 +23,9 @@ public class TwoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
 
     private Context mContext;
-    private List<String> list;
+    private List<HomeBean.DataBean.InformationBean> list;
 
-    public TwoAdapter(Context mContext, List<String> list) {
+    public TwoAdapter(Context mContext, List<HomeBean.DataBean.InformationBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -90,6 +91,12 @@ public class TwoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                         }
                     });
                 }
+
+                holder.setText(R.id.item_tv_infotitle,list.get(position).getTitle());
+                holder.setText(R.id.item_tv_info_content,list.get(position).getContent());
+                holder.setText(R.id.item_tv_infortime,list.get(position).getAddDate().substring(0,10));
+
+
                 break;
         }
 
@@ -107,7 +114,7 @@ public class TwoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     @Override
     public int getItemCount() {
-        return list.size()+1;
+        return list.size();
     }
 
     //define interface

@@ -36,7 +36,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="电工慌得背后是什么"
+            android:text=""
             android:textColor="@color/textBlack"
             android:textSize="15sp" />
 
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="2018-5-25"
+            android:text=""
             android:textColor="@color/textBlack"
             android:textSize="12sp" />
 
@@ -69,7 +69,7 @@
         android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="上海电工上海电工-上海电工-上海电工-上海"
+        android:text=""
         android:textColor="@color/textBlack"
         android:textSize="12sp" />
 

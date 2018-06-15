@@ -32,10 +32,10 @@ public class SharedPreferencesUtils {
     public static final String USERIMAGE = "userimage";
     //昵称
     public static final String USERNAME = "username";
-    //电话
-    public static final String PHONE = "phone";
-    //邀请码
-    public static final String CODE = "code";
+    //性别
+    public static final String USERSEX = "usersex";
+    //地区
+    public static final String USERADS = "userads";
 
     //一起玩联盟id
     public static final String ALLIANCEID = "allianceid";

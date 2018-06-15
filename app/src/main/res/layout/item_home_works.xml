@@ -93,7 +93,7 @@
                         android:id="@+id/tv_home_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="5000-7000元/月"
+                        android:text="元/月"
                         android:textColor="@color/textBlack"
                         android:textSize="14sp" />
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/line_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_layout" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/board" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/tab"
+            layout="@layout/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <LinearLayout
+            android:layout_above="@+id/tab"
+            android:id="@+id/ll_progroms"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.androidkun.xtablayout.XTabLayout
+                android:id="@+id/xtab_pro"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                app:xTabIndicatorColor="@color/textBlack"
+                app:xTabIndicatorHeight="2dp"
+                app:xTabMode="scrollable"
+                app:xTabPaddingEnd="10dp"
+                app:xTabPaddingStart="10dp"
+                app:xTabSelectedTextColor="@color/textBlack"
+                app:xTabSelectedTextSize="14sp"
+                app:xTabTextColor="@color/textBlack"
+                app:xTabTextSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/fengexian" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/mPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

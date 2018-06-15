@@ -95,6 +95,12 @@
         <activity
             android:name=".login.view.ForgetThreeActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".maincode.home.view.activity.ProgramsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            />
+
 
     </application>
 

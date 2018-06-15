@@ -7,7 +7,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import com.xingguang.master.R;
+
 import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

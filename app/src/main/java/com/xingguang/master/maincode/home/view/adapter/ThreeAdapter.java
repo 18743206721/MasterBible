@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.view.CommonViewHolder;
 
@@ -22,9 +23,9 @@ public class ThreeAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
 
     private Context mContext;
-    private List<String> list;
+    private List<HomeBean.DataBean.CultivateBean> list;
 
-    public ThreeAdapter(Context mContext, List<String> list) {
+    public ThreeAdapter(Context mContext, List<HomeBean.DataBean.CultivateBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -90,6 +91,10 @@ public class ThreeAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                         }
                     });
                 }
+
+                holder.setText(R.id.item_tv_weldertitle1,list.get(position).getTitle());
+                holder.setText(R.id.item_tv_welder_content1,list.get(position).getContent());
+
                 break;
         }
 
@@ -107,7 +112,7 @@ public class ThreeAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     @Override
     public int getItemCount() {
-        return list.size()+1;
+        return list.size();
     }
 
     //define interface

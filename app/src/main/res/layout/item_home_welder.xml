@@ -36,7 +36,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="焊工培训"
+            android:text=""
             android:textColor="@color/textBlack"
             android:textSize="15sp" />
     </LinearLayout>
@@ -51,7 +51,7 @@
         android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:maxLines="3"
-        android:text="上海电工上海电工-上海电工-上海电工-上海"
+        android:text=""
         android:textColor="@color/textBlack"
         android:textSize="12sp" />
     <View

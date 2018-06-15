@@ -13,8 +13,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.CommonBean;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.login.model.SmsBean;
+import com.xingguang.master.maincode.mine.view.activity.SettingActivity;
 import com.xingguang.master.util.CountDownRTimerUtil;
 import com.xingguang.master.util.ToastUtils;
 
@@ -52,16 +61,18 @@ public class ForgetOneActivity extends ToolBarActivity implements CountDownRTime
     private CountDownRTimerUtil util;
     private static final int REG_EMS = 0x0004;
 
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    public Handler mHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
+            super.handleMessage(msg);
             switch (msg.what) {
-                case REG_EMS:
+                case 1:
                     util.restart();
                     break;
             }
         }
     };
+    private String code; //验证码
 
     @Override
     protected int getLayoutId() {
@@ -77,7 +88,7 @@ public class ForgetOneActivity extends ToolBarActivity implements CountDownRTime
                 finish();
             }
         });
-        util = new CountDownRTimerUtil(ForgetOneActivity.this, this);
+        util = new CountDownRTimerUtil(this, this);
     }
 
     @OnClick({R.id.rl_get_messs, R.id.btn_commit})
@@ -111,17 +122,50 @@ public class ForgetOneActivity extends ToolBarActivity implements CountDownRTime
      * 忘记密码第一步，走验证验证码接口
      */
     private void forgetload() {
-
-        startActivity(new Intent(ForgetOneActivity.this,ForgetTwoActivity.class));
-        finish();
+        OkGo.<String>post(HttpManager.Login_xgmm)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "yzcode") //验证验证码字段值
+                .params("UserName", etPhone.getText().toString())
+                .params("IdenCode",registerMss.getText().toString())
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        ToastUtils.showToast(ForgetOneActivity.this, bean.getResult());
+                        startActivity(new Intent(ForgetOneActivity.this,ForgetTwoActivity.class)
+                        .putExtra("phone",etPhone.getText().toString()));
+                        finish();
+                    }
+                });
     }
 
+    //发送验证码
     private void sendSMSClient() {
-        tvGetmss.setTextColor(Color.rgb(81, 87, 104));
-        rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
-        Message msgs = mHandler.obtainMessage();
-        msgs.what = REG_EMS;
-        msgs.sendToTarget();
+        OkGo.<String>post(HttpManager.Login_xgmm)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", etPhone.getText().toString())
+                .params("MethodCode", "yzm")
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
+                        ToastUtils.showToast(ForgetOneActivity.this, smsBean.getResult());
+                        code = smsBean.getIdenCode();
+                        tvGetmss.setTextColor(Color.rgb(81, 87, 104));
+                        rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
+                        Message msgs = mHandler.obtainMessage();
+                        msgs.what = 1;
+                        msgs.sendToTarget();
+                        tvGetmss.setEnabled(false);
+                        rlGetMesss.setEnabled(false);
+                    }
+                });
     }
 
 

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,10 +14,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidkun.xtablayout.XTabLayout;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.login.model.LoginBean;
+import com.xingguang.master.login.model.SmsBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.CountDownRTimerUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
 import com.xingguang.master.util.ToastUtils;
 
 import butterknife.BindView;
@@ -25,7 +35,7 @@ import butterknife.OnClick;
 /**
  * 登录
  */
-public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.CountDownTimerListener{
+public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.CountDownTimerListener {
 
     @BindView(R.id.xtab_login)
     XTabLayout xtabLogin;
@@ -70,6 +80,7 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
         }
     };
     private boolean ispwd;
+    private String code; // 验证码
 
     @Override
     protected int getLayoutId() {
@@ -120,26 +131,26 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
     }
 
 
-    @OnClick({R.id.ll_yes, R.id.tv_login,R.id.rl_get_messs,R.id.iv_visgone,R.id.tv_forget})
+    @OnClick({R.id.ll_yes, R.id.tv_login, R.id.rl_get_messs, R.id.iv_visgone, R.id.tv_forget})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_yes: //勾选记住密码
                 isshow = !isshow;
                 if (isshow) {
                     ivYes.setImageResource(R.mipmap.login_no);
-                } else { //完成的时候，点击上传数据，finish
-
+                } else {
+                    ivYes.setImageResource(R.mipmap.login_yes);
                 }
                 break;
             case R.id.tv_login://登录或者注册
-                if (type == 0){ //登录
+                if (type == 0) { //登录
                     if (AppUtil.isFastDoubleClick(1000)) {
                         return;
                     }
                     if (validates1()) {
                         loadlogin();
                     }
-                }else{ // 注册
+                } else { // 注册
                     if (AppUtil.isFastDoubleClick(1000)) {
                         return;
                     }
@@ -166,27 +177,73 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
 
                 break;
             case R.id.tv_forget://忘记密码
-                startActivity(new Intent(LoginActivity.this,ForgetOneActivity.class));
+                startActivity(new Intent(LoginActivity.this, ForgetOneActivity.class));
                 break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (AppUtil.getUserId(LoginActivity.this).equals("")) {
+            etPhone.setText("");
+        } else {
+            etPhone.setText(AppUtil.getUserId(LoginActivity.this));
         }
     }
 
     /**
      * 注册接口
-     * */
+     */
     private void loadregister() {
-        ToastUtils.showToast(LoginActivity.this, "注册成功");
+        OkGo.<String>post(HttpManager.sendSms)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", etPhone.getText().toString())
+                .params("UserPass", etPwd.getText().toString())
+                .params("IdenCode", code)
+                .params("MethodCode", "zc")  //验证码发送：yzm，注册：zc）
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
+                        ToastUtils.showToast(LoginActivity.this, smsBean.getResult());
+                    }
+                });
     }
 
     /**
      * 登录接口
-     * */
+     */
     private void loadlogin() {
-        ToastUtils.showToast(LoginActivity.this, "登录成功");
+        OkGo.<String>post(HttpManager.Login)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", etPhone.getText().toString())
+                .params("UserPass", etPwd.getText().toString())
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        LoginBean loginBean = gson.fromJson(response.body().toString(), LoginBean.class);
+                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERID, loginBean.getData().get(0).getUserName());
+                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERNAME, loginBean.getData().get(0).getYEPrice());
+                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + loginBean.getData().get(0).getHeadPic());
+                        //性别
+                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERSEX, loginBean.getData().get(0).getEmail());
+                        //地区
+                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
+                        ToastUtils.showToast(LoginActivity.this, loginBean.getResult());
+                        finish();
+                    }
+                });
     }
 
     private boolean validatesRegister() {
-        if (etPhone.getText().length() == 0 ) {
+        if (etPhone.getText().length() == 0) {
             ToastUtils.showToast(LoginActivity.this, "请输入您的手机号");
             return false;
         } else if (etPhone.getText().length() != 11) {
@@ -195,36 +252,57 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
         } else if (etPwd.getText().length() == 0) {
             ToastUtils.showToast(LoginActivity.this, "请输入密码");
             return false;
-        } else if (registerMss.getText().length() == 0){
+        } else if (registerMss.getText().length() == 0) {
             ToastUtils.showToast(LoginActivity.this, "请输入验证码");
             return false;
-        }else {
+        } else {
             return true;
         }
     }
 
     private boolean validates1() {
-        if (etPhone.getText().length() == 0 ) {
+        if (etPhone.getText().length() == 0) {
             ToastUtils.showToast(LoginActivity.this, "请输入您的手机号");
             return false;
         } else if (etPhone.getText().length() != 11) {
             ToastUtils.showToast(LoginActivity.this, "请填写11位手机号");
             return false;
-        } else if (etPwd.getText().length() == 0){
+        } else if (etPwd.getText().length() == 0) {
             ToastUtils.showToast(LoginActivity.this, "请输入密码");
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
     private void sendSMSClient() {
-        tvGetmss.setTextColor(Color.rgb(81, 87, 104));
-        rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
-        Message msgs = mHandler.obtainMessage();
-        msgs.what = REG_EMS;
-        msgs.sendToTarget();
+        OkGo.<String>post(HttpManager.sendSms)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", etPhone.getText().toString())
+                .params("MethodCode", "yzm")
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
+                        ToastUtils.showToast(LoginActivity.this, smsBean.getResult());
+
+                        code = smsBean.getIdenCode();
+
+                        tvGetmss.setTextColor(Color.rgb(81, 87, 104));
+                        rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
+                        Message msgs = mHandler.obtainMessage();
+                        msgs.what = 1;
+                        msgs.sendToTarget();
+                        tvGetmss.setEnabled(false);
+                        rlGetMesss.setEnabled(false);
+
+
+                    }
+                });
     }
 
 

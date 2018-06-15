@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.view.CommonViewHolder;
 
@@ -22,9 +23,9 @@ public class OneAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
 
     private Context mContext;
-    private List<String> list;
+    private List<HomeBean.DataBean.RecruitinfoBean> list;
 
-    public OneAdapter(Context mContext, List<String> list) {
+    public OneAdapter(Context mContext, List<HomeBean.DataBean.RecruitinfoBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -89,6 +90,9 @@ public class OneAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                         }
                     });
                 }
+                holder.setText(R.id.item_tv_city_title,list.get(position).getJobName());
+                holder.setText(R.id.tv_home_ads,list.get(position).getDiDian());
+                holder.setText(R.id.tv_home_payment,list.get(position).getDaiYu()+"元/月");
                 break;
         }
 
@@ -96,17 +100,21 @@ public class OneAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (list != null && position ==0) {
-            return 1;
-        } else {
-            return 2;
+        if (list != null) {
+            if (position == 0) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }else {
+            return 0;
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return list.size()+1;
+        return list.size();
     }
 
     //define interface

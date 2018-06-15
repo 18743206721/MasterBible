@@ -11,8 +11,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.CommonBean;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.util.ToastUtils;
 
 import butterknife.BindView;
@@ -37,6 +44,7 @@ public class ForgetTwoActivity extends ToolBarActivity {
     @BindView(R.id.btn_commit)
     Button btnCommit;
     private boolean isshow;
+    private String phone = "";
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +53,7 @@ public class ForgetTwoActivity extends ToolBarActivity {
 
     @Override
     protected void initView() {
+        phone = getIntent().getStringExtra("phone");
         setToolBarTitle("找回密码");
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +61,11 @@ public class ForgetTwoActivity extends ToolBarActivity {
                 finish();
             }
         });
+
+
     }
 
-    @OnClick({R.id.btn_commit,R.id.iv_visgone})
+    @OnClick({R.id.btn_commit, R.id.iv_visgone})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_visgone:
@@ -84,12 +95,27 @@ public class ForgetTwoActivity extends ToolBarActivity {
 
 
     private void commit() {
-        tvNosms.setVisibility(View.GONE);
-        //跳转到
-        Intent intent = new Intent();
-        intent.setClass(ForgetTwoActivity.this,ForgetThreeActivity.class);
-        startActivity(intent);
-        finish();
+        OkGo.<String>post(HttpManager.Login_xgmm)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "xgmm") //修改密码字段值
+                .params("UserName", phone)
+                .params("NewsPass",etPwd.getText().toString())
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        ToastUtils.showToast(ForgetTwoActivity.this, bean.getResult());
+                        tvNosms.setVisibility(View.GONE);
+                        //跳转到
+                        Intent intent = new Intent();
+                        intent.setClass(ForgetTwoActivity.this, ForgetThreeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
     }
 
 
