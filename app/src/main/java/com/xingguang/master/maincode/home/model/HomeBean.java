@@ -380,12 +380,20 @@ public class HomeBean {
              * Sort : 2
              * AddDate : 2018-06-14T16:19:19
              */
-
+            private int ID;
             private String JobName;
             private String DiDian;
             private String DaiYu;
             private int Sort;
             private String AddDate;
+
+            public int getID() {
+                return ID;
+            }
+
+            public void setID(int ID) {
+                this.ID = ID;
+            }
 
             public String getJobName() {
                 return JobName;

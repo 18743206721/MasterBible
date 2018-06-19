@@ -94,7 +94,6 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
 
     }
 
-
     private void init() {
         util = new CountDownRTimerUtil(LoginActivity.this, this);
         xtabLogin.addTab(xtabLogin.newTab().setText("登录"));
@@ -230,12 +229,21 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                         Gson gson = new Gson();
                         LoginBean loginBean = gson.fromJson(response.body().toString(), LoginBean.class);
                         SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERID, loginBean.getData().get(0).getUserName());
-                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERNAME, loginBean.getData().get(0).getYEPrice());
-                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + loginBean.getData().get(0).getHeadPic());
+                        if (loginBean.getData().get(0).getYEPrice() != null) {
+                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERNAME, loginBean.getData().get(0).getYEPrice());
+                        }
+                        if (loginBean.getData().get(0).getHeadPic() != null) {
+                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + loginBean.getData().get(0).getHeadPic());
+                        }
                         //性别
-                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERSEX, loginBean.getData().get(0).getEmail());
+                        if (loginBean.getData().get(0).getEmail() != null) {
+                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERSEX, loginBean.getData().get(0).getEmail());
+                        }
+
                         //地区
-                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
+                        if (loginBean.getData().get(0).getTeam() != null) {
+                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
+                        }
                         ToastUtils.showToast(LoginActivity.this, loginBean.getResult());
                         finish();
                     }

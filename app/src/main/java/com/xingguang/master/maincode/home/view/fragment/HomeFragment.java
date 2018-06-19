@@ -135,13 +135,13 @@ public class HomeFragment extends BaseFragment {
 
                         //设置广告位数据1
                         ImageLoader.getInstance().initGlide(getActivity())
-                                .loadImage(HttpManager.BASE_URL + bean.getData().getAdsense1().get(0).getColumn1(),ivHomeHelpse);
+                                .loadImage(HttpManager.BASE_URL + bean.getData().getAdsense1().get(0).getColumn1(), ivHomeHelpse);
                         //设置广告位数据2
                         ImageLoader.getInstance().initGlide(getActivity())
-                                .loadImage(HttpManager.BASE_URL + bean.getData().getAdsense2().get(0).getColumn1(),ivHomeBotm1);
+                                .loadImage(HttpManager.BASE_URL + bean.getData().getAdsense2().get(0).getColumn1(), ivHomeBotm1);
                         //设置广告位数据3
                         ImageLoader.loadRoundImage(getActivity(),
-                                HttpManager.BASE_URL + bean.getData().getAdsense3().get(0).getColumn1(),ivHomeBotm2,5);
+                                HttpManager.BASE_URL + bean.getData().getAdsense3().get(0).getColumn1(), ivHomeBotm2, 5);
                         adsense1BeanList.addAll(bean.getData().getAdsense1());
                         adsense2BeanList.addAll(bean.getData().getAdsense2());
                         adsense3BeanList.addAll(bean.getData().getAdsense3());
@@ -184,7 +184,7 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(View view, int position) {
                 //跳转到招工详情
                 startActivity(new Intent(getActivity(), OneDetailsActivity.class)
-                        .putExtra("id", position));
+                        .putExtra("id", onelist.get(position).getID()));
             }
         });
         oneAdapter.setmOnItemMoreClickListener(new OneAdapter.OnItemMoreClickListener() {
@@ -202,12 +202,14 @@ public class HomeFragment extends BaseFragment {
         rv2.setLayoutManager(manager);
         rv2.setAdapter(twoAdapter);
         rv2.setNestedScrollingEnabled(false);
-
+        //行业资讯
         twoAdapter.setOnItemClickListener(new TwoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 startActivity(new Intent(getActivity(), WebViewActivity.class)
-                        .putExtra("id", position));
+                        .putExtra("id", 1)
+                        .putExtra("classid",twolist.get(position).getID())
+                );
             }
         });
         twoAdapter.setmOnItemMoreClickListener(new TwoAdapter.OnItemMoreClickListener() {
@@ -217,7 +219,6 @@ public class HomeFragment extends BaseFragment {
                 MainActivity.instance.setOnTwoFragment();
             }
         });
-
     }
 
     private void initthree() {
@@ -230,14 +231,17 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 startActivity(new Intent(getActivity(), WebViewActivity.class)
-                        .putExtra("id", position));
+                        .putExtra("id", 2)
+                        .putExtra("classid",threelist.get(position).getID())
+                );
             }
         });
         threeAdapter.setmOnItemMoreClickListener(new ThreeAdapter.OnItemMoreClickListener() {
             @Override
             public void onItemMoreClick(LinearLayout onemore, int position) {
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setOnThreeFragment();
+                startActivity(new Intent(getActivity(), ProgramsActivity.class)
+                        .putExtra("classtype",2)
+                );
             }
         });
 
@@ -270,8 +274,10 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_login: //登录
-                if (AppUtil.isExamined(getActivity()))
-                    break;
+                if (AppUtil.getUserId(getActivity()).equals("")) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
+                break;
             case R.id.ll_main_baodian: //考试宝典
                 MainActivity.instance.setBg(1);
                 MainActivity.instance.setToBaodianFragment();
@@ -281,49 +287,51 @@ public class HomeFragment extends BaseFragment {
                 MainActivity.instance.setToExamChapterFragment();
                 break;
             case R.id.ll_home_programs://培训项目
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setOnProgramsFragment();
+                startActivity(new Intent(getActivity(), ProgramsActivity.class)
+                        .putExtra("classtype",1));
                 break;
             case R.id.ll_online://在线留言
                 MainActivity.instance.setBg(1);
                 MainActivity.instance.setOnLineFragment();
                 break;
             case R.id.iv_home_helpse://帮我选考点
-                intentclassif(adsense1BeanList.get(0).getUrl(),adsense1BeanList.get(0).getTitle());
-//                MainActivity.instance.setBg(3);
-//                MainActivity.instance.setToActivityFragment();
+                intentclassif(adsense1BeanList.get(0).getUrl(), adsense1BeanList.get(0).getTitle());
                 break;
             case R.id.iv_home_botm1://底部图片1
-                intentclassif(adsense2BeanList.get(0).getUrl(),adsense2BeanList.get(0).getTitle());
+                intentclassif(adsense2BeanList.get(0).getUrl(), adsense2BeanList.get(0).getTitle());
                 break;
             case R.id.iv_home_botm2://底部图片2
-                intentclassif(adsense3BeanList.get(0).getUrl(),adsense3BeanList.get(0).getTitle());
+                intentclassif(adsense3BeanList.get(0).getUrl(), adsense3BeanList.get(0).getTitle());
                 break;
         }
     }
 
     /**
      * 广告位跳转界面
-     * */
-    private void intentclassif(String url,String title) {
-        if (url.equals("1")){ //1招工信息
+     */
+    private void intentclassif(String url, String title) {
+        if (url.equals("1")) { //1招工信息
             MainActivity.instance.setBg(1);
             MainActivity.instance.setOnOneFragment();
-        } else if (url.equals("2")){ //2行业资讯
+        } else if (url.equals("2")) { //2行业资讯
             MainActivity.instance.setBg(1);
             MainActivity.instance.setOnTwoFragment();
-        } else if ("3".equals(url)){ //3在线留言
+        } else if ("3".equals(url)) { //3在线留言
             MainActivity.instance.setBg(1);
             MainActivity.instance.setOnLineFragment();
-        } else if ("4".equals(url)){//4培训报名
-            startActivity(new Intent(getActivity(),ProgramsActivity.class)
-            .putExtra("title","10"));
-        } else if ("5".equals(url)){ //5考试报名
+        } else if ("4".equals(url)) {//4培训报名
+            startActivity(new Intent(getActivity(), ProgramsActivity.class)
+                    .putExtra("title", "10")
+                    .putExtra("classtype",3)
+            );
+        } else if ("5".equals(url)) { //5考试报名
             MainActivity.instance.setBg(3);
             MainActivity.instance.setToActivityFragment();
-        } else if ("6".equals(url)){ //6培训项目
-            startActivity(new Intent(getActivity(),ProgramsActivity.class)
-                    .putExtra("title",title));
+        } else if ("6".equals(url)) { //6培训项目
+            startActivity(new Intent(getActivity(), ProgramsActivity.class)
+                    .putExtra("title", title)
+                    .putExtra("classtype",3)
+            );
         }
     }
 

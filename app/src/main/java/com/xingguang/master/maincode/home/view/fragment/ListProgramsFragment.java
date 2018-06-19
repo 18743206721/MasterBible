@@ -1,6 +1,7 @@
 package com.xingguang.master.maincode.home.view.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import com.xingguang.master.base.BaseFragment;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.JsonBean;
 import com.xingguang.master.maincode.home.view.adapter.ProjectAdapter;
+import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.CountDownRTimerUtil;
 import com.xingguang.master.util.GetJsonDataUtil;
@@ -135,6 +137,7 @@ public class ListProgramsFragment extends BaseFragment implements CountDownRTime
     private List<String> proLists = new ArrayList<>();//项目列表数据
     int type;
     private int len;
+    private ProjectAdapter adapter;
 
     @Override
     protected void initView() {
@@ -143,10 +146,23 @@ public class ListProgramsFragment extends BaseFragment implements CountDownRTime
             type = arguments.getInt("type");
             len = arguments.getInt("len");
         }
-        ToastUtils.showToast(getActivity(),"type"+len);
         init();
         initProject();
         initBaoming();
+
+        initListener();
+    }
+
+    private void initListener() {
+        adapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                startActivity(new Intent(getActivity(), WebViewActivity.class)
+                        .putExtra("id", 2)
+                        .putExtra("classid",position)
+                );
+            }
+        });
     }
 
 
@@ -317,7 +333,7 @@ public class ListProgramsFragment extends BaseFragment implements CountDownRTime
 
 
     private void initProject() {
-        ProjectAdapter adapter = new ProjectAdapter(getActivity(),proLists);
+        adapter = new ProjectAdapter(getActivity(),proLists);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         rvPrograms.setLayoutManager(manager);
         rvPrograms.setAdapter(adapter);

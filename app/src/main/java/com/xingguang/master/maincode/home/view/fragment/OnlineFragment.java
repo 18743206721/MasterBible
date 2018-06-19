@@ -8,12 +8,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarFragment;
+import com.xingguang.master.http.CommonBean;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.ClearEditText;
 import com.xingguang.master.util.ToastUtils;
+import com.xingguang.master.view.ImageLoader;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -69,17 +79,32 @@ public class OnlineFragment extends ToolBarFragment {
 
     @OnClick(R.id.btn_commit)
     public void onViewClicked() {
-        if (AppUtil.isFastDoubleClick(1000)) {
-            return;
-        }
         if (validate()) {
             CommitClient();
         }
     }
 
+    /**
+     * 提交
+     * */
     private void CommitClient() {
-        MainActivity.instance.setBg(1);
-        MainActivity.instance.setToNewsFragment();
+        OkGo.<String>post(HttpManager.Messageonline)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("Name",etName.getText().toString())
+                .params("Phone",etPhone.getText().toString())
+                .params("Content",edContent.getText().toString())
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        ToastUtils.showToast(getActivity(),bean.getResult());
+                        MainActivity.instance.setBg(1);
+                        MainActivity.instance.setToNewsFragment();
+                    }
+                });
     }
 
     public Boolean validate() {

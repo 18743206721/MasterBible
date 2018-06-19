@@ -10,14 +10,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidkun.xtablayout.XTabLayout;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragmentAdapter;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
+import com.xingguang.master.maincode.home.model.HomeBean;
+import com.xingguang.master.maincode.home.model.TwoDetailsBean;
 import com.xingguang.master.maincode.home.view.fragment.ListProgramsFragment;
 import com.xingguang.master.maincode.home.view.fragment.ProgramsFragment;
+import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.ToastUtils;
+import com.xingguang.master.view.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +83,7 @@ public class ProgramsActivity extends ToolBarActivity {
     String[] mTitles = new String[]{"培训项目", "培训报名"};
     ListProgramsFragment listFragment;
     private String title; //上个界面传过来的跳转到哪个页的
+    private int classtype;
 
     @Override
     protected int getLayoutId() {
@@ -83,25 +95,67 @@ public class ProgramsActivity extends ToolBarActivity {
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               finish();
+                finish();
             }
         });
         setToolBarTitle("培训项目");
 
         title = getIntent().getStringExtra("title");
+        //2是 焊工培训更多, 1 是分类按钮培训项目,3是广告位跳转
+        classtype = getIntent().getIntExtra("classtype", 0);
+
+        if (classtype == 1) {
+
+        } else if (classtype == 2) {
+
+        }
+
 
         //设置首页按钮颜色
-        AppUtil.setThemeColor(tabOneImg,ProgramsActivity.this, R.drawable.home_icon);
+        AppUtil.setThemeColor(tabOneImg, ProgramsActivity.this, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
 
         initViewPage();
 
+        loadlist();
+
+    }
+
+
+    private void loadlist() {
+        OkGo.<String>post(HttpManager.ProjectTraining)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "info")
+//                .params("InfoID", classid)
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+//                        Gson gson = new Gson();
+//                        TwoDetailsBean bean = gson.fromJson(response.body().toString(), TwoDetailsBean.class);
+//                        if (bean.getData() != null) {
+//                            dataBean = bean.getData();
+//
+//                            LastID = bean.getData().getLastID();
+//                            NextId = bean.getData().getNextID();
+//
+//                            String html = bean.getData().getContent();
+//                            String data = html.replace("%@", html);
+//                            webView1.loadData(data, "text/html; charset=UTF-8", null);
+//                            tvTitle.setText(bean.getData().getTitle());
+//                            tvTime.setText(bean.getData().getFormatAddDate());
+//                        } else {
+//                            ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
+//                        }
+                    }
+                });
     }
 
     private void initViewPage() {
         mFragments = new ArrayList<>();
         for (int i = 0; i < mTitles.length; i++) {
-            listFragment = ListProgramsFragment.newInstance(i + 1,mTitles.length);
+            listFragment = ListProgramsFragment.newInstance(i + 1, mTitles.length);
             mFragments.add(listFragment);
         }
         BaseFragmentAdapter adapter = new BaseFragmentAdapter(getSupportFragmentManager(), mFragments, mTitles);
@@ -112,10 +166,12 @@ public class ProgramsActivity extends ToolBarActivity {
         mPager.setOffscreenPageLimit(0);
 
         //具体跳转到哪个页面
-        if (title.equals("10")){
-            mPager.setCurrentItem(mTitles.length);
-        }else {
-            mPager.setCurrentItem(Integer.parseInt(title));
+        if (classtype == 3) {
+            if (title.equals("10")) {
+                mPager.setCurrentItem(mTitles.length);
+            } else {
+                mPager.setCurrentItem(Integer.parseInt(title));
+            }
         }
 
     }
@@ -124,37 +180,35 @@ public class ProgramsActivity extends ToolBarActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tab_one:
-                intent.setClass(ProgramsActivity.this,MainActivity.class);
-                intent.putExtra("id",1);
+                intent.setClass(ProgramsActivity.this, MainActivity.class);
+                intent.putExtra("id", 1);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ProgramsActivity.this.finish();
                 break;
             case R.id.tab_two:
-                intent.setClass(ProgramsActivity.this,MainActivity.class);
-                intent.putExtra("id",2);
+                intent.setClass(ProgramsActivity.this, MainActivity.class);
+                intent.putExtra("id", 2);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ProgramsActivity.this.finish();
                 break;
             case R.id.tab_three:
-                intent.setClass(ProgramsActivity.this,MainActivity.class);
-                intent.putExtra("id",3);
+                intent.setClass(ProgramsActivity.this, MainActivity.class);
+                intent.putExtra("id", 3);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ProgramsActivity.this.finish();
                 break;
             case R.id.tab_four:
-                intent.setClass(ProgramsActivity.this,MainActivity.class);
-                intent.putExtra("id",4);
+                intent.setClass(ProgramsActivity.this, MainActivity.class);
+                intent.putExtra("id", 4);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ProgramsActivity.this.finish();
                 break;
         }
     }
-
-
 
 
 }

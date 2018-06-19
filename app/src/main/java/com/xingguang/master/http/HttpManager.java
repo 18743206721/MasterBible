@@ -28,4 +28,19 @@ public class HttpManager {
     //首页
     public static final String index= BASE_URL+"index.aspx";
 
+    //个人信息接口
+    public static final String Login_hy= BASE_URL+"Login_hy.aspx";
+
+    //在线留言接口
+    public static final String Messageonline = BASE_URL+"Message.aspx";
+
+    //招工信息列表，招工信息详情，提交的接口，都是这个。
+    public static final String Recruit = BASE_URL+"Recruit.aspx";
+
+    //行业资讯列表，行业资讯详情
+    public static final String Information = BASE_URL+"Information.aspx";
+
+    //项目培训，报名，提交，详情
+    public static final String ProjectTraining = BASE_URL+"ProjectTraining.aspx";
+
 }

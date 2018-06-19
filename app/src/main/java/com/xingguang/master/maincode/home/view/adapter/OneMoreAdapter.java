@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.OneBean;
 import com.xingguang.master.view.CommonViewHolder;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public class OneMoreAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
 
     private Context mContext;
-    private List<String> list;
+    private List<OneBean.DataBean> list;
 
-    public OneMoreAdapter(Context mContext, List<String> list) {
+    public OneMoreAdapter(Context mContext, List<OneBean.DataBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -60,11 +61,23 @@ public class OneMoreAdapter extends RecyclerView.Adapter<CommonViewHolder> {
             });
         }
 
+        holder.setText(R.id.item_tv_city_title,list.get(position).getJobName());
+        holder.setText(R.id.tv_home_ads,list.get(position).getDiDian());
+        if (list.get(position).getDaiYu().equals("面议")){
+            holder.setText(R.id.tv_home_payment,list.get(position).getDaiYu());
+        }else{
+            holder.setText(R.id.tv_home_payment,list.get(position).getDaiYu()+"元/月");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return list.size();
+    }
+
+    public void setList(List<OneBean.DataBean> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     //define interface

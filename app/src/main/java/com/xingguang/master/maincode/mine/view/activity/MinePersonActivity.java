@@ -14,12 +14,26 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.CommonBean;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.login.view.LoginActivity;
+import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.maincode.home.model.JsonBean;
+import com.xingguang.master.maincode.mine.model.MineBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.GetJsonDataUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
+import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.ImageLoader;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -62,6 +76,7 @@ public class MinePersonActivity extends ToolBarActivity {
     private Thread thread;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private String img = ""; //图片url
+    List<MineBean.DataBean> mineDatas = new ArrayList<>();
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -121,7 +136,12 @@ public class MinePersonActivity extends ToolBarActivity {
                     setSubTitle("编辑");
                     setSubTitleColor(R.color.home_bule);
 
-                    load();
+//                    if (mineEtname.getText().length() == 0) {
+//                        ToastUtils.showToast(MinePersonActivity.this, "请输入您的昵称");
+//                    }else {
+                        load();
+//                    }
+
                 }
 
 
@@ -129,13 +149,59 @@ public class MinePersonActivity extends ToolBarActivity {
         });
 
         init();
+        Edit();
+    }
 
-
+    /**回显数据*/
+    private void Edit() {
+        ImageLoader.loadCircleImage(MinePersonActivity.this, AppUtil.getUserImage(this), mineIv);
+        mineTvname.setText(AppUtil.getUserNickname(this));
+        mineTvsex.setText(AppUtil.getUsersex(this));
+        mineTvarea.setText( AppUtil.getUserads(this));
     }
 
 
+    /**
+     * 完成接口
+     * */
     private void load() {
-        finish();
+        File url = null;
+        if (AppUtil.getUserImage(this).equals("")){
+            url = new File(selectedPhotos.get(0));
+        }else {
+            url = new File(AppUtil.getUserImage(this));
+        }
+
+        OkGo.<String>post(HttpManager.Login_hy)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName",AppUtil.getUserId(this))
+                .params("MethodCode","modify")
+                .params("HeadSculpture",url)
+                .params("NickName",mineEtname.getText().toString())
+                .params("Sex",mineTvsex.getText().toString())
+                .params("Address",mineTvarea.getText().toString())
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        MineBean bean = gson.fromJson(response.body().toString(), MineBean.class);
+                        if (bean.getData()!=null){
+                            mineDatas.addAll(bean.getData());
+                            SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERNAME, mineDatas.get(0).getYEPrice());
+                            SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + mineDatas.get(0).getHeadPic());
+                            //性别
+                            SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERSEX, mineDatas.get(0).getEmail());
+                            //地区
+                            SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERADS, mineDatas.get(0).getTeam());
+                            ToastUtils.showToast(MinePersonActivity.this,bean.getResult());
+                            finish();
+                        }else {
+                            ToastUtils.showToast(MinePersonActivity.this,bean.getResult());
+                        }
+                    }
+                });
     }
 
 
@@ -165,7 +231,6 @@ public class MinePersonActivity extends ToolBarActivity {
                             .setPreviewEnabled(false)
                             .start(this, PhotoPicker.REQUEST_CODE);
                 }
-
                 break;
             case R.id.rl_sex: //性别
                 if (a == 1){

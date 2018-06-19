@@ -67,7 +67,8 @@ public class SettingActivity extends ToolBarActivity {
                 break;
             case R.id.ll_about:
                 startActivity(new Intent(SettingActivity.this, WebViewActivity.class)
-                        .putExtra("id", 0));
+                        .putExtra("id", 0)
+                );
                 break;
             case R.id.ll_backlogin: //退出登录
                 loadback();

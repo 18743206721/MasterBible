@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
 
     BaodianFragment baodianFragment;  //考试宝典
     ExamChapterFragment examchapterFragment; //模拟考试
-    ProgramsFragment programsFragment;//培训项目
+//    ProgramsFragment programsFragment;//培训项目
     OnlineFragment onlineFragment;//在线留言
     ClassifExamFragment classifExamFragment; //考试宝典
     OneFragment oneFragment; //更多页面的招工信息
@@ -288,18 +288,18 @@ public class MainActivity extends BaseActivity {
     /**
      * 设置当前的Fragment 为项目培训
      */
-    public void setOnProgramsFragment() {
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.addToBackStack(null);
-        hideAll(transaction);
-        if (programsFragment != null) {
-            transaction.show(programsFragment);
-        } else {
-            programsFragment = new ProgramsFragment();
-            transaction.add(R.id.main_frame, programsFragment, "programsFragment");
-        }
-        transaction.commit();
-    }
+//    public void setOnProgramsFragment() {
+//        FragmentTransaction transaction = fm.beginTransaction();
+//        transaction.addToBackStack(null);
+//        hideAll(transaction);
+//        if (programsFragment != null) {
+//            transaction.show(programsFragment);
+//        } else {
+//            programsFragment = new ProgramsFragment();
+//            transaction.add(R.id.main_frame, programsFragment, "programsFragment");
+//        }
+//        transaction.commit();
+//    }
 
     /**
      * 设置当前的Fragment 为在线留言
@@ -437,9 +437,9 @@ public class MainActivity extends BaseActivity {
         if (onlineFragment != null) {
             transaction.hide(onlineFragment);
         }
-        if (programsFragment != null) {
-            transaction.hide(programsFragment);
-        }
+//        if (programsFragment != null) {
+//            transaction.hide(programsFragment);
+//        }
         if (classifExamFragment != null) {
             transaction.hide(classifExamFragment);
         }

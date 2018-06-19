@@ -75,7 +75,7 @@
                 <TextView
                     android:id="@+id/mine_tvname"
                     android:visibility="visible"
-                    android:text="h-zy8888"
+                    android:text=""
                     android:gravity="right"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 
             <TextView
                 android:id="@+id/mine_tvsex"
-                android:text="男"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -149,7 +149,7 @@
 
             <TextView
                 android:id="@+id/mine_tvarea"
-                android:text="吉林长春"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

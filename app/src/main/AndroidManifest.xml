@@ -85,7 +85,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".maincode.home.view.activity.OneDetailsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".login.view.ForgetOneActivity"
             android:screenOrientation="portrait" />
@@ -98,10 +99,7 @@
         <activity
             android:name=".maincode.home.view.activity.ProgramsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            />
-
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

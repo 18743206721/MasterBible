@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/board"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".maincode.mine.view.activity.WebViewActivity">
 
@@ -14,9 +14,38 @@
         android:layout_height="5dp"
         android:background="@color/board" />
 
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="13dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="标题"
+            android:textColor="@color/textBlack"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text=""
+            android:textColor="@color/textDarkGray"
+            android:textSize="13sp" />
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp">
 
         <WebView
             android:id="@+id/webView1"
@@ -38,6 +67,7 @@
             android:visibility="visible">
 
             <LinearLayout
+                android:id="@+id/ll_last"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -59,6 +89,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
