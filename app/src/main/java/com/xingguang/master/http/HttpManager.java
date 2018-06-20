@@ -43,4 +43,9 @@ public class HttpManager {
     //项目培训，报名，提交，详情
     public static final String ProjectTraining = BASE_URL+"ProjectTraining.aspx";
 
+    //考试报名
+    public static final String ExamRegistration = BASE_URL+"ExamRegistration.aspx";
+
+
+
 }

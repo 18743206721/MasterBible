@@ -22,6 +22,7 @@ import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
 import com.xingguang.master.maincode.home.model.HomeBean;
+import com.xingguang.master.maincode.home.model.ProgramsBean;
 import com.xingguang.master.maincode.home.model.TwoDetailsBean;
 import com.xingguang.master.maincode.home.view.fragment.ListProgramsFragment;
 import com.xingguang.master.maincode.home.view.fragment.ProgramsFragment;
@@ -31,6 +32,7 @@ import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -80,7 +82,8 @@ public class ProgramsActivity extends ToolBarActivity {
     private Intent intent = new Intent();
 
     List<Fragment> mFragments;
-    String[] mTitles = new String[]{"培训项目", "培训报名"};
+    String[] mTitles = new String[]{};
+    private ArrayList<String> list = new ArrayList<>();
     ListProgramsFragment listFragment;
     private String title; //上个界面传过来的跳转到哪个页的
     private int classtype;
@@ -104,20 +107,19 @@ public class ProgramsActivity extends ToolBarActivity {
         //2是 焊工培训更多, 1 是分类按钮培训项目,3是广告位跳转
         classtype = getIntent().getIntExtra("classtype", 0);
 
-        if (classtype == 1) {
-
-        } else if (classtype == 2) {
-
-        }
+//        if (classtype == 1) {
+//
+//        } else if (classtype == 2) {
+//
+//        }
 
 
         //设置首页按钮颜色
         AppUtil.setThemeColor(tabOneImg, ProgramsActivity.this, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
 
-        initViewPage();
-
         loadlist();
+
 
     }
 
@@ -127,33 +129,32 @@ public class ProgramsActivity extends ToolBarActivity {
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("MethodCode", "info")
-//                .params("InfoID", classid)
+                .params("MethodCode", "list")
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
-//                        Gson gson = new Gson();
-//                        TwoDetailsBean bean = gson.fromJson(response.body().toString(), TwoDetailsBean.class);
-//                        if (bean.getData() != null) {
-//                            dataBean = bean.getData();
-//
-//                            LastID = bean.getData().getLastID();
-//                            NextId = bean.getData().getNextID();
-//
-//                            String html = bean.getData().getContent();
-//                            String data = html.replace("%@", html);
-//                            webView1.loadData(data, "text/html; charset=UTF-8", null);
-//                            tvTitle.setText(bean.getData().getTitle());
-//                            tvTime.setText(bean.getData().getFormatAddDate());
-//                        } else {
-//                            ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
-//                        }
+                        Gson gson = new Gson();
+                        ProgramsBean bean = gson.fromJson(response.body().toString(), ProgramsBean.class);
+
+
+                        if (bean.getData()!=null) {
+                            for (int i = 0; i < bean.getData().size(); i++) {
+                                list.add(bean.getData().get(i).getClassName());
+                            }
+
+                            initViewPage(list);
+
+                        }
+
                     }
                 });
     }
 
-    private void initViewPage() {
+    private void initViewPage(ArrayList<String> list) {
         mFragments = new ArrayList<>();
+        //list转换成数组
+        mTitles = list.toArray(new String[list.size()]);
+
         for (int i = 0; i < mTitles.length; i++) {
             listFragment = ListProgramsFragment.newInstance(i + 1, mTitles.length);
             mFragments.add(listFragment);

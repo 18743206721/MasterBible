@@ -102,6 +102,7 @@ public class MinePersonActivity extends ToolBarActivity {
             }
         }
     };
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_mine_person;
@@ -136,11 +137,11 @@ public class MinePersonActivity extends ToolBarActivity {
                     setSubTitle("编辑");
                     setSubTitleColor(R.color.home_bule);
 
-//                    if (mineEtname.getText().length() == 0) {
-//                        ToastUtils.showToast(MinePersonActivity.this, "请输入您的昵称");
-//                    }else {
+                    if (mineEtname.getText().length() == 0) {
+                        ToastUtils.showToast(MinePersonActivity.this, "请输入您的昵称");
+                    }else {
                         load();
-//                    }
+                    }
 
                 }
 
@@ -165,20 +166,54 @@ public class MinePersonActivity extends ToolBarActivity {
      * 完成接口
      * */
     private void load() {
-        File url = null;
-        if (AppUtil.getUserImage(this).equals("")){
-            url = new File(selectedPhotos.get(0));
+        if (img.equals("")){ //没修改过头像
+            loadhead2();
         }else {
-            url = new File(AppUtil.getUserImage(this));
+            loadhead();
         }
+    }
 
+    private void loadhead2() {
+            OkGo.<String>post(HttpManager.Login_hy)
+                    .tag(this)
+                    .cacheKey("cachePostKey")
+                    .cacheMode(CacheMode.DEFAULT)
+                    .params("UserName", AppUtil.getUserId(this))
+                    .params("MethodCode", "modify")
+//                    .params("HeadSculpture",selectedPhotos.get(0))
+                    .params("NickName", mineEtname.getText().toString())
+                    .params("Sex", mineTvsex.getText().toString())
+                    .params("Address", mineTvarea.getText().toString())
+                    .execute(new DialogCallback<String>(this) {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Gson gson = new Gson();
+                            MineBean bean = gson.fromJson(response.body().toString(), MineBean.class);
+                            if (bean.getData() != null) {
+                                mineDatas.addAll(bean.getData());
+                                SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERNAME, mineDatas.get(0).getYEPrice());
+                                SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + mineDatas.get(0).getHeadPic());
+                                //性别
+                                SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERSEX, mineDatas.get(0).getEmail());
+                                //地区
+                                SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERADS, mineDatas.get(0).getTeam());
+                                ToastUtils.showToast(MinePersonActivity.this, bean.getResult());
+                                finish();
+                            } else {
+                                ToastUtils.showToast(MinePersonActivity.this, bean.getResult());
+                            }
+                        }
+                    });
+    }
+
+    private void loadhead() {
         OkGo.<String>post(HttpManager.Login_hy)
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("UserName",AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getUserId(this))
                 .params("MethodCode","modify")
-                .params("HeadSculpture",url)
+                .params("HeadSculpture",selectedPhotos.get(0))
                 .params("NickName",mineEtname.getText().toString())
                 .params("Sex",mineTvsex.getText().toString())
                 .params("Address",mineTvarea.getText().toString())

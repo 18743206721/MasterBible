@@ -19,9 +19,17 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarFragment;
+import com.xingguang.master.http.CommonBean;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.model.JsonBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.CountDownRTimerUtil;
@@ -122,6 +130,15 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
         }
     };
     private List<String> proLists = new ArrayList<>();//项目列表数据
+    protected List<String> listbumen = new ArrayList<>(); //选择部门数据
+    private List<String> listgongzhong = new ArrayList<>();
+
+    String province = "";//省份
+    String city = "";//城市
+    String area = "";//区域
+    int bumenId = 0;     //部门id
+    int gongzhongId = 0; //工种id
+
 
     @Override
     protected int getLayoutId() {
@@ -132,9 +149,8 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
     protected void initView() {
         setToolBarTitle("考试报名");
         init();
-        initBaoming();
+        loadbaoming();
     }
-
     private void init() {
         util = new CountDownRTimerUtil(getActivity(), this);
         mHandler.sendEmptyMessage(MSG_LOAD_DATA);
@@ -149,26 +165,21 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
 
     }
 
-    private void initBaoming() {
-
-        mDatas.add("项目部");
-        mDatas.add("安监部");
-        mDatas.add("侦查部");
-    }
-
     @Override
-    protected void lazyLoad() {
+    protected void lazyLoad() { }
 
-    }
-
-    @OnClick({R.id.et_bumeng, R.id.et_province, R.id.rl_get_messs, R.id.btn_commit,R.id.et_gongzhong})
+    @OnClick({R.id.et_bumeng, R.id.et_province, R.id.rl_get_messs, R.id.btn_commit, R.id.et_gongzhong})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.et_bumeng: //部门
                 selectbumen();
                 break;
             case R.id.et_gongzhong: //工种
-                selectgonghzong();
+                if (etBumeng.getText().length() == 0) {
+                    ToastUtils.showToast(getActivity(), "请选择部门!");
+                } else {
+                    selectgonghzong();
+                }
                 break;
             case R.id.et_province://省份
                 selectprovice();
@@ -191,16 +202,41 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
     }
 
     /**
+     * 部门数据
+     */
+    private void loadbaoming() {
+        OkGo.<String>post(HttpManager.ExamRegistration)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "list")
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
+                        if (bean.getData() != null) {
+                            listbumen.clear();
+                            for (int i = 0; i < bean.getData().size(); i++) {
+                                listbumen.add(bean.getData().get(i).getName());
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
      * 选择工种
-     * */
+     */
     private void selectgonghzong() {
         //条件选择器
         OptionsPickerView pvOptions = new OptionsPickerBuilder(getActivity(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
-                String tx = mDatas.get(options1);
+                String tx = listgongzhong.get(options1);
                 etGongzhong.setText(tx);
+                loadgongzhong2(tx);
             }
         })
                 .setTitleColor(Color.BLACK)//标题文字颜色
@@ -211,44 +247,70 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
                 .setTitleSize(18)//标题文字大小
                 .setTitleText("选择工种")//标题文字
                 .build();
-        pvOptions.setPicker(mDatas);
+        pvOptions.setPicker(listgongzhong);
         pvOptions.show();
     }
 
+    /**
+     * 获取工种id数据
+     *
+     * @param tx
+     */
+    private void loadgongzhong2(final String tx) {
+        OkGo.<String>post(HttpManager.ExamRegistration)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "list")
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
+                        if (bean.getData() != null) {
+                            for (int i = 0; i < bean.getData().size(); i++) {
+                                for (int j = 0; j < bean.getData().get(i).getData().size(); j++) {
+                                    if (tx.equals(bean.getData().get(i).getData().get(j).getName())) {
+                                        gongzhongId = bean.getData().get(i).getData().get(j).getID();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 发送验证码
+     */
     private void sendSMSClient() {
-        tvGetmss.setTextColor(Color.rgb(81, 87, 104));
-        rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
-        Message msgs = mHandler.obtainMessage();
-        msgs.what = REG_EMS;
-        msgs.sendToTarget();
+        OkGo.<String>post(HttpManager.ExamRegistration)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "yzm")
+                .params("Phone", etPhone.getText().toString())
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        ToastUtils.showToast(getActivity(), bean.getResult());
+                        rlGetMesss.setEnabled(false);
+                        tvGetmss.setTextColor(Color.rgb(81, 87, 104));
+                        rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);
+                        Message msgs = mHandler.obtainMessage();
+                        msgs.what = REG_EMS;
+                        msgs.sendToTarget();
+                    }
+                });
     }
 
     /**
      * 验证码校验
      */
     private boolean validates1() {
-        if (TextUtils.isEmpty(etBumeng.getText().toString())) {
-            ToastUtils.showToast(getActivity(), "请选择部门!");
-            return false;
-        } else if (etGongzhong.getText().length() == 0) {
-            ToastUtils.showToast(getActivity(), "请选择工种!");
-            return false;
-        } else if (etName.getText().length() == 0) {
-            ToastUtils.showToast(getActivity(), "请输入您的姓名!");
-            return false;
-        } else if (TextUtils.isEmpty(etProvince.getText().toString())) {
-            ToastUtils.showToast(getActivity(), "请选择省市区!");
-            return false;
-        } else if (etAds.getText().length() == 0) {
-            ToastUtils.showToast(getActivity(), "请输入详细地址!");
-            return false;
-        } else if (etIdnum.getText().length() == 0) {
-            ToastUtils.showToast(getActivity(), "请输入身份证!");
-            return false;
-        } else if (etIdnum.getText().length() == 18) {
-            ToastUtils.showToast(getActivity(), "请输入18位身份证!");
-            return false;
-        } else if (etPhone.getText().length() == 0) {
+        if (etPhone.getText().length() == 0) {
             ToastUtils.showToast(getActivity(), "请填写联系方式");
             return false;
         } else if (etPhone.getText().length() != 11) {
@@ -259,10 +321,36 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
         }
     }
 
-
+    /**
+     * 提交接口
+     * */
     private void CommitClient() {
-        MainActivity.instance.setBg(1);
-        MainActivity.instance.setToNewsFragment();
+        OkGo.<String>post(HttpManager.ExamRegistration)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "submit")
+                .params("UserName", AppUtil.getUserId(getActivity()))
+                .params("DepartmentID", bumenId) //部门ID
+                .params("ProfessionID", gongzhongId)//工种ID
+                .params("Name", etName.getText().toString()) //姓名
+                .params("Province", province) //省
+                .params("City", city) //市
+                .params("Area", area) //区
+                .params("Address", etAds.getText().toString()) //地址
+                .params("IDcard", etIdnum.getText().toString()) //身份证
+                .params("Phone", etPhone.getText().toString())  //手机
+                .params("IdenCode", registerMss.getText().toString()) //验证码
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        ToastUtils.showToast(getActivity(), bean.getResult());
+                        MainActivity.instance.setBg(1);
+                        MainActivity.instance.setToNewsFragment();
+                    }
+                });
     }
 
     /**
@@ -276,6 +364,9 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
                 String tx = options1Items.get(options1).getPickerViewText() +
                         options2Items.get(options1).get(options2)
                         + options3Items.get(options1).get(options2).get(options3);
+                province = options1Items.get(options1).getPickerViewText();
+                city = options2Items.get(options1).get(options2);
+                area = options3Items.get(options1).get(options2).get(options3);
                 etProvince.setText(tx);
             }
         })
@@ -302,8 +393,9 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
-                String tx = mDatas.get(options1);
+                String tx = listbumen.get(options1);
                 etBumeng.setText(tx);
+                loadgongzhong(tx);
             }
         })
                 .setTitleColor(Color.BLACK)//标题文字颜色
@@ -314,9 +406,40 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
                 .setTitleSize(18)//标题文字大小
                 .setTitleText("选择部门")//标题文字
                 .build();
-        pvOptions.setPicker(mDatas);
+        pvOptions.setPicker(listbumen);
         pvOptions.show();
     }
+
+    /**
+     * 工种数据
+     *
+     * @param tx
+     */
+    private void loadgongzhong(final String tx) {
+        OkGo.<String>post(HttpManager.ExamRegistration)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "list")
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
+                        if (bean.getData() != null) {
+                            for (int i = 0; i < bean.getData().size(); i++) {
+                                if (tx.equals(bean.getData().get(i).getName())) {
+                                    bumenId = bean.getData().get(i).getID(); //获取部门id数据
+                                    for (int j = 0; j < bean.getData().get(i).getData().size(); j++) {
+                                        listgongzhong.add(bean.getData().get(i).getData().get(j).getName());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
 
     public Boolean validate() {
         if (TextUtils.isEmpty(etBumeng.getText().toString())) {
@@ -337,7 +460,7 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
         } else if (etIdnum.getText().length() == 0) {
             ToastUtils.showToast(getActivity(), "请输入身份证!");
             return false;
-        } else if (etIdnum.getText().length() == 18) {
+        } else if (etIdnum.getText().length() != 18) {
             ToastUtils.showToast(getActivity(), "请输入18位身份证!");
             return false;
         } else if (etPhone.getText().length() == 0) {
@@ -349,8 +472,8 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
         } else if (registerMss.getText().toString().length() == 0) {
             ToastUtils.showToast(getActivity(), "请输入验证码");
             return false;
-        } else if (registerMss.getText().length() != 6) {
-            ToastUtils.showToast(getActivity(), "请输入6位验证码");
+        } else if (registerMss.getText().length() != 5) {
+            ToastUtils.showToast(getActivity(), "请输入5位验证码");
             return false;
         } else {
             return true;
@@ -411,10 +534,10 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
     @Override
     public void countDownTimerFinish() {
         tvGetmss.setEnabled(true);
+        rlGetMesss.setEnabled(true);
         tvGetmss.setTextColor(Color.parseColor("#005FBB"));
         rlGetMesss.setBackgroundResource(R.drawable.btn_register_bg);
     }
-
 
 
 }

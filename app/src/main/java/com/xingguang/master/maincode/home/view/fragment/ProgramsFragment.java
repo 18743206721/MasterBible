@@ -31,6 +31,7 @@ import com.xingguang.master.base.ToolBarFragment;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.JsonBean;
 import com.xingguang.master.maincode.home.model.MessageEvent;
+import com.xingguang.master.maincode.home.model.ProgramsBean;
 import com.xingguang.master.maincode.home.view.adapter.ProjectAdapter;
 import com.xingguang.master.popwindows.WheelPopUpWindow;
 import com.xingguang.master.util.AppUtil;
@@ -139,7 +140,7 @@ public class ProgramsFragment extends ToolBarFragment implements CountDownRTimer
             }
         }
     };
-    private List<String> proLists = new ArrayList<>();//项目列表数据
+    private List<ProgramsBean.DataBeanX.DataBean> proLists = new ArrayList<>();//项目列表数据
 
     @Override
     protected int getLayoutId() {

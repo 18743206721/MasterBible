@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.ProgramsBean;
 import com.xingguang.master.view.CommonViewHolder;
 
 import java.util.List;
@@ -18,9 +19,9 @@ import java.util.List;
 public class ProjectAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     private Context mContext;
-    private List<String> list;
+    private List<ProgramsBean.DataBeanX.DataBean> list;
 
-    public ProjectAdapter(Context mContext, List<String> list) {
+    public ProjectAdapter(Context mContext, List<ProgramsBean.DataBeanX.DataBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -49,11 +50,20 @@ public class ProjectAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                 }
             });
         }
+        holder.setText(R.id.item_tvname,list.get(position).getTitle());
+        holder.setText(R.id.item_tvcontent,list.get(position).getContent());
+        holder.setText(R.id.item_tvtime,list.get(position).getFormatAddDate());
+
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return list.size();
+    }
+
+    public void setList(List<ProgramsBean.DataBeanX.DataBean> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     //define interface
