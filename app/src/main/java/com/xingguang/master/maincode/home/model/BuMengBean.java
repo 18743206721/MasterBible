@@ -87,6 +87,15 @@ public class BuMengBean {
 
             private int ID;
             private String Name;
+            private String ClassPic;
+
+            public String getClassPic() {
+                return ClassPic;
+            }
+
+            public void setClassPic(String classPic) {
+                ClassPic = classPic;
+            }
 
             public int getID() {
                 return ID;

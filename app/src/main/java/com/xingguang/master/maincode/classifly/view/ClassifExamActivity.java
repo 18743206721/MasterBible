@@ -7,9 +7,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.view.activity.DaTiActivity;
 import com.xingguang.master.util.AppUtil;
 
@@ -62,41 +69,39 @@ public class ClassifExamActivity extends ToolBarActivity {
         String classifid = getIntent().getStringExtra("classifid");
 
         //设置首页按钮颜色
-        AppUtil.setThemeColor(tabOneImg,ClassifExamActivity.this, R.drawable.home_icon);
+        AppUtil.setThemeColor(tabOneImg, ClassifExamActivity.this, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
-
     }
-
-    Intent intent  = new Intent();
+    Intent intent = new Intent();
 
     @OnClick({R.id.tab_one, R.id.tab_two, R.id.tab_three, R.id.tab_four,
             R.id.iv_baodian, R.id.iv_kaoshi})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tab_one:
-                intent.setClass(ClassifExamActivity.this,MainActivity.class);
-                intent.putExtra("id",1);
+                intent.setClass(ClassifExamActivity.this, MainActivity.class);
+                intent.putExtra("id", 1);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ClassifExamActivity.this.finish();
                 break;
             case R.id.tab_two:
-                intent.setClass(ClassifExamActivity.this,MainActivity.class);
-                intent.putExtra("id",2);
+                intent.setClass(ClassifExamActivity.this, MainActivity.class);
+                intent.putExtra("id", 2);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ClassifExamActivity.this.finish();
                 break;
             case R.id.tab_three:
-                intent.setClass(ClassifExamActivity.this,MainActivity.class);
-                intent.putExtra("id",3);
+                intent.setClass(ClassifExamActivity.this, MainActivity.class);
+                intent.putExtra("id", 3);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ClassifExamActivity.this.finish();
                 break;
             case R.id.tab_four:
-                intent.setClass(ClassifExamActivity.this,MainActivity.class);
-                intent.putExtra("id",4);
+                intent.setClass(ClassifExamActivity.this, MainActivity.class);
+                intent.putExtra("id", 4);
                 startActivity(intent);
                 MainActivity.instance.finish();
                 ClassifExamActivity.this.finish();
@@ -113,8 +118,6 @@ public class ClassifExamActivity extends ToolBarActivity {
                 break;
         }
     }
-
-
 
 
 }

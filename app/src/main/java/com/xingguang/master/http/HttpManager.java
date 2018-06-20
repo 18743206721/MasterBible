@@ -46,6 +46,12 @@ public class HttpManager {
     //考试报名
     public static final String ExamRegistration = BASE_URL+"ExamRegistration.aspx";
 
+    //关于我们
+    public static final String TemplateForm = BASE_URL+"TemplateForm.aspx";
+
+    //报名管理
+    public static final String Login_record = BASE_URL+"Login_record.aspx";
+
 
 
 }

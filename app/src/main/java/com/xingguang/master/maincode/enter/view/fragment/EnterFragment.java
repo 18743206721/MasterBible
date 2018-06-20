@@ -151,6 +151,7 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
         init();
         loadbaoming();
     }
+
     private void init() {
         util = new CountDownRTimerUtil(getActivity(), this);
         mHandler.sendEmptyMessage(MSG_LOAD_DATA);
@@ -166,7 +167,8 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
     }
 
     @Override
-    protected void lazyLoad() { }
+    protected void lazyLoad() {
+    }
 
     @OnClick({R.id.et_bumeng, R.id.et_province, R.id.rl_get_messs, R.id.btn_commit, R.id.et_gongzhong})
     public void onViewClicked(View view) {
@@ -323,7 +325,7 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
 
     /**
      * 提交接口
-     * */
+     */
     private void CommitClient() {
         OkGo.<String>post(HttpManager.ExamRegistration)
                 .tag(this)

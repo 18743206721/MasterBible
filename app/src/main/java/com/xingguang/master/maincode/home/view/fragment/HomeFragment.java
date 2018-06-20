@@ -104,6 +104,7 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.tv_sousuo)
     TextView tv_sousuo;
 
+    private View headview;
 
     @Override
     protected int getLayoutId() {
@@ -179,19 +180,25 @@ public class HomeFragment extends BaseFragment {
         rv1.setAdapter(oneAdapter);
         rv1.setNestedScrollingEnabled(false);
 
+        //头布局的xml
+        headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
+        LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
+        TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
+        AppUtil.addForeSizeSpan(itemtv_info,"招工信息",getActivity());
+        oneAdapter.addHeaderView(headview);//添加头布局到列表中；
+        ll_hworks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setOnOneFragment();
+            }
+        });
         oneAdapter.setOnItemClickListener(new OneAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 //跳转到招工详情
                 startActivity(new Intent(getActivity(), OneDetailsActivity.class)
-                        .putExtra("id", onelist.get(position).getID()));
-            }
-        });
-        oneAdapter.setmOnItemMoreClickListener(new OneAdapter.OnItemMoreClickListener() {
-            @Override
-            public void onItemMoreClick(LinearLayout onemore, int position) {
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setOnOneFragment();
+                        .putExtra("id", onelist.get(position-1).getID()));
             }
         });
     }
@@ -202,21 +209,29 @@ public class HomeFragment extends BaseFragment {
         rv2.setLayoutManager(manager);
         rv2.setAdapter(twoAdapter);
         rv2.setNestedScrollingEnabled(false);
+
+        //头布局的xml
+        headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
+        LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
+        TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
+        AppUtil.addForeSizeSpan(itemtv_info,"招工信息",getActivity());
+        twoAdapter.addHeaderView(headview);//添加头布局到列表中；
+        ll_hworks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setOnTwoFragment();
+            }
+        });
+
         //行业资讯
         twoAdapter.setOnItemClickListener(new TwoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 startActivity(new Intent(getActivity(), WebViewActivity.class)
                         .putExtra("id", 1)
-                        .putExtra("classid",twolist.get(position).getID())
+                        .putExtra("classid",twolist.get(position-1).getID())
                 );
-            }
-        });
-        twoAdapter.setmOnItemMoreClickListener(new TwoAdapter.OnItemMoreClickListener() {
-            @Override
-            public void onItemMoreClick(LinearLayout onemore, int position) {
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setOnTwoFragment();
             }
         });
     }
@@ -227,25 +242,30 @@ public class HomeFragment extends BaseFragment {
         rv3.setLayoutManager(manager);
         rv3.setAdapter(threeAdapter);
         rv3.setNestedScrollingEnabled(false);
-        threeAdapter.setOnItemClickListener(new ThreeAdapter.OnItemClickListener() {
+
+        //头布局的xml
+        headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
+        LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
+        TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
+        AppUtil.addForeSizeSpan(itemtv_info,"招工信息",getActivity());
+        threeAdapter.addHeaderView(headview);//添加头布局到列表中；
+        ll_hworks.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                startActivity(new Intent(getActivity(), WebViewActivity.class)
-                        .putExtra("id", 2)
-                        .putExtra("classid",threelist.get(position).getID())
-                );
-            }
-        });
-        threeAdapter.setmOnItemMoreClickListener(new ThreeAdapter.OnItemMoreClickListener() {
-            @Override
-            public void onItemMoreClick(LinearLayout onemore, int position) {
+            public void onClick(View view) {
                 startActivity(new Intent(getActivity(), ProgramsActivity.class)
                         .putExtra("classtype",2)
                 );
             }
         });
-
-
+        threeAdapter.setOnItemClickListener(new ThreeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                startActivity(new Intent(getActivity(), WebViewActivity.class)
+                        .putExtra("id", 2)
+                        .putExtra("classid",threelist.get(position-1).getID())
+                );
+            }
+        });
     }
 
     @Override

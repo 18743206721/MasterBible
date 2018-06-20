@@ -7,8 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import com.xingguang.master.R;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.home.model.BuMengBean;
+import com.xingguang.master.util.RoundRectImageView;
 import com.xingguang.master.view.CommonViewHolder;
+import com.xingguang.master.view.ImageLoader;
+
+import java.util.List;
 
 /**
  * 基本功能：右侧Adapter
@@ -19,11 +27,11 @@ import com.xingguang.master.view.CommonViewHolder;
 public class RightAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     private Context mContext;
-    private String[] rightStr;
+    private List<BuMengBean.DataBeanX.DataBean> list;
 
-    public RightAdapter(Context context, String[] rightStr) {
+    public RightAdapter(Context context, List<BuMengBean.DataBeanX.DataBean> list) {
         this.mContext = context;
-        this.rightStr = rightStr;
+        this.list = list;
     }
     private OnItemClickListener mOnItemClickListener = null;
 
@@ -49,10 +57,19 @@ public class RightAdapter extends RecyclerView.Adapter<CommonViewHolder> {
                 }
             });
         }
+
+        RoundRectImageView iv = holder.getItemView().findViewById(R.id.iv_typeofwork);
+        ImageLoader.loadRoundImage(mContext, HttpManager.BASE_URL+
+                list.get(position).getClassPic(),iv,5);
     }
     @Override
     public int getItemCount() {
-        return rightStr.length;
+        return list.size();
+    }
+
+    public void setList(List<BuMengBean.DataBeanX.DataBean> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     //define interface

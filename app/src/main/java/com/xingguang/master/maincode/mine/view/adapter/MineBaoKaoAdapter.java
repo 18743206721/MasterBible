@@ -2,12 +2,17 @@ package com.xingguang.master.maincode.mine.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.mine.model.BaoKaoGuanLiBean;
+import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.view.CommonViewHolder;
 
 import java.util.List;
@@ -17,82 +22,103 @@ import java.util.List;
  * 描述:报考记录适配器
  * 作者:LiuYu
  */
-public class MineBaoKaoAdapter extends RecyclerView.Adapter<CommonViewHolder> {
+public class MineBaoKaoAdapter extends RecyclerView.Adapter<MineBaoKaoAdapter.ViewHolder> {
 
+    public static final int TYPE_HEAD=0;
+    public static final int TYPE_NORMAL=1;
+    private View mHeaderView;
     private Context mContext;
-    private List<String> list;
-    int type;//1是报考记录，2是培训记录
+    private List<BaoKaoGuanLiBean.DataBean> list;
+    int classif;//1是报考记录，2是培训记录
 
-    public MineBaoKaoAdapter(Context mContext, List<String> list, int type) {
+    public MineBaoKaoAdapter(Context mContext, List<BaoKaoGuanLiBean.DataBean> list, int classif) {
         this.mContext = mContext;
         this.list = list;
-        this.type = type;
+        this.classif = classif;
     }
+
     private OnItemClickListener mOnItemClickListener = null;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 
-
-    @Override
-    public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CommonViewHolder commonViewHolder = null;
-        commonViewHolder = CommonViewHolder.getViewHolder(parent, R.layout.item_mine_baokao);
-        return commonViewHolder;
+    public void addHeaderView(View headerView){
+        mHeaderView = headerView;
+        notifyItemInserted(0);  //在itemview中设置第一项
+    }
+    /*
+     * 判断head的位置，是否显示item的一整行
+     * **/
+    public boolean isHeader(int position) {
+        return position == 0;
     }
 
     @Override
-    public void onBindViewHolder(final CommonViewHolder holder, final int position) {
-        LinearLayout item_ll = holder.getItemView().findViewById(R.id.item_ll);
-        LinearLayout item_llbaokao = holder.getItemView().findViewById(R.id.item_llbaokao);
-        View view1 = holder.getItemView().findViewById(R.id.view1);
-        TextView tv1 =holder.getItemView().findViewById(R.id.tv1);
-        TextView tv2 = holder.getItemView().findViewById(R.id.tv2);
-        TextView tv3 = holder.getItemView().findViewById(R.id.tv3);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == TYPE_HEAD && mHeaderView != null){
+            return new ViewHolder(mHeaderView);
+        }
+        View view= LayoutInflater.from(mContext).inflate(R.layout.item_mine_baokao,parent,false);
+        return new ViewHolder(view);
+    }
 
-        if (position == 0){
-            item_ll.setVisibility(View.VISIBLE);
-            item_llbaokao.setVisibility(View.GONE);
-            view1.setVisibility(View.GONE);
-            if (type == 1){
-                tv1.setText("报考部门");
-                tv2.setText("报考职务");
-                tv3.setText("报考时间");
-            }else if (type == 2){
-                tv1.setText("培训工种");
-                tv2.setText("选择部门");
-                tv3.setText("培训时间");
-            }
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if (getItemViewType(position) == TYPE_HEAD){
+            return;
         }else {
-            item_ll.setVisibility(View.GONE);
-            item_llbaokao.setVisibility(View.VISIBLE);
-            view1.setVisibility(View.VISIBLE);
-        }
-
-        if (mOnItemClickListener != null) {
-            holder.getItemView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //注意这里使用getTag方法获取position
-                    mOnItemClickListener.onItemClick(holder.getItemView(), position);
+            if (mHeaderView!=null){
+                //如果设置了回调，则设置点击事件
+                if (mOnItemClickListener != null){
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mOnItemClickListener.onItemClick(holder.itemView,position);
+                        }
+                    });
                 }
-            });
+            }
+            holder.item_tvname1.setText(list.get(position-1).getDepartmentName());//种类
+            holder.item_tvname2.setText(list.get(position-1).getProfessionName());//工种
+            holder.item_tvname3.setText(list.get(position-1).getFormatAddDate());//时间
         }
-
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mHeaderView==null)
+            return TYPE_NORMAL;
+        if (position==0){
+            return TYPE_HEAD;
+        }
+        return TYPE_NORMAL;
+    }
+
 
     @Override
     public int getItemCount() {
-        return 4;
+        return mHeaderView!=null ? list.size()+1 : list.size();
     }
 
+    public void setList(List<BaoKaoGuanLiBean.DataBean> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
 
-    //define interface
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView item_tvname1,item_tvname2,item_tvname3;//名字
+        View view1;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            item_tvname1 = (TextView) itemView.findViewById(R.id.item_tvname1);
+            item_tvname2 = (TextView) itemView.findViewById(R.id.item_tvname2);
+            item_tvname3 = (TextView) itemView.findViewById(R.id.item_tvname3);
+            view1 = itemView.findViewById(R.id.view1);
+        }
+    }
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
-
-
 
 }

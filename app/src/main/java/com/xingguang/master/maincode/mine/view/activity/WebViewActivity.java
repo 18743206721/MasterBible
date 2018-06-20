@@ -16,6 +16,7 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.maincode.home.model.TwoDetailsBean;
+import com.xingguang.master.maincode.mine.model.AboutBean;
 import com.xingguang.master.util.ToastUtils;
 
 import butterknife.BindView;
@@ -44,6 +45,15 @@ public class WebViewActivity extends ToolBarActivity {
     TextView tvTime;
     @BindView(R.id.ll_title)
     LinearLayout llTitle;
+    @BindView(R.id.tv_emails)
+    TextView tvEmails;
+    @BindView(R.id.tv_phone)
+    TextView tvPhone;
+    @BindView(R.id.ll_email_phone)
+    LinearLayout llEmailPhone;
+    @BindView(R.id.tv_banquan)
+    TextView tv_banquan;
+
 
     private int id;//0是设置，1是资讯 2焊工详情
     private int classid; //资讯 classid
@@ -73,16 +83,19 @@ public class WebViewActivity extends ToolBarActivity {
         if (id == 0) { //关于我们
             ll_bot.setVisibility(View.GONE);
             llTitle.setVisibility(View.GONE);
+            llEmailPhone.setVisibility(View.VISIBLE);
             setToolBarTitle("关于我们");
             loadabout();
         } else if (id == 1) { //资讯详情信息
             ll_bot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
+            llEmailPhone.setVisibility(View.GONE);
             setToolBarTitle("项目");
             loadxieyi();
         } else { //焊工
             ll_bot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
+            llEmailPhone.setVisibility(View.GONE);
             setToolBarTitle("项目");
             loadhangong();
         }
@@ -126,7 +139,27 @@ public class WebViewActivity extends ToolBarActivity {
      * 关于我们
      */
     private void loadabout() {
-
+        OkGo.<String>post(HttpManager.TemplateForm)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        AboutBean bean = gson.fromJson(response.body().toString(), AboutBean.class);
+                        if (bean.getData() != null) {
+                            String html = bean.getData().getContent();
+                            String data = html.replace("%@", html);
+                            webView1.loadData(data, "text/html; charset=UTF-8", null);
+                            tvEmails.setText(bean.getData().getEmailAddress()); //邮箱
+                            tvPhone.setText(bean.getData().getPhone()); //电话
+                            tv_banquan.setText(bean.getData().getCopyright());//版权
+                        } else {
+                            ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
+                        }
+                    }
+                });
 
     }
 
@@ -166,12 +199,12 @@ public class WebViewActivity extends ToolBarActivity {
         switch (view.getId()) {
             case R.id.ll_last: //上一篇
                 if (LastID != 0) {
-                    if (id == 1){//资讯详情信息
+                    if (id == 1) {//资讯详情信息
                         url = HttpManager.Information;
-                    }else{//焊工
+                    } else {//焊工
                         url = HttpManager.ProjectTraining;
                     }
-                    loadlast(url,LastID);
+                    loadlast(url, LastID);
                 } else {
                     ToastUtils.showToast(WebViewActivity.this, "已经是第一篇了!");
                 }
@@ -179,13 +212,13 @@ public class WebViewActivity extends ToolBarActivity {
             case R.id.ll_next: //下一篇
                 if (NextId != 0) {
 
-                    if (id == 1){//资讯详情信息
+                    if (id == 1) {//资讯详情信息
                         url = HttpManager.Information;
-                    }else{//焊工
+                    } else {//焊工
                         url = HttpManager.ProjectTraining;
                     }
 
-                    loadnext(url,NextId);
+                    loadnext(url, NextId);
                 } else {
                     ToastUtils.showToast(WebViewActivity.this, "已经是最后一篇了!");
                 }

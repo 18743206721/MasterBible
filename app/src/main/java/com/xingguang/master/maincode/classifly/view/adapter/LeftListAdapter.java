@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.xingguang.master.R;
 import com.xingguang.master.view.CommonViewHolder;
 
+import java.util.List;
+
 /**
  * 基本功能：左侧Adapter
  * 创建：王杰
@@ -19,11 +21,12 @@ import com.xingguang.master.view.CommonViewHolder;
  * 邮箱：w489657152@gmail.com
  */
 public class LeftListAdapter extends RecyclerView.Adapter<CommonViewHolder> {
-    private String[] leftStr;
+    private List<String> leftStr;
     boolean[] flagArray;
     private Context context;
+    private List<String> list;
 
-    public LeftListAdapter(Context context, String[] leftStr,boolean[] flagArray) {
+    public LeftListAdapter(Context context, List<String> leftStr, boolean[] flagArray) {
         this.leftStr = leftStr;
         this.flagArray = flagArray;
         this.context = context;
@@ -54,7 +57,7 @@ public class LeftListAdapter extends RecyclerView.Adapter<CommonViewHolder> {
             });
         }
 
-        holder.setText(R.id.left_list_item,leftStr[position]);
+        holder.setText(R.id.left_list_item,leftStr.get(position));
         if (flagArray[position]) {
             left_list_item.setBackgroundColor(Color.rgb(255, 255, 255));
             left_list_item.setTextColor(ContextCompat.getColor(context,R.color.textBlack));
@@ -66,6 +69,11 @@ public class LeftListAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     }
 
+    public void setList(List<String> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
     //define interface
     public interface OnItemClickListener {
         void onItemClick(View view,TextView left_list_item, int position);
@@ -73,7 +81,7 @@ public class LeftListAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     @Override
     public int getItemCount() {
-        return leftStr.length;
+        return leftStr.size();
     }
 
 

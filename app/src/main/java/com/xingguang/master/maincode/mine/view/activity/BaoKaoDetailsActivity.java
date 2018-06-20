@@ -44,8 +44,8 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
     @BindView(R.id.ll_baoming)
     LinearLayout llBaoming;
 
-    int type = 0; //1是报考记录，2是培训记录
-
+    int type = 0; //2是报考记录，1是培训记录
+    int id;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bao_kao_details;
@@ -54,9 +54,10 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
     @Override
     protected void initView() {
         type = getIntent().getIntExtra("type",0);
-        if (type == 1){
+        id = getIntent().getIntExtra("id",0);
+        if (type == 2){
             setToolBarTitle("报考记录");
-        }else if (type ==2){
+        }else if (type ==1){
             setToolBarTitle("培训记录");
         }
         getToolbarBack().setOnClickListener(new View.OnClickListener() {

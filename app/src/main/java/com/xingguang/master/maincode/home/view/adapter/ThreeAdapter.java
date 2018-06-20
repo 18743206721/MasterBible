@@ -2,6 +2,7 @@ package com.xingguang.master.maincode.home.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,9 +20,11 @@ import java.util.List;
  * 描述:招工信息适配器
  * 作者:LiuYu
  */
-public class ThreeAdapter extends RecyclerView.Adapter<CommonViewHolder> {
+public class ThreeAdapter extends RecyclerView.Adapter<ThreeAdapter.ViewHolder> {
 
-
+    public static final int TYPE_HEAD = 0;
+    public static final int TYPE_NORMAL = 1;
+    private View mHeaderView;
     private Context mContext;
     private List<HomeBean.DataBean.CultivateBean> list;
 
@@ -30,89 +33,85 @@ public class ThreeAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         this.list = list;
     }
 
-    //更多
-    private OnItemMoreClickListener mOnItemMoreClickListener = null;
-
-    public void setmOnItemMoreClickListener(OnItemMoreClickListener mOnItemMoreClickListener) {
-        this.mOnItemMoreClickListener = mOnItemMoreClickListener;
-    }
     //列表点击
     private OnItemClickListener mOnItemClickListener = null;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
+    public void addHeaderView(View headerView) {
+        mHeaderView = headerView;
+        notifyItemInserted(0);  //在itemview中设置第一项
+    }
 
-    @Override
-    public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CommonViewHolder commonViewHolder = null;
-        switch (viewType) {
-            case 1:
-                commonViewHolder = CommonViewHolder.getViewHolder(parent, R.layout.item_homeone_header);
-                break;
-            case 2:
-                commonViewHolder = CommonViewHolder.getViewHolder(parent, R.layout.item_home_welder);
-                break;
-        }
-        return commonViewHolder;
+    /*
+     * 判断head的位置，是否显示item的一整行
+     * **/
+    public boolean isHeader(int position) {
+        return position == 0;
     }
 
     @Override
-    public void onBindViewHolder(final CommonViewHolder holder, final int position) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_HEAD && mHeaderView != null) {
+            return new ViewHolder(mHeaderView);
+        }
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_welder, parent, false);
+        return new ViewHolder(view);
+    }
 
-        int type = getItemViewType(position);
-        switch (type){
-            case 1:
-                final LinearLayout ll_hworks = holder.getItemView().findViewById(R.id.ll_hworks);
-                holder.getItemView().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mOnItemMoreClickListener.onItemMoreClick(ll_hworks, position);
-                    }
-                });
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-                TextView itemtv_info = holder.getItemView().findViewById(R.id.itemtv_info);
-                AppUtil.addForeSizeSpan(itemtv_info,"焊工培训",mContext);
 
-                break;
-            case 2:
-                TextView itemtv_three = holder.getItemView().findViewById(R.id.itemtv_three);
-                if (position == 1){
-                    itemtv_three.setVisibility(View.VISIBLE);
-                }else {
-                    itemtv_three.setVisibility(View.GONE);
-                }
+        if (getItemViewType(position) == TYPE_HEAD) {
+            return;
+        } else {
+            if (mHeaderView != null) {
+                //如果设置了回调，则设置点击事件
                 if (mOnItemClickListener != null) {
-                    holder.getItemView().setOnClickListener(new View.OnClickListener() {
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //注意这里使用getTag方法获取position
-                            mOnItemClickListener.onItemClick(holder.getItemView(), position);
+                            mOnItemClickListener.onItemClick(holder.itemView, position);
                         }
                     });
                 }
-
-                holder.setText(R.id.item_tv_weldertitle1,list.get(position).getTitle());
-                holder.setText(R.id.item_tv_welder_content1,list.get(position).getContent());
-
-                break;
+            }
+            if (position == 1) {
+                holder.itemtv_three.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemtv_three.setVisibility(View.GONE);
+            }
+            holder.item_tv_weldertitle1.setText(list.get(position - 1).getTitle());
+            holder.item_tv_welder_content1.setText(list.get(position - 1).getContent());
         }
-
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (list != null && position ==0) {
-            return 1;
-        } else {
-            return 2;
+        if (mHeaderView == null)
+            return TYPE_NORMAL;
+        if (position == 0) {
+            return TYPE_HEAD;
         }
+        return TYPE_NORMAL;
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView item_tv_weldertitle1, item_tv_welder_content1, itemtv_three;//名字
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            item_tv_weldertitle1 = (TextView) itemView.findViewById(R.id.item_tv_weldertitle1);
+            item_tv_welder_content1 = (TextView) itemView.findViewById(R.id.item_tv_welder_content1);
+            itemtv_three = (TextView) itemView.findViewById(R.id.itemtv_three);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return mHeaderView != null ? list.size() + 1 : list.size();
     }
 
     //define interface
@@ -120,10 +119,5 @@ public class ThreeAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         void onItemClick(View view, int position);
     }
 
-    //更多
-    //define interface
-    public interface OnItemMoreClickListener {
-        void onItemMoreClick(LinearLayout onemore, int position);
-    }
 
 }
