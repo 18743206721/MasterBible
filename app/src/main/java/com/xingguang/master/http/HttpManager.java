@@ -52,6 +52,8 @@ public class HttpManager {
     //报名管理
     public static final String Login_record = BASE_URL+"Login_record.aspx";
 
+    //考试入口
+    public static final String ExamineEntry = BASE_URL+"ExamineEntry.aspx";
 
 
 }

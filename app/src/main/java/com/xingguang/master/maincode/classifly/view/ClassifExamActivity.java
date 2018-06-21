@@ -51,6 +51,8 @@ public class ClassifExamActivity extends ToolBarActivity {
     ImageView tabOneImg;
     @BindView(R.id.tab_one_txt)
     TextView tabOneTxt;
+    String name;//名字
+    private int classifid;
 
     @Override
     protected int getLayoutId() {
@@ -66,11 +68,15 @@ public class ClassifExamActivity extends ToolBarActivity {
                 finish();
             }
         });
-        String classifid = getIntent().getStringExtra("classifid");
+        classifid = getIntent().getIntExtra("classifid",0);
+        name = getIntent().getStringExtra("name");
 
         //设置首页按钮颜色
         AppUtil.setThemeColor(tabOneImg, ClassifExamActivity.this, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
+
+        tvName.setText(name);
+
     }
     Intent intent = new Intent();
 

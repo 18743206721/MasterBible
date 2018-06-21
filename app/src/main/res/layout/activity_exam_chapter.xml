@@ -86,7 +86,7 @@
                 android:layout_marginLeft="50dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="60分钟"
+                android:text="分钟"
                 android:textColor="@color/textBlack"
                 android:textSize="15sp" />
         </RelativeLayout>

@@ -126,7 +126,7 @@ public class MineBaoKaoActivity extends ToolBarActivity {
             public void onItemClick(View view, int position) {
                 startActivity(new Intent(MineBaoKaoActivity.this, BaoKaoDetailsActivity.class)
                         .putExtra("type", type)
-                        .putExtra("id", mList.get(position-1).getDepartmentID())
+                        .putExtra("id", mList.get(position-1).getID())
                 );
             }
         });

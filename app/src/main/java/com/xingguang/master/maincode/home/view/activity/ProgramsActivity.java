@@ -1,14 +1,12 @@
 package com.xingguang.master.maincode.home.view.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.androidkun.xtablayout.XTabLayout;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -20,23 +18,12 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
-import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
-import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.maincode.home.model.ProgramsBean;
-import com.xingguang.master.maincode.home.model.TwoDetailsBean;
 import com.xingguang.master.maincode.home.view.fragment.ListProgramsFragment;
-import com.xingguang.master.maincode.home.view.fragment.ProgramsFragment;
-import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
 import com.xingguang.master.util.AppUtil;
-import com.xingguang.master.util.ToastUtils;
-import com.xingguang.master.view.ImageLoader;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -107,22 +94,12 @@ public class ProgramsActivity extends ToolBarActivity {
         //2是 焊工培训更多, 1 是分类按钮培训项目,3是广告位跳转
         classtype = getIntent().getIntExtra("classtype", 0);
 
-//        if (classtype == 1) {
-//
-//        } else if (classtype == 2) {
-//
-//        }
-
-
         //设置首页按钮颜色
         AppUtil.setThemeColor(tabOneImg, ProgramsActivity.this, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
 
         loadlist();
-
-
     }
-
 
     private void loadlist() {
         OkGo.<String>post(HttpManager.ProjectTraining)
@@ -135,17 +112,12 @@ public class ProgramsActivity extends ToolBarActivity {
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         ProgramsBean bean = gson.fromJson(response.body().toString(), ProgramsBean.class);
-
-
                         if (bean.getData()!=null) {
                             for (int i = 0; i < bean.getData().size(); i++) {
                                 list.add(bean.getData().get(i).getClassName());
                             }
-
                             initViewPage(list);
-
                         }
-
                     }
                 });
     }
@@ -163,7 +135,6 @@ public class ProgramsActivity extends ToolBarActivity {
         mPager.setAdapter(adapter);
         xtabPro.setxTabDisplayNum(mTitles.length);//需要写在setupWithViewPager前
         xtabPro.setupWithViewPager(mPager);
-        xtabPro.setupWithViewPager(mPager);
         mPager.setOffscreenPageLimit(0);
 
         //具体跳转到哪个页面
@@ -174,7 +145,6 @@ public class ProgramsActivity extends ToolBarActivity {
                 mPager.setCurrentItem(Integer.parseInt(title));
             }
         }
-
     }
 
     @OnClick({R.id.tab_one, R.id.tab_two, R.id.tab_three, R.id.tab_four})

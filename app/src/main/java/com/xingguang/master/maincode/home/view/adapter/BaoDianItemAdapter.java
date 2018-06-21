@@ -6,7 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xingguang.master.R;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.home.model.BuMengBean;
+import com.xingguang.master.util.RoundRectImageView;
 import com.xingguang.master.view.CommonViewHolder;
+import com.xingguang.master.view.ImageLoader;
 
 import java.util.List;
 
@@ -18,10 +22,10 @@ import java.util.List;
 public class BaoDianItemAdapter extends RecyclerView.Adapter<CommonViewHolder>  {
 
     private Context mContext;
-    private List<String> list;
+    private List<BuMengBean.DataBeanX.DataBean> list;
     private int type;
 
-    public BaoDianItemAdapter(Context mContext, List<String> list, int type) {
+    public BaoDianItemAdapter(Context mContext, List<BuMengBean.DataBeanX.DataBean> list, int type) {
         this.mContext = mContext;
         this.list = list;
         this.type = type;
@@ -53,12 +57,26 @@ public class BaoDianItemAdapter extends RecyclerView.Adapter<CommonViewHolder>  
             });
         }
 
+        RoundRectImageView iv = holder.getItemView().findViewById(R.id.iv_typeofwork);
 
+        if (list.get(position).getPIC()!=null) {
+            if (list.get(position).getPIC().equals("")) {
+                ImageLoader.loadRoundImage(mContext, R.mipmap.classif_gong, iv, 5);
+            } else {
+                ImageLoader.loadRoundImage(mContext, HttpManager.BASE_URL +
+                        list.get(position).getClassPic(), iv, 5);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 9;
+        return list.size();
+    }
+
+    public void setList(List<BuMengBean.DataBeanX.DataBean> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     //define interface

@@ -214,7 +214,7 @@ public class HomeFragment extends BaseFragment {
         headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
         LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
         TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
-        AppUtil.addForeSizeSpan(itemtv_info,"招工信息",getActivity());
+        AppUtil.addForeSizeSpan(itemtv_info,"行业资讯",getActivity());
         twoAdapter.addHeaderView(headview);//添加头布局到列表中；
         ll_hworks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,7 +247,7 @@ public class HomeFragment extends BaseFragment {
         headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
         LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
         TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
-        AppUtil.addForeSizeSpan(itemtv_info,"招工信息",getActivity());
+        AppUtil.addForeSizeSpan(itemtv_info,"焊工培训",getActivity());
         threeAdapter.addHeaderView(headview);//添加头布局到列表中；
         ll_hworks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,11 +298,11 @@ public class HomeFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 }
                 break;
-            case R.id.ll_main_baodian: //考试宝典
+            case R.id.ll_main_baodian: //考试宝典,练习
                 MainActivity.instance.setBg(1);
                 MainActivity.instance.setToBaodianFragment();
                 break;
-            case R.id.ll_main_database://考试题库
+            case R.id.ll_main_database://考试题库，考试
                 MainActivity.instance.setBg(1);
                 MainActivity.instance.setToExamChapterFragment();
                 break;

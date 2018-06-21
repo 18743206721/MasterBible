@@ -8,8 +8,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.view.activity.ExamChapterActivity;
 import com.xingguang.master.maincode.home.view.adapter.BaoDianItemAdapter;
 import com.xingguang.master.util.AppUtil;
@@ -22,7 +29,7 @@ import butterknife.BindView;
 
 /**
  * 创建日期：2018/5/26
- * 描述:模拟考试里分类下的工种
+ * 描述: 考试 分类下的工种
  * 作者:LiuYu
  */
 public class ExamChapterItemFragment extends BaseFragment {
@@ -34,9 +41,9 @@ public class ExamChapterItemFragment extends BaseFragment {
     @BindView(R.id.empty)
     ImageView empty;
     private BaoDianItemAdapter adapter;
-    private List<String> list = new ArrayList<>();
-
+    private List<BuMengBean.DataBeanX.DataBean> listgongzhong = new ArrayList<>();
     int type;
+    private int bumenID;
 
     public static ExamChapterItemFragment newInstance(int type) {
         ExamChapterItemFragment fragment = new ExamChapterItemFragment();
@@ -60,11 +67,12 @@ public class ExamChapterItemFragment extends BaseFragment {
         }
 
         initAdapter();
+        loadbumen();
         initListener();
     }
 
     private void initAdapter() {
-        adapter = new BaoDianItemAdapter(getActivity(), list, type);
+        adapter = new BaoDianItemAdapter(getActivity(), listgongzhong, type);
         GridLayoutManager mgr = new GridLayoutManager(getActivity(), 2);
 //        rvLooksp.addItemDecoration(
 //                new GridItemDecoration(AppUtil.dip2px(getActivity(),5),
@@ -73,19 +81,48 @@ public class ExamChapterItemFragment extends BaseFragment {
         rvLooksp.setAdapter(adapter);
     }
 
+    /**
+     * 工种数据
+     */
+    private void loadbumen() {
+        OkGo.<String>post(HttpManager.ExamRegistration)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "list")
+                .execute(new DialogCallback<String>(getActivity()) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
+                        if (bean.getData() != null) {
+
+                            for (int i = 0; i < bean.getData().size(); i++) {
+                                if (type - 1 == i) {
+                                    bumenID = bean.getData().get(i).getID();
+                                    listgongzhong.addAll(bean.getData().get(i).getData());
+                                }
+                            }
+                            adapter.setList(listgongzhong);
+                        }
+                    }
+                });
+    }
+
     private void initListener() {
         adapter.setOnItemClickListener(new BaoDianItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(new Intent(getActivity(), ExamChapterActivity.class)); //跳转到模拟考试
+                startActivity(new Intent(getActivity(), ExamChapterActivity.class)
+                        .putExtra("bumenId",bumenID)
+                        .putExtra("gongzhongId",listgongzhong.get(position).getID())
+                ); //跳转到模拟考试
             }
         });
     }
 
     @Override
-    protected void lazyLoad() {
-
-    }
+    protected void lazyLoad() {}
 
 
 }

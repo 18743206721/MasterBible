@@ -390,6 +390,7 @@ public class ListProgramsFragment extends BaseFragment implements CountDownRTime
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "yzm")
                 .params("Phone", etPhone.getText().toString())
+                .params("UserName",AppUtil.getUserId(getActivity()))
                 .execute(new DialogCallback<String>(getActivity()) {
                     @Override
                     public void onSuccess(Response<String> response) {

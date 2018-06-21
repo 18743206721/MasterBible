@@ -55,10 +55,10 @@
                 android:id="@+id/tv_zhonglei"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginEnd="100dp"
-                android:text="安监局-电工"
+                android:layout_marginStart="140dp"
+                android:layout_marginEnd="13dp"
+                android:text=""
                 android:textColor="@color/textBlack"
                 android:textSize="15sp" />
         </RelativeLayout>
@@ -87,7 +87,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginEnd="146dp"
-                android:text="1000"
+                android:text=""
                 android:textColor="@color/textBlack"
                 android:textSize="15sp" />
         </RelativeLayout>
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-                android:text="宝典题库:汇总历年真题,提高你的练习质量,使你距离成功更近一步"
+                android:text=""
                 android:textColor="@color/textDarkGray"
                 android:textSize="13sp" />
         </LinearLayout>

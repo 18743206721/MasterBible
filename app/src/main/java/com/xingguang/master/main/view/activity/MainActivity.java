@@ -1,5 +1,6 @@
 package com.xingguang.master.main.view.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,18 +15,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.main.model.UpdateBean;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifExamFragment;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
+import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.model.MessageEvent;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
 import com.xingguang.master.maincode.home.view.fragment.ExamChapterFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
 import com.xingguang.master.maincode.home.view.fragment.OneFragment;
 import com.xingguang.master.maincode.home.view.fragment.OnlineFragment;
-import com.xingguang.master.maincode.home.view.fragment.ProgramsFragment;
 import com.xingguang.master.maincode.home.view.fragment.SearchFragment;
 import com.xingguang.master.maincode.home.view.fragment.ThreeFragment;
 import com.xingguang.master.maincode.home.view.fragment.TwoFragment;
@@ -140,6 +148,41 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    /**
+     * 自动检测app的版本
+     * 直接检测是否有新的版本，然后进行更新
+     */
+//    private void checkAppVersion(String curVersion) {
+//        OkGo.<String>post(HttpManager.ExamRegistration)
+//                .tag(this)
+//                .cacheKey("cachePostKey")
+//                .cacheMode(CacheMode.DEFAULT)
+//                .params("MethodCode", "list")
+//                .execute(new DialogCallback<String>(this) {
+//                    @Override
+//                    public void onSuccess(Response<String> response) {
+//                        Gson gson = new Gson();
+//                        UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
+//                        if (bean.getData() != null) {
+//
+//                            String curAppVersion= AppUtil.getAppVersion(getApplicationContext());
+//                            curAppVersion=AppUtil.formatVersion(curAppVersion);
+//                            int curVersion=AppUtil.formatVersionString(curAppVersion);
+//                            //TODO
+//                            int newVersion=AppUtil.formatVersionString(newBean.getVersion());
+//                            if(newVersion>curVersion){
+//                                Intent intent=new Intent();
+//                                intent.setClass(getApplicationContext(), UpdateActivity.class);
+//                                intent.putExtra("newBean",newBean);
+//                                startActivity(intent);
+//                            }
+//
+//                        }
+//                    }
+//                });
+//    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -157,8 +200,10 @@ public class MainActivity extends BaseActivity {
                 setToProjectFragment();
                 break;
             case R.id.tab_three://报考
-                setBg(3);
-                setToActivityFragment();
+                if (AppUtil.isExamined(MainActivity.this)) {
+                    setBg(3);
+                    setToActivityFragment();
+                }
                 break;
             case R.id.tab_four:// 我的
                 setBg(4);
@@ -284,22 +329,6 @@ public class MainActivity extends BaseActivity {
         }
         transaction.commit();
     }
-
-    /**
-     * 设置当前的Fragment 为项目培训
-     */
-//    public void setOnProgramsFragment() {
-//        FragmentTransaction transaction = fm.beginTransaction();
-//        transaction.addToBackStack(null);
-//        hideAll(transaction);
-//        if (programsFragment != null) {
-//            transaction.show(programsFragment);
-//        } else {
-//            programsFragment = new ProgramsFragment();
-//            transaction.add(R.id.main_frame, programsFragment, "programsFragment");
-//        }
-//        transaction.commit();
-//    }
 
     /**
      * 设置当前的Fragment 为在线留言
@@ -437,9 +466,6 @@ public class MainActivity extends BaseActivity {
         if (onlineFragment != null) {
             transaction.hide(onlineFragment);
         }
-//        if (programsFragment != null) {
-//            transaction.hide(programsFragment);
-//        }
         if (classifExamFragment != null) {
             transaction.hide(classifExamFragment);
         }

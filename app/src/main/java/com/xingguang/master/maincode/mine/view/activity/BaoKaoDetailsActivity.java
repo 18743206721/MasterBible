@@ -7,8 +7,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.mine.model.BaoKaoDetailsBean;
+import com.xingguang.master.maincode.mine.model.BaoKaoGuanLiBean;
+import com.xingguang.master.util.AppUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +55,8 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
 
     int type = 0; //2是报考记录，1是培训记录
     int id;
+    BaoKaoDetailsBean.DataBean dataBean = new BaoKaoDetailsBean.DataBean();
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bao_kao_details;
@@ -67,7 +78,41 @@ public class BaoKaoDetailsActivity extends ToolBarActivity {
             }
         });
 
+        load();
+
     }
+
+    private void load() {
+        OkGo.<String>post(HttpManager.Login_record)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "info")
+                .params("UserName", AppUtil.getUserId(this))
+                .params("ListType", type)
+                .params("InfoID", id)
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        BaoKaoDetailsBean bean = gson.fromJson(response.body().toString(), BaoKaoDetailsBean.class);
+                        if (bean.getData() != null) {
+                            dataBean = bean.getData();
+                            tvName.setText(dataBean.getName());
+                            //部门加工种
+                            etBumeng.setText(dataBean.getDepartmentName()+" "+dataBean.getProfessionName());
+
+                            etProvince.setText(dataBean.getProvince()+" "+dataBean.getCity()+" "+dataBean.getArea()+" ");
+                            tvAds.setText(dataBean.getAddress());
+                            etIdnum.setText(dataBean.getTel()); //身份证号
+                            etPhone.setText(dataBean.getPhone());
+                        }
+
+                    }
+                });
+    }
+
+
 
     @OnClick(R.id.btn_commit)
     public void onViewClicked() {

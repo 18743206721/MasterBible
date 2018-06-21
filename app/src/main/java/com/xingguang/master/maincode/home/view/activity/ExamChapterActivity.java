@@ -7,8 +7,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.home.model.ExambaoDianBean;
+import com.xingguang.master.util.AppUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +42,9 @@ public class ExamChapterActivity extends ToolBarActivity {
     TextView tvBaodianJieshao;
     @BindView(R.id.iv_start)
     ImageView ivStart;
+    int bumenId;
+    int gongzhongId;
+    String count; //答题数量
 
     @Override
     protected int getLayoutId() {
@@ -49,13 +60,43 @@ public class ExamChapterActivity extends ToolBarActivity {
             }
         });
         setToolBarTitle("模拟考试");
+        bumenId = getIntent().getIntExtra("bumenId",0);
+        gongzhongId = getIntent().getIntExtra("gongzhongId",0);
+        load();
     }
+
+    private void load() {
+        OkGo.<String>post(HttpManager.ExamineEntry)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "info")
+                .params("UserName", AppUtil.getUserId(this))
+                .params("ExamType", 2) //考试类型：1:练习,2:考试(必填)
+                .params("DepartmentID", bumenId) //部门ID
+                .params("ProfessionID", gongzhongId) //工种ID
+                .execute(new DialogCallback<String>(this){
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        ExambaoDianBean bean = gson.fromJson(response.body().toString(), ExambaoDianBean.class);
+                        if (bean.getData() != null) {
+                            tvZhonglei.setText(bean.getData().getQuestionBank()); //名字
+                            tvTime.setText(bean.getData().getExamDuration()+"分钟");//考试时间
+                            tvFenshu.setText(bean.getData().getQualifiedStandard());//考试分数
+                            tvBaodianJieshao.setText(bean.getData().getExamExplain()); //考试说明
+                            count = bean.getData().getSubjectAmount();
+                        }
+                    }
+                });
+    }
+
 
     @OnClick(R.id.iv_start)
     public void onViewClicked() {
         startActivity(new Intent(ExamChapterActivity.this, DaTiActivity.class)
                 .putExtra("exam", "2")
-                .putExtra("count", 3)//传过去的答题数量
+                .putExtra("count", count)//传过去的答题数量
         );
     }
 

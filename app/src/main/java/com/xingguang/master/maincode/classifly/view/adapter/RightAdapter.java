@@ -59,8 +59,16 @@ public class RightAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         }
 
         RoundRectImageView iv = holder.getItemView().findViewById(R.id.iv_typeofwork);
-        ImageLoader.loadRoundImage(mContext, HttpManager.BASE_URL+
-                list.get(position).getClassPic(),iv,5);
+
+        if (list.get(position).getPIC()!=null) {
+            if (list.get(position).getPIC().equals("")) {
+                ImageLoader.loadRoundImage(mContext, R.mipmap.classif_gong, iv, 5);
+            } else {
+                ImageLoader.loadRoundImage(mContext, HttpManager.BASE_URL +
+                        list.get(position).getClassPic(), iv, 5);
+            }
+        }
+
     }
     @Override
     public int getItemCount() {

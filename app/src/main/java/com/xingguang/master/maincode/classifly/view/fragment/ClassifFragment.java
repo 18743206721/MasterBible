@@ -45,14 +45,11 @@ public class ClassifFragment extends ToolBarFragment {
     RecyclerView leftListview;
     @BindView(R.id.right_listView)
     RecyclerView rightListView;
-    private String[] leftStr = new String[]{"安监局", "安监局", "安监局", "安监局", "安监局"};
     private boolean[] flagArray = {true, false, false, false, false};
-    private String[] rightStr = new String[]{"番茄鸡蛋", "红烧排骨", "农家小炒肉", "番茄鸡蛋", "红烧排骨"};
     private LeftListAdapter leftListAdapter;
     private RightAdapter rightListAdapter;
 
     private boolean isScroll = true;
-    private boolean shouldSet;
 
     private List<String> listbumen = new ArrayList<>();
     private int bumenId; //部门id
@@ -94,12 +91,11 @@ public class ClassifFragment extends ToolBarFragment {
     }
 
     private void initListener() {
-//        leftListview.setItemChecked(0, true);
         leftListAdapter.setOnItemClickListener(new LeftListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, TextView bg_tv, int position) {
                 isScroll = false;
-                for (int i = 0; i < leftStr.length; i++) {
+                for (int i = 0; i < listbumen.size(); i++) {
                     if (i == position) {
                         flagArray[i] = true;
                     } else {
@@ -107,7 +103,6 @@ public class ClassifFragment extends ToolBarFragment {
                     }
                 }
                 loadgongzhong(listbumen.get(position));
-                leftListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -117,7 +112,9 @@ public class ClassifFragment extends ToolBarFragment {
             public void onItemClick(View view, int position) {
                 //跳转到考试宝典
                 startActivity(new Intent(getActivity(), ClassifExamActivity.class)
-                        .putExtra("classifid", position + ""));
+                        .putExtra("classifid", listgongzhong.get(position).getID())
+                        .putExtra("name",listgongzhong.get(position).getName())
+                );
             }
         });
 
@@ -139,9 +136,12 @@ public class ClassifFragment extends ToolBarFragment {
                         Gson gson = new Gson();
                         BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
                         if (bean.getData() != null) {
+                            listgongzhong.clear();
                             for (int i = 0; i < bean.getData().size(); i++) {
                                 listbumen.add(bean.getData().get(i).getName());
                             }
+                            listgongzhong.addAll(bean.getData().get(0).getData());
+                            leftListAdapter.notifyDataSetChanged();
                             leftListAdapter.setList(listbumen);
                         }
                     }
@@ -165,19 +165,15 @@ public class ClassifFragment extends ToolBarFragment {
                         Gson gson = new Gson();
                         BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
                         if (bean.getData() != null) {
+                            listgongzhong.clear();
                             for (int i = 0; i < bean.getData().size(); i++) {
                                 if (tx.equals(bean.getData().get(i).getName())) {
                                     bumenId = bean.getData().get(i).getID(); //获取部门id数据
-                                    for (int j = 0; j < bean.getData().get(i).getData().size(); j++) {
-//                                        listgongzhong.add(bean.getData().get(i).getData().get(j).getName());
-                                        listgongzhong.addAll(bean.getData().get(i).getData());
-                                    }
-
+                                    listgongzhong.addAll(bean.getData().get(i).getData());
                                 }
                             }
-
+                            leftListAdapter.notifyDataSetChanged();
                             rightListAdapter.setList(listgongzhong);
-
                         }
                     }
                 });
