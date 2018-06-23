@@ -947,6 +947,25 @@ public class AppUtil {
     }
 
 
+    /**
+     * 获得答对数量
+     *
+     * @param context
+     */
+    public static String getYesCount(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.YESCOUNT, "");
+    }
+
+    /**
+     * 答错数量
+     *
+     * @param context
+     */
+    public static String getNoCount(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.NOCOUNT, "");
+    }
+
+
 
     /**
      * 是否登录

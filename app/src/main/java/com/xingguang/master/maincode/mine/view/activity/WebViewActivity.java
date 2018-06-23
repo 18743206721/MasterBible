@@ -31,29 +31,20 @@ import butterknife.OnClick;
  */
 public class WebViewActivity extends ToolBarActivity {
 
-    @BindView(R.id.webView1)
-    WebView webView1;
-    @BindView(R.id.ll_bot)
-    RelativeLayout ll_bot;
-    @BindView(R.id.ll_last)
-    LinearLayout llLast;
-    @BindView(R.id.ll_next)
-    LinearLayout llNext;
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.ll_title)
     LinearLayout llTitle;
-    @BindView(R.id.tv_emails)
-    TextView tvEmails;
-    @BindView(R.id.tv_phone)
-    TextView tvPhone;
-    @BindView(R.id.ll_email_phone)
-    LinearLayout llEmailPhone;
-    @BindView(R.id.tv_banquan)
-    TextView tv_banquan;
-
+    @BindView(R.id.webView1)
+    WebView webView1;
+    @BindView(R.id.ll_last)
+    LinearLayout llLast;
+    @BindView(R.id.ll_next)
+    LinearLayout llNext;
+    @BindView(R.id.ll_bot)
+    RelativeLayout llBot;
 
     private int id;//0是设置，1是资讯 2焊工详情
     private int classid; //资讯 classid
@@ -81,21 +72,18 @@ public class WebViewActivity extends ToolBarActivity {
         classid = getIntent().getIntExtra("classid", 0);
 
         if (id == 0) { //关于我们
-            ll_bot.setVisibility(View.GONE);
+            llBot.setVisibility(View.GONE);
             llTitle.setVisibility(View.GONE);
-            llEmailPhone.setVisibility(View.VISIBLE);
             setToolBarTitle("关于我们");
             loadabout();
         } else if (id == 1) { //资讯详情信息
-            ll_bot.setVisibility(View.VISIBLE);
+            llBot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
-            llEmailPhone.setVisibility(View.GONE);
             setToolBarTitle("项目");
             loadxieyi();
         } else { //焊工
-            ll_bot.setVisibility(View.VISIBLE);
+            llBot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
-            llEmailPhone.setVisibility(View.GONE);
             setToolBarTitle("项目");
             loadhangong();
         }
@@ -152,9 +140,6 @@ public class WebViewActivity extends ToolBarActivity {
                             String html = bean.getData().getContent();
                             String data = html.replace("%@", html);
                             webView1.loadData(data, "text/html; charset=UTF-8", null);
-                            tvEmails.setText(bean.getData().getEmailAddress()); //邮箱
-                            tvPhone.setText(bean.getData().getPhone()); //电话
-                            tv_banquan.setText(bean.getData().getCopyright());//版权
                         } else {
                             ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
                         }
@@ -283,4 +268,10 @@ public class WebViewActivity extends ToolBarActivity {
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

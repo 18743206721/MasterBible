@@ -13,12 +13,17 @@ import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.BuMengBean;
+import com.xingguang.master.maincode.home.model.ExambaoDianBean;
 import com.xingguang.master.maincode.home.view.activity.DaTiActivity;
+import com.xingguang.master.maincode.home.view.activity.ExamBaoDianActivity;
+import com.xingguang.master.maincode.home.view.activity.ExamChapterActivity;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +57,12 @@ public class ClassifExamActivity extends ToolBarActivity {
     @BindView(R.id.tab_one_txt)
     TextView tabOneTxt;
     String name;//名字
-    private int classifid;
+    int bumenId;
+    int gongzhongId;
+    private String count;
+    private String kaoshiTime;
+    private String kaoshifenshu;
+    Intent intent = new Intent();
 
     @Override
     protected int getLayoutId() {
@@ -68,17 +78,15 @@ public class ClassifExamActivity extends ToolBarActivity {
                 finish();
             }
         });
-        classifid = getIntent().getIntExtra("classifid",0);
         name = getIntent().getStringExtra("name");
+        bumenId = getIntent().getIntExtra("bumenId", 0);
+        gongzhongId = getIntent().getIntExtra("gongzhongId", 0);
 
         //设置首页按钮颜色
         AppUtil.setThemeColor(tabOneImg, ClassifExamActivity.this, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
-
         tvName.setText(name);
-
     }
-    Intent intent = new Intent();
 
     @OnClick({R.id.tab_one, R.id.tab_two, R.id.tab_three, R.id.tab_four,
             R.id.iv_baodian, R.id.iv_kaoshi})
@@ -113,16 +121,82 @@ public class ClassifExamActivity extends ToolBarActivity {
                 ClassifExamActivity.this.finish();
                 break;
             case R.id.iv_baodian: //平常练习
-                startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
-                        .putExtra("exam", "1")
-                        .putExtra("count", 4));//传过去的答题数量
+                loadinfo(1);
                 break;
             case R.id.iv_kaoshi://正规考试
-                startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
-                        .putExtra("exam", "2")
-                        .putExtra("count", 3));//传过去的答题数量
+                loadinfo(2);
                 break;
         }
+    }
+    /**先走详情接口，获取时间，题数*/
+    private void loadinfo(final int type) {
+        OkGo.<String>post(HttpManager.ExamineEntry)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "info")
+                .params("UserName", AppUtil.getUserId(this))
+                .params("ExamType", type) //考试类型：1:练习,2:考试(必填)
+                .params("DepartmentID", bumenId) //部门ID
+                .params("ProfessionID", gongzhongId) //工种ID
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        ExambaoDianBean bean = gson.fromJson(response.body().toString(), ExambaoDianBean.class);
+                        if (bean.getData() != null) {
+                            count = bean.getData().getSubjectAmount();
+                            kaoshiTime = bean.getData().getExamDuration();
+                            kaoshifenshu = bean.getData().getQualifiedStandard();
+                            if (type == 1) { //练习
+                                loadsubmit(type);
+                            } else { //考试
+                                loadsubmit(type);
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**再走提交接口，传过去exampaperID*/
+    private void loadsubmit(final int classif) {
+        OkGo.<String>post(HttpManager.ExamineEntry)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "submit")
+                .params("UserName", AppUtil.getUserId(this))
+                .params("ExamType", classif) //考试类型：1:练习,2:考试(必填)
+                .params("DepartmentID", bumenId) //部门ID
+                .params("ProfessionID", gongzhongId) //工种ID
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        if (!AppUtil.getYesCount(ClassifExamActivity.this).equals("")) {
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.YESCOUNT);
+                        }
+                        if (!AppUtil.getNoCount(ClassifExamActivity.this).equals("")) {
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.NOCOUNT);
+                        }
+                        if (classif == 1) { //练习提交
+                            startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
+                                    .putExtra("exam", "1")
+                                    .putExtra("count", count)//传过去的答题数量
+                                    .putExtra("exampaperID", bean.getExampaperID()));
+                        } else { //考试提交
+                            startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
+                                    .putExtra("exam", "2")
+                                    .putExtra("count", count)//传过去的答题数量
+                                    .putExtra("exampaperID", bean.getExampaperID())
+                                    .putExtra("kaoshiTime", kaoshiTime)
+                                    .putExtra("kaoshifenshu", kaoshifenshu));
+                        }
+                    }
+                });
     }
 
 

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/board"
     android:orientation="vertical"
     tools:context=".maincode.home.view.activity.ExamResultActivity">
@@ -62,15 +63,32 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
-                <TextView
+
+                <cn.iwgang.countdownview.CountdownView
                     android:id="@+id/tv_alltime"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-                    android:layout_marginLeft="8dp"
-                    android:text="45:26"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:isHideTimeBackground="true"
+                    android:layout_marginLeft="8dp"
+                    app:isShowMinute="true"
+                    app:timeTextColor="@color/white"
+                    app:timeTextSize="15sp"
+                    app:isTimeTextBold="true"
+                    app:suffixGravity="bottom"
+                    app:suffixTextColor="#000000"
+                    app:suffixTextSize="12sp"
+                    app:suffixMinute=":"
+                    />
+
+                <!--<Custom-->
+                    <!--android:id="@+id/tv_alltime"-->
+                    <!--style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"-->
+                    <!--android:text="45:26"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
 
             </LinearLayout>
 

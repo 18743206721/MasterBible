@@ -70,8 +70,14 @@ public class SharedPreferencesUtils {
     //个人园区
     public static final String GION = "gion";
 
+    //yescount
+    public static final String YESCOUNT = "yescount";
+    //nocount
+    public static final String NOCOUNT = "nocount";
+
     //cid
     public static final String CID = "cid";
+
 
     /**
      * @param context

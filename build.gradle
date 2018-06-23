@@ -17,7 +17,16 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+        jcenter()
+        //Maven URL地址
+        maven {
+            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+        }
+    }
+}
+
+allprojects {
+    repositories {
         jcenter()
         //Maven URL地址
         maven {

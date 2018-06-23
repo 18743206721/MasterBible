@@ -13,11 +13,13 @@ import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.model.ExambaoDianBean;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,8 +62,8 @@ public class ExamBaoDianActivity extends ToolBarActivity {
             }
         });
         setToolBarTitle("考试宝典");
-        bumenId = getIntent().getIntExtra("bumenId",0);
-        gongzhongId = getIntent().getIntExtra("gongzhongId",0);
+        bumenId = getIntent().getIntExtra("bumenId", 0);
+        gongzhongId = getIntent().getIntExtra("gongzhongId", 0);
         load();
     }
 
@@ -92,14 +94,44 @@ public class ExamBaoDianActivity extends ToolBarActivity {
 
     @OnClick(R.id.tv_exercises)
     public void onViewClicked() {
-        startActivity(new Intent(ExamBaoDianActivity.this,DaTiActivity.class)
-                .putExtra("exam","1")
-                .putExtra("count",count)//传过去的答题数量
-        );
-
+        loadcommit();
     }
 
 
+    private void loadcommit() {
+        OkGo.<String>post(HttpManager.ExamineEntry)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "submit")
+                .params("UserName", AppUtil.getUserId(this))
+                .params("ExamType", 1) //考试类型：1:练习,2:考试(必填)
+                .params("DepartmentID", bumenId) //部门ID
+                .params("ProfessionID", gongzhongId) //工种ID
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+
+                        if (!AppUtil.getYesCount(ExamBaoDianActivity.this).equals("")){
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ExamBaoDianActivity.this,SharedPreferencesUtils.YESCOUNT);
+                        }
+
+                        if (!AppUtil.getNoCount(ExamBaoDianActivity.this).equals("")){
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ExamBaoDianActivity.this,SharedPreferencesUtils.NOCOUNT);
+                        }
+
+                            startActivity(new Intent(ExamBaoDianActivity.this,DaTiActivity.class)
+                                    .putExtra("exam","1")
+                                    .putExtra("count",count)//传过去的答题数量
+                                    .putExtra("exampaperID",bean.getExampaperID())
+                            );
+                    }
+                });
+    }
 
 
 }

@@ -1,12 +1,27 @@
 package com.xingguang.master.main.view.activity;
 
 import android.content.Intent;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
+import com.xingguang.master.http.CommonBean;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.main.model.TuisongBean;
+import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
+import com.xingguang.master.maincode.home.view.activity.DaTiActivity;
+import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
+import com.xingguang.master.util.ToastUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +53,8 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         finishActivity();
     }
+
+
 
     private void finishActivity() {
         Observable.timer(2000, TimeUnit.MILLISECONDS)

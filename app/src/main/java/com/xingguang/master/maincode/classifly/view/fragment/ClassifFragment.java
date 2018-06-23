@@ -52,8 +52,11 @@ public class ClassifFragment extends ToolBarFragment {
     private boolean isScroll = true;
 
     private List<String> listbumen = new ArrayList<>();
-    private int bumenId; //部门id
     private List<BuMengBean.DataBeanX.DataBean> listgongzhong = new ArrayList<>();
+
+    private int bumenId; //部门id
+    int gongzhongId;
+
 
     @Override
     protected int getLayoutId() {
@@ -84,9 +87,8 @@ public class ClassifFragment extends ToolBarFragment {
         rightListView.setLayoutManager(layoutManager);
         rightListView.setAdapter(rightListAdapter);
 
-
-        initListener();
         load();
+        initListener();
 
     }
 
@@ -112,8 +114,9 @@ public class ClassifFragment extends ToolBarFragment {
             public void onItemClick(View view, int position) {
                 //跳转到考试宝典
                 startActivity(new Intent(getActivity(), ClassifExamActivity.class)
-                        .putExtra("classifid", listgongzhong.get(position).getID())
+                        .putExtra("gongzhongId", listgongzhong.get(position).getID())
                         .putExtra("name",listgongzhong.get(position).getName())
+                        .putExtra("bumenId",bumenId)
                 );
             }
         });
@@ -138,6 +141,7 @@ public class ClassifFragment extends ToolBarFragment {
                         if (bean.getData() != null) {
                             listgongzhong.clear();
                             for (int i = 0; i < bean.getData().size(); i++) {
+                                bumenId = bean.getData().get(i).getID(); //获取部门id数据
                                 listbumen.add(bean.getData().get(i).getName());
                             }
                             listgongzhong.addAll(bean.getData().get(0).getData());
@@ -169,6 +173,7 @@ public class ClassifFragment extends ToolBarFragment {
                             for (int i = 0; i < bean.getData().size(); i++) {
                                 if (tx.equals(bean.getData().get(i).getName())) {
                                     bumenId = bean.getData().get(i).getID(); //获取部门id数据
+
                                     listgongzhong.addAll(bean.getData().get(i).getData());
                                 }
                             }

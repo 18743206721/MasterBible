@@ -42,6 +42,16 @@
             app:suffixTextSize="12sp"
             app:suffixMinute=":"
              />
+        <TextView
+            android:layout_centerInParent="true"
+            android:text=""
+            android:id="@+id/tvti2"
+            android:visibility="gone"
+            android:textColor="@color/textBlack"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
     </RelativeLayout>
 

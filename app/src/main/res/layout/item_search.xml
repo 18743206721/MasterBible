@@ -5,14 +5,30 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/item_tv_title"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_margin="13dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="电工慌得背后是什么"
-        android:textColor="@color/textBlack"
-        android:textSize="15sp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_tv_title"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/textBlack"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/item_tv_right"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text=""
+            android:textColor="@color/textBlack"
+            android:textSize="14sp" />
+    </LinearLayout>
+
 
     <View
         android:background="@color/fengexian"

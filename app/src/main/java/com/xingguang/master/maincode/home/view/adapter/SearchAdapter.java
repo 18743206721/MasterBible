@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xingguang.master.R;
+import com.xingguang.master.maincode.home.model.SearchBean;
 import com.xingguang.master.view.CommonViewHolder;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class SearchAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
 
     private Context mContext;
-    private List<String> list;
+    private List<SearchBean.DataBean> list;
 
-    public SearchAdapter(Context mContext, List<String> list) {
+    public SearchAdapter(Context mContext, List<SearchBean.DataBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -53,11 +54,19 @@ public class SearchAdapter extends RecyclerView.Adapter<CommonViewHolder> {
             });
         }
 
+        holder.setText(R.id.item_tv_right,list.get(position).getTypename());
+        holder.setText(R.id.item_tv_title,list.get(position).getTitle());
+
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return list.size();
+    }
+
+    public void setList(List<SearchBean.DataBean> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     //define interface

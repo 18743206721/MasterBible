@@ -2,12 +2,10 @@ package com.xingguang.master.main.view.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.igexin.sdk.PushManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.model.Response;
@@ -23,28 +22,24 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.main.model.TuisongBean;
 import com.xingguang.master.main.model.UpdateBean;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifExamFragment;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
-import com.xingguang.master.maincode.home.model.BuMengBean;
-import com.xingguang.master.maincode.home.model.MessageEvent;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
 import com.xingguang.master.maincode.home.view.fragment.ExamChapterFragment;
 import com.xingguang.master.maincode.home.view.fragment.HomeFragment;
 import com.xingguang.master.maincode.home.view.fragment.OneFragment;
 import com.xingguang.master.maincode.home.view.fragment.OnlineFragment;
-import com.xingguang.master.maincode.home.view.fragment.SearchFragment;
 import com.xingguang.master.maincode.home.view.fragment.ThreeFragment;
 import com.xingguang.master.maincode.home.view.fragment.TwoFragment;
 import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
+import com.xingguang.master.push.IntentService;
 import com.xingguang.master.util.AppManager;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
 import com.xingguang.master.util.ToastUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
@@ -107,13 +102,11 @@ public class MainActivity extends BaseActivity {
 
     BaodianFragment baodianFragment;  //考试宝典
     ExamChapterFragment examchapterFragment; //模拟考试
-//    ProgramsFragment programsFragment;//培训项目
     OnlineFragment onlineFragment;//在线留言
     ClassifExamFragment classifExamFragment; //考试宝典
     OneFragment oneFragment; //更多页面的招工信息
     TwoFragment twoFragment; // 资讯更多
     ThreeFragment threeFragment; //焊工更多
-    SearchFragment searchFragment; //搜索页面
     private int id = 0; //考试宝典页面用的id
 
 
@@ -132,6 +125,15 @@ public class MainActivity extends BaseActivity {
         setThemeColor(tabOneImg, R.drawable.home_icon);
         tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
 
+        //推送
+        PushManager.getInstance().initialize(this.getApplicationContext(), com.xingguang.master.push.PushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
+
+        Log.e("sdfasdf", "initView: "+ (String) SharedPreferencesUtils.get(MainActivity.this,
+                SharedPreferencesUtils.CID,""));
+
+
+
         if (id == 1) {
 //            setBg(1);
 //            setToNewsFragment();
@@ -141,9 +143,48 @@ public class MainActivity extends BaseActivity {
         } else if (id == 3) {
             setBg(3);
             setToActivityFragment();
-        } else if (id == 4){
+        } else if (id == 4) {
             setBg(4);
             setToInvestmentFragment();
+        }
+
+        checkAppVersion();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        load();
+    }
+
+    //推送
+    String tuisong;
+    private void load() {
+
+        if (((String) SharedPreferencesUtils.get(MainActivity.this,
+                SharedPreferencesUtils.CID,"")).equals("")){
+            tuisong = "";
+        }else {
+            tuisong = (String) SharedPreferencesUtils.get(MainActivity.this,
+                    SharedPreferencesUtils.CID,"");
+
+            OkGo.<String>post(HttpManager.PushMessageInterface)
+                    .tag(this)
+                    .cacheKey("cachePostKey")
+                    .cacheMode(CacheMode.DEFAULT)
+                    .params("ClientID",  (String) SharedPreferencesUtils.get(MainActivity.this,
+                            SharedPreferencesUtils.CID,""))
+                    .execute(new DialogCallback<String>(this) {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Gson gson = new Gson();
+                            TuisongBean bean = gson.fromJson(response.body().toString(), TuisongBean.class);
+//                        ToastUtils.showToast(SplashActivity.this,bean.getMsg());
+                        }
+                    });
+
+
         }
 
     }
@@ -152,35 +193,34 @@ public class MainActivity extends BaseActivity {
      * 自动检测app的版本
      * 直接检测是否有新的版本，然后进行更新
      */
-//    private void checkAppVersion(String curVersion) {
-//        OkGo.<String>post(HttpManager.ExamRegistration)
-//                .tag(this)
-//                .cacheKey("cachePostKey")
-//                .cacheMode(CacheMode.DEFAULT)
-//                .params("MethodCode", "list")
-//                .execute(new DialogCallback<String>(this) {
-//                    @Override
-//                    public void onSuccess(Response<String> response) {
-//                        Gson gson = new Gson();
-//                        UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
-//                        if (bean.getData() != null) {
-//
-//                            String curAppVersion= AppUtil.getAppVersion(getApplicationContext());
-//                            curAppVersion=AppUtil.formatVersion(curAppVersion);
-//                            int curVersion=AppUtil.formatVersionString(curAppVersion);
-//                            //TODO
-//                            int newVersion=AppUtil.formatVersionString(newBean.getVersion());
-//                            if(newVersion>curVersion){
-//                                Intent intent=new Intent();
-//                                intent.setClass(getApplicationContext(), UpdateActivity.class);
-//                                intent.putExtra("newBean",newBean);
-//                                startActivity(intent);
-//                            }
-//
+    private void checkAppVersion() {
+        OkGo.<String>post(HttpManager.UPdata)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("VersionName", "V4.1.0")
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
+
+//                        String curAppVersion = AppUtil.getAppVersion(getApplicationContext());
+//                        curAppVersion = AppUtil.formatVersion(curAppVersion);
+//                        int curVersion = AppUtil.formatVersionString(curAppVersion);
+//                        //TODO
+//                        int newVersion = AppUtil.formatVersionString(bean.getVersionName());
+//                        if (newVersion > curVersion) {
+//                            Intent intent = new Intent();
+//                            intent.setClass(getApplicationContext(), UpdateActivity.class);
+//                            intent.putExtra("newBean", newBean);
+//                            startActivity(intent);
 //                        }
-//                    }
-//                });
-//    }
+
+
+                    }
+                });
+    }
 
 
     @Override
@@ -269,22 +309,6 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 设置当前的Fragment 为搜索
-     */
-    public void setOnSearchFragment() {
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.addToBackStack(null);
-        hideAll(transaction);
-        if (searchFragment != null) {
-            transaction.show(searchFragment);
-        } else {
-            searchFragment = new SearchFragment();
-            transaction.add(R.id.main_frame, searchFragment, "searchFragment");
-        }
-        transaction.commit();
-    }
-
-    /**
      * 设置当前的Fragment 为招工更多
      */
     public void setOnOneFragment() {
@@ -299,6 +323,7 @@ public class MainActivity extends BaseActivity {
         }
         transaction.commit();
     }
+
     /**
      * 设置当前的Fragment 为资讯更多
      */
@@ -311,21 +336,6 @@ public class MainActivity extends BaseActivity {
         } else {
             twoFragment = new TwoFragment();
             transaction.add(R.id.main_frame, twoFragment, "twoFragment");
-        }
-        transaction.commit();
-    }
-    /**
-     * 设置当前的Fragment 为焊工更多
-     */
-    public void setOnThreeFragment() {
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.addToBackStack(null);
-        hideAll(transaction);
-        if (threeFragment != null) {
-            transaction.show(threeFragment);
-        } else {
-            threeFragment = new ThreeFragment();
-            transaction.add(R.id.main_frame, threeFragment, "threeFragment");
         }
         transaction.commit();
     }
@@ -477,9 +487,6 @@ public class MainActivity extends BaseActivity {
         }
         if (threeFragment != null) {
             transaction.hide(threeFragment);
-        }
-        if (searchFragment != null) {
-            transaction.hide(searchFragment);
         }
 
 

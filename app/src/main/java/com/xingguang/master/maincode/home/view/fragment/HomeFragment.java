@@ -2,11 +2,15 @@ package com.xingguang.master.maincode.home.view.fragment;
 
 import android.content.Intent;
 import android.content.Loader;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +34,11 @@ import com.xingguang.master.login.view.LoginActivity;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.GlideImageLoader;
 import com.xingguang.master.maincode.home.model.HomeBean;
+import com.xingguang.master.maincode.home.model.SearchBean;
+import com.xingguang.master.maincode.home.model.TextQuestionsBean;
 import com.xingguang.master.maincode.home.view.activity.OneDetailsActivity;
 import com.xingguang.master.maincode.home.view.activity.ProgramsActivity;
+import com.xingguang.master.maincode.home.view.activity.SearchActivity;
 import com.xingguang.master.maincode.home.view.adapter.OneAdapter;
 import com.xingguang.master.maincode.home.view.adapter.ThreeAdapter;
 import com.xingguang.master.maincode.home.view.adapter.TwoAdapter;
@@ -184,7 +191,7 @@ public class HomeFragment extends BaseFragment {
         headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
         LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
         TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
-        AppUtil.addForeSizeSpan(itemtv_info,"招工信息",getActivity());
+        AppUtil.addForeSizeSpan(itemtv_info, "招工信息", getActivity());
         oneAdapter.addHeaderView(headview);//添加头布局到列表中；
         ll_hworks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +205,7 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(View view, int position) {
                 //跳转到招工详情
                 startActivity(new Intent(getActivity(), OneDetailsActivity.class)
-                        .putExtra("id", onelist.get(position-1).getID()));
+                        .putExtra("id", onelist.get(position - 1).getID()));
             }
         });
     }
@@ -214,7 +221,7 @@ public class HomeFragment extends BaseFragment {
         headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
         LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
         TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
-        AppUtil.addForeSizeSpan(itemtv_info,"行业资讯",getActivity());
+        AppUtil.addForeSizeSpan(itemtv_info, "行业资讯", getActivity());
         twoAdapter.addHeaderView(headview);//添加头布局到列表中；
         ll_hworks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,7 +237,7 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(View view, int position) {
                 startActivity(new Intent(getActivity(), WebViewActivity.class)
                         .putExtra("id", 1)
-                        .putExtra("classid",twolist.get(position-1).getID())
+                        .putExtra("classid", twolist.get(position - 1).getID())
                 );
             }
         });
@@ -247,13 +254,13 @@ public class HomeFragment extends BaseFragment {
         headview = LayoutInflater.from(getActivity()).inflate(R.layout.item_homeone_header, null);
         LinearLayout ll_hworks = headview.findViewById(R.id.ll_hworks);
         TextView itemtv_info = headview.findViewById(R.id.itemtv_info);
-        AppUtil.addForeSizeSpan(itemtv_info,"焊工培训",getActivity());
+        AppUtil.addForeSizeSpan(itemtv_info, "焊工培训", getActivity());
         threeAdapter.addHeaderView(headview);//添加头布局到列表中；
         ll_hworks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), ProgramsActivity.class)
-                        .putExtra("classtype",2)
+                        .putExtra("classtype", 2)
                 );
             }
         });
@@ -262,7 +269,7 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(View view, int position) {
                 startActivity(new Intent(getActivity(), WebViewActivity.class)
                         .putExtra("id", 2)
-                        .putExtra("classid",threelist.get(position-1).getID())
+                        .putExtra("classid", threelist.get(position - 1).getID())
                 );
             }
         });
@@ -287,10 +294,13 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_sousuo://搜索按钮
-                if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
-                    ToastUtils.showToast(getActivity(), "请输入搜索内容！");
-                } else {
-                    serarchload();
+                if (AppUtil.isExamined(getActivity())) {
+                    if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
+                        ToastUtils.showToast(getActivity(), "请输入搜索内容！");
+                    } else {
+                        startActivity(new Intent(getActivity(), SearchActivity.class)
+                                .putExtra("content", tvPlaySerch.getText().toString()));
+                    }
                 }
                 break;
             case R.id.ll_login: //登录
@@ -299,29 +309,49 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_main_baodian: //考试宝典,练习
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setToBaodianFragment();
+                if (AppUtil.isExamined(getActivity())){
+                    MainActivity.instance.setBg(1);
+                    MainActivity.instance.setToBaodianFragment();
+                }
                 break;
             case R.id.ll_main_database://考试题库，考试
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setToExamChapterFragment();
+                if (AppUtil.isExamined(getActivity())) {
+                    MainActivity.instance.setBg(1);
+                    MainActivity.instance.setToExamChapterFragment();
+                }
                 break;
             case R.id.ll_home_programs://培训项目
-                startActivity(new Intent(getActivity(), ProgramsActivity.class)
-                        .putExtra("classtype",1));
+                if (AppUtil.isExamined(getActivity())) {
+                    startActivity(new Intent(getActivity(), ProgramsActivity.class)
+                            .putExtra("classtype", 1));
+                }
                 break;
             case R.id.ll_online://在线留言
-                MainActivity.instance.setBg(1);
-                MainActivity.instance.setOnLineFragment();
+                if (AppUtil.isExamined(getActivity())) {
+                    MainActivity.instance.setBg(1);
+                    MainActivity.instance.setOnLineFragment();
+                }
                 break;
             case R.id.iv_home_helpse://帮我选考点
-                intentclassif(adsense1BeanList.get(0).getUrl(), adsense1BeanList.get(0).getTitle());
+                if (AppUtil.isExamined(getActivity())) {
+                    if (adsense1BeanList.size() != 0) {
+                        intentclassif(adsense1BeanList.get(0).getUrl(), adsense1BeanList.get(0).getTitle());
+                    }
+                }
                 break;
             case R.id.iv_home_botm1://底部图片1
-                intentclassif(adsense2BeanList.get(0).getUrl(), adsense2BeanList.get(0).getTitle());
+                if (AppUtil.isExamined(getActivity())) {
+                    if (adsense2BeanList.size() != 0) {
+                        intentclassif(adsense2BeanList.get(0).getUrl(), adsense2BeanList.get(0).getTitle());
+                    }
+                }
                 break;
             case R.id.iv_home_botm2://底部图片2
-                intentclassif(adsense3BeanList.get(0).getUrl(), adsense3BeanList.get(0).getTitle());
+                if (AppUtil.isExamined(getActivity())) {
+                    if (adsense3BeanList.size() != 0) {
+                        intentclassif(adsense3BeanList.get(0).getUrl(), adsense3BeanList.get(0).getTitle());
+                    }
+                }
                 break;
         }
     }
@@ -342,7 +372,7 @@ public class HomeFragment extends BaseFragment {
         } else if ("4".equals(url)) {//4培训报名
             startActivity(new Intent(getActivity(), ProgramsActivity.class)
                     .putExtra("title", "10")
-                    .putExtra("classtype",3)
+                    .putExtra("classtype", 3)
             );
         } else if ("5".equals(url)) { //5考试报名
             MainActivity.instance.setBg(3);
@@ -350,19 +380,9 @@ public class HomeFragment extends BaseFragment {
         } else if ("6".equals(url)) { //6培训项目
             startActivity(new Intent(getActivity(), ProgramsActivity.class)
                     .putExtra("title", title)
-                    .putExtra("classtype",3)
+                    .putExtra("classtype", 3)
             );
         }
     }
-
-    /**
-     * 跳转搜索fragment
-     */
-    private void serarchload() {
-        MainActivity.instance.setBg(1);
-        MainActivity.instance.setOnSearchFragment();
-
-    }
-
 
 }

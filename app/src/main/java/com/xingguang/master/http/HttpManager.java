@@ -8,9 +8,9 @@ package com.xingguang.master.http;
 public class HttpManager {
 
     //线上
-    public static final String BASE_URL = "http://192.168.0.150:8035/";
+//    public static final String BASE_URL = "http://192.168.0.150:8035/";
     //本地测试
-//    public static final String BASE_URL = "http://192.168.0.230/index.php/";
+    public static final String BASE_URL = "http://192.168.0.150:8035/";
 
 
     //登录接口
@@ -55,5 +55,16 @@ public class HttpManager {
     //考试入口
     public static final String ExamineEntry = BASE_URL+"ExamineEntry.aspx";
 
+    //考题答卷
+    public static final String TestQuestions = BASE_URL+"TestQuestions.aspx";
+
+    //搜索
+    public static final String Search = BASE_URL+"Search.aspx";
+
+    //版本升级
+    public static final String UPdata = BASE_URL+"Search.aspx";
+
+    //个推送
+    public static final String PushMessageInterface = BASE_URL+"PushMessageInterface.aspx";
 
 }

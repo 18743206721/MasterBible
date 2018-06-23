@@ -109,7 +109,7 @@ public class BaodianFragment extends ToolBarFragment {
         mPager.setAdapter(adapter);
         tab_layout.setupWithViewPager(mPager);
 
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < adapter.getCount(); i++) {
             TabLayout.Tab tab = tab_layout.getTabAt(i);//获得每一个tab
             if (tab != null) {
                 tab.setCustomView(R.layout.item_tab);//给每一个tab设置view
@@ -129,17 +129,25 @@ public class BaodianFragment extends ToolBarFragment {
                 }
             }
             textView.setText(mTitles[i]);//设置tab上的文字
+
+//            textView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                }
+//            });
+
         }
 
         tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                textView.setSelected(true);
+                tab.getCustomView().findViewById(R.id.tab_text).setSelected(true);
                 mPager.setCurrentItem(tab.getPosition());
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                textView.setSelected(false);
+                tab.getCustomView().findViewById(R.id.tab_text).setSelected(false);
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {

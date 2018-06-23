@@ -8,7 +8,15 @@ package com.xingguang.master.http;
 public class CommonBean {
 
     private String result;
+    private String exampaperID;
 
+    public String getExampaperID() {
+        return exampaperID;
+    }
+
+    public void setExampaperID(String exampaperID) {
+        this.exampaperID = exampaperID;
+    }
 
     public String getResult() {
         return result;

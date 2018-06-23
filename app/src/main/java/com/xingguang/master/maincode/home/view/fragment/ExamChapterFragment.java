@@ -130,12 +130,12 @@ public class ExamChapterFragment extends ToolBarFragment {
         tab_layoutexam.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                textView.setSelected(true);
+                tab.getCustomView().findViewById(R.id.tab_text).setSelected(true);
                 mPager.setCurrentItem(tab.getPosition());
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                textView.setSelected(false);
+                tab.getCustomView().findViewById(R.id.tab_text).setSelected(false);
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {

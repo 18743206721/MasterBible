@@ -6,9 +6,18 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.maincode.home.model.ExambaoDianBean;
+import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.SharedPreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -30,6 +39,7 @@ public class FiBaodianActivity extends ToolBarActivity {
     LinearLayout llRestart;
     @BindView(R.id.tv_back)
     TextView tvBack;
+    int yescount = 0;
 
     @Override
     protected int getLayoutId() {
@@ -45,16 +55,25 @@ public class FiBaodianActivity extends ToolBarActivity {
             }
         });
         setToolBarTitle("考试宝典");
+
+        if (AppUtil.getYesCount(FiBaodianActivity.this).equals("")){
+            tvYescount.setText(yescount+"");
+        }else {
+            tvYescount.setText(AppUtil.getYesCount(FiBaodianActivity.this));
+        }
+
+        if (AppUtil.getNoCount(FiBaodianActivity.this).equals("")){
+            tvNocount.setText(yescount+"");
+        }else {
+            tvNocount.setText(AppUtil.getNoCount(FiBaodianActivity.this));
+        }
     }
 
     @OnClick({R.id.ll_restart, R.id.tv_back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_restart:
-                startActivity(new Intent(FiBaodianActivity.this, DaTiActivity.class)
-                        .putExtra("exam", "1")
-                        .putExtra("count", 4));//传过去的答题数量
-                        FiBaodianActivity.this.finish();
+                FiBaodianActivity.this.finish();
                 break;
             case R.id.tv_back:
                 Intent intent = new Intent();
@@ -63,8 +82,6 @@ public class FiBaodianActivity extends ToolBarActivity {
                 break;
         }
     }
-
-
 
 
 }
