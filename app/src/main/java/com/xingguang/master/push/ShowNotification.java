@@ -61,7 +61,7 @@ public class ShowNotification {
                 .getSystemService(context.NOTIFICATION_SERVICE);
 
         Intent launchIntent = context.getPackageManager()
-                .getLaunchIntentForPackage("com.yogee.aipinyou");
+                .getLaunchIntentForPackage("com.xingguang.master");
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 
@@ -72,6 +72,7 @@ public class ShowNotification {
         notification = new Notification.Builder(context)
                 .setSmallIcon(R.mipmap.icon_logo)
                 .setTicker(text)
+                .setLargeIcon(bit)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setContentIntent(pendingIntent)

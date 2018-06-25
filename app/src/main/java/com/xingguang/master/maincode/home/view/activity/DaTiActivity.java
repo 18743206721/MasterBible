@@ -15,9 +15,14 @@ import com.xingguang.master.util.CountDownTimerUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
 import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.NoScrollViewpager;
+import com.xingguang.master.view.TimerTextView;
 
 import java.io.DataInput;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
@@ -36,10 +41,9 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
     @BindView(R.id.ivback)
     ImageView ivback;
     @BindView(R.id.csv2)
-    CountdownView tvTitle;
+    TimerTextView tvTitle;
     @BindView(R.id.tvti2)
     TextView tvti2;
-
 
     private ExamBanFragment listFragment;
     private String count = "";
@@ -65,15 +69,16 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
         if (exam.equals("2")) {
             tvti2.setVisibility(View.GONE);
             kaoshifenshu = getIntent().getStringExtra("kaoshifenshu");
-
             timea = Long.parseLong(getIntent().getStringExtra("kaoshiTime")) * 60000;
-            Log.e("time", "initView: "+timea );
-            tvTitle.start(timea); // Millisecond  //3600000
-            for (int time=0; time<1000; time++) {
-                tvTitle.updateShow(time);
-//                Log.e("tvTitle", "initView: "+tvTitle.getHour()+",,"+time+"，，"+tvTitle.getRemainTime()+",,"+tvTitle.getSecond() );
+            //设置时间
+            tvTitle.setTimes(timea);
+            /**
+             * 开始倒计时
+             */
+            if (!tvTitle.isRun()) {
+                tvTitle.start();
+                ToastUtils.showToast(DaTiActivity.this,tvTitle.showTime());
             }
-
 
         }else {
             tvTitle.setVisibility(View.GONE);
@@ -83,20 +88,20 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
 
         initViewPage();
 
-        tvTitle.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
-            @Override
-            public void onEnd(CountdownView cv) {
-                if ("2".equals(exam)) { //跳转到考试完成页面
-                    startActivity(new Intent(DaTiActivity.this,
-                            ExamResultActivity.class)
-                            .putExtra("kaoshifenshu",kaoshifenshu));
-                    finish();
-                } else { //跳转到练习完成页面
-                    startActivity(new Intent(DaTiActivity.this,FiBaodianActivity.class));
-                    finish();
-                }
-            }
-        });
+//        tvTitle.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+//            @Override
+//            public void onEnd(CountdownView cv) {
+//                if ("2".equals(exam)) { //跳转到考试完成页面
+//                    startActivity(new Intent(DaTiActivity.this,
+//                            ExamResultActivity.class)
+//                            .putExtra("kaoshifenshu",kaoshifenshu));
+//                    finish();
+//                } else { //跳转到练习完成页面
+//                    startActivity(new Intent(DaTiActivity.this,FiBaodianActivity.class));
+//                    finish();
+//                }
+//            }
+//        });
     }
 
     private void initViewPage() {

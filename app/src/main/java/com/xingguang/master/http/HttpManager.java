@@ -62,7 +62,7 @@ public class HttpManager {
     public static final String Search = BASE_URL+"Search.aspx";
 
     //版本升级
-    public static final String UPdata = BASE_URL+"Search.aspx";
+    public static final String UPdata = BASE_URL+"VersionUpgrade.aspx";
 
     //个推送
     public static final String PushMessageInterface = BASE_URL+"PushMessageInterface.aspx";

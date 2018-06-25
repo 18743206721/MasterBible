@@ -1,13 +1,23 @@
 package com.xingguang.master.main.view.activity;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +46,7 @@ import com.xingguang.master.maincode.home.view.fragment.ThreeFragment;
 import com.xingguang.master.maincode.home.view.fragment.TwoFragment;
 import com.xingguang.master.maincode.mine.view.fragment.MineFragment;
 import com.xingguang.master.push.IntentService;
+import com.xingguang.master.updata.UpdateHelper;
 import com.xingguang.master.util.AppManager;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
@@ -109,6 +120,21 @@ public class MainActivity extends BaseActivity {
     ThreeFragment threeFragment; //焊工更多
     private int id = 0; //考试宝典页面用的id
 
+    private final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1003;
+
+    public UpdateHelper helper = new UpdateHelper(MainActivity.this, new UpdateHelper.UpdateCallBack() {
+        @Override
+        public void hasNewVersion(boolean hasNew) {
+            if (!hasNew) {
+
+            }
+        }
+
+        @Override
+        public void cancelUpdate() {
+
+        }
+    });
 
     @Override
     protected int getLayoutId() {
@@ -129,9 +155,8 @@ public class MainActivity extends BaseActivity {
         PushManager.getInstance().initialize(this.getApplicationContext(), com.xingguang.master.push.PushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
 
-        Log.e("sdfasdf", "initView: "+ (String) SharedPreferencesUtils.get(MainActivity.this,
-                SharedPreferencesUtils.CID,""));
-
+        Log.e("sdfasdf", "initView: " + (String) SharedPreferencesUtils.get(MainActivity.this,
+                SharedPreferencesUtils.CID, ""));
 
 
         if (id == 1) {
@@ -148,7 +173,6 @@ public class MainActivity extends BaseActivity {
             setToInvestmentFragment();
         }
 
-        checkAppVersion();
 
     }
 
@@ -156,31 +180,32 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         load();
+//        checkAppVersion();
     }
 
     //推送
     String tuisong;
+
     private void load() {
 
         if (((String) SharedPreferencesUtils.get(MainActivity.this,
-                SharedPreferencesUtils.CID,"")).equals("")){
+                SharedPreferencesUtils.CID, "")).equals("")) {
             tuisong = "";
-        }else {
+        } else {
             tuisong = (String) SharedPreferencesUtils.get(MainActivity.this,
-                    SharedPreferencesUtils.CID,"");
+                    SharedPreferencesUtils.CID, "");
 
             OkGo.<String>post(HttpManager.PushMessageInterface)
                     .tag(this)
                     .cacheKey("cachePostKey")
                     .cacheMode(CacheMode.DEFAULT)
-                    .params("ClientID",  (String) SharedPreferencesUtils.get(MainActivity.this,
-                            SharedPreferencesUtils.CID,""))
+                    .params("ClientID", (String) SharedPreferencesUtils.get(MainActivity.this,
+                            SharedPreferencesUtils.CID, ""))
                     .execute(new DialogCallback<String>(this) {
                         @Override
                         public void onSuccess(Response<String> response) {
                             Gson gson = new Gson();
                             TuisongBean bean = gson.fromJson(response.body().toString(), TuisongBean.class);
-//                        ToastUtils.showToast(SplashActivity.this,bean.getMsg());
                         }
                     });
 
@@ -194,32 +219,61 @@ public class MainActivity extends BaseActivity {
      * 直接检测是否有新的版本，然后进行更新
      */
     private void checkAppVersion() {
-        OkGo.<String>post(HttpManager.UPdata)
-                .tag(this)
-                .cacheKey("cachePostKey")
-                .cacheMode(CacheMode.DEFAULT)
-                .params("VersionName", "V4.1.0")
-                .execute(new DialogCallback<String>(this) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Gson gson = new Gson();
-                        UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
 
-//                        String curAppVersion = AppUtil.getAppVersion(getApplicationContext());
-//                        curAppVersion = AppUtil.formatVersion(curAppVersion);
-//                        int curVersion = AppUtil.formatVersionString(curAppVersion);
-//                        //TODO
-//                        int newVersion = AppUtil.formatVersionString(bean.getVersionName());
-//                        if (newVersion > curVersion) {
-//                            Intent intent = new Intent();
-//                            intent.setClass(getApplicationContext(), UpdateActivity.class);
-//                            intent.putExtra("newBean", newBean);
-//                            startActivity(intent);
-//                        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //申请WRITE_EXTERNAL_STORAGE权限
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+            } else {
+                helper.getNewVerison();
+            }
+        } else {
+            helper.getNewVerison();
+        }
+
+    }
+
+    /**
+     * 更新弹窗
+     *
+     * @param bean
+     */
+    private void showUpdataDialog(UpdateBean bean) {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_updata, null);
+
+        TextView mTvCanel = (TextView) view.findViewById(R.id.tv_cancel);
+        TextView mTvUpdate = (TextView) view.findViewById(R.id.tv_update);
+        TextView tv_info = (TextView) view.findViewById(R.id.tv_info);
+        TextView tv_version = (TextView) view.findViewById(R.id.tv_version);
+
+        tv_version.setText("版本:" + bean.getVersionName());
+        tv_info.setText(bean.getContent().replace(",", "\n"));
+        dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        dialog.getWindow().setWindowAnimations(R.style.AnimBottom);
+        dialog.setCanceledOnTouchOutside(false);
+
+        mTvUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadFile();
+            }
+        });
+
+        mTvCanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
 
 
-                    }
-                });
+    private void uploadFile() {
+
     }
 
 
@@ -517,6 +571,34 @@ public class MainActivity extends BaseActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        doNext(requestCode, grantResults);
+    }
+
+    private void doNext(int requestCode, int[] grantResults) {
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    helper.getNewVerison();
+
+                } else {
+                    // Permission Denied
+                    ToastUtils.showToast(MainActivity.this, "请到设置中开放对本引用的权限");
+                }
+            } else {
+//                MobclickAgent.reportError(MainActivity.this, "grantResults.length:<0");
+            }
+
+        }
+
+    }
+
+
 
 
 }

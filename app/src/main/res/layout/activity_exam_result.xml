@@ -64,31 +64,15 @@
 
                 </LinearLayout>
 
-                <cn.iwgang.countdownview.CountdownView
-                    android:id="@+id/tv_alltime"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:isHideTimeBackground="true"
-                    android:layout_marginLeft="8dp"
-                    app:isShowMinute="true"
-                    app:timeTextColor="@color/white"
-                    app:timeTextSize="15sp"
-                    app:isTimeTextBold="true"
-                    app:suffixGravity="bottom"
-                    app:suffixTextColor="#000000"
-                    app:suffixTextSize="12sp"
-                    app:suffixMinute=":"
-                    />
 
-                <!--<Custom-->
-                    <!--android:id="@+id/tv_alltime"-->
-                    <!--style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"-->
-                    <!--android:text="45:26"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:textSize="18sp"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content" />-->
+                <TextView
+                    android:id="@+id/tv_alltime"
+                    android:layout_marginLeft="8dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

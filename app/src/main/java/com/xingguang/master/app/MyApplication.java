@@ -20,7 +20,6 @@ public class MyApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
         OkGo.getInstance().init(this);
 
 //        Config.DEBUG = true;
@@ -42,10 +41,10 @@ public class MyApplication extends BaseApplication {
         return mInstance;
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
 //        MultiDex.install(this);
-    }
+//    }
 
 }

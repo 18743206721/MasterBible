@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
@@ -24,6 +25,7 @@ import com.xingguang.master.base.BaseFragment;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.maincode.home.model.TextQuestionsBean;
+import com.xingguang.master.maincode.home.view.activity.DaTiActivity;
 import com.xingguang.master.maincode.home.view.activity.ExamResultActivity;
 import com.xingguang.master.maincode.home.view.activity.FiBaodianActivity;
 import com.xingguang.master.util.AppUtil;
@@ -32,10 +34,12 @@ import com.xingguang.master.util.SharedPreferencesUtils;
 import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.ImageLoader;
 import com.xingguang.master.view.NoScrollViewpager;
+import com.xingguang.master.view.TimerTextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
@@ -119,11 +123,11 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     int yescount = 0; //答对题数
     int nocount = 0; //答错题数
     private final String kaoshifenshu; //考试分数
-    CountdownView tvTitle;
+    TimerTextView tvTitle;
 
     public ExamBanFragment(int type, String sum, String exam,
                            NoScrollViewpager vp_exters,
-                           String exampaperID, String kaoshifenshu,CountdownView tvTitle) {
+                           String exampaperID, String kaoshifenshu, TimerTextView tvTitle) {
         this.type = type;
         this.sum = sum;
         this.exam = exam;
@@ -155,8 +159,20 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
         util = new CountDownTimerUtil(getActivity(), this);
 
 
+        //如果时间到
+        if (tvTitle.showTime().equals("0:0:0")) {
+            if ("2".equals(exam)) { //跳转到考试完成页面
+                startActivity(new Intent(getActivity(),
+                        ExamResultActivity.class)
+                        .putExtra("kaoshifenshu", kaoshifenshu)
+                        .putExtra("tvtime", tvTitle.getText().toString()));
+                getActivity().finish();
+            } else { //跳转到练习完成页面
+                startActivity(new Intent(getActivity(), FiBaodianActivity.class));
+                getActivity().finish();
+            }
+        }
 
-//        Log.e("tvTitle_fragment", "initView: "+tvTitle.getMinute()+",,,"+tvTitle.getSecond() );
 
     }
 
@@ -203,17 +219,17 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                             //正确答案
                             answer = bean.getData().getAnswer();
 
-                            if (!AppUtil.getYesCount(getActivity()).equals("")){
-                                if (exam.equals("1")){
+                            if (!AppUtil.getYesCount(getActivity()).equals("")) {
+                                if (exam.equals("1")) {
                                     tvYesCount.setText(AppUtil.getYesCount(getActivity()));
-                                }else {
+                                } else {
                                     tv2YesCount.setText(AppUtil.getYesCount(getActivity()));
                                 }
                             }
                             if (!AppUtil.getNoCount(getActivity()).equals("")) {
                                 if (exam.equals("1")) {
                                     tvNoCount.setText(AppUtil.getNoCount(getActivity()));
-                                }else{
+                                } else {
                                     tv2NoCount.setText(AppUtil.getNoCount(getActivity()));
                                 }
                             }
@@ -283,8 +299,12 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                 getActivity().finish();
 
             } else { //跳转到考试完成页面
+                tvTitle.stop();
+                tvTitle.showTime();
+
                 startActivity(new Intent(getActivity(), ExamResultActivity.class)
-                .putExtra("kaoshifenshu",kaoshifenshu)
+                        .putExtra("kaoshifenshu", kaoshifenshu)
+                        .putExtra("tvtime", tvTitle.getText().toString())
                 );
                 getActivity().finish();
 
@@ -315,7 +335,8 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                     getActivity().finish();
                 } else { //跳转到考试完成页面
                     startActivity(new Intent(getActivity(), ExamResultActivity.class)
-                    .putExtra("kaoshifenshu",kaoshifenshu)
+                            .putExtra("kaoshifenshu", kaoshifenshu)
+                            .putExtra("tvtime", tvTitle.showTime())
                     );
                     getActivity().finish();
                 }
@@ -347,6 +368,7 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     String B = "B";
     String C = "C";
     String D = "D";
+
     private void setlected(int i) {
 
         if (i == 1) {
@@ -475,34 +497,34 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     }
 
     private void YesCount() {
-        if (AppUtil.getYesCount(getActivity()).equals("")){
-            yescount = yescount+1;
-            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESCOUNT,yescount+"" );
-        }else{
-            yescount = Integer.parseInt(AppUtil.getYesCount(getActivity()))+1;
-            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESCOUNT,yescount+"" );
+        if (AppUtil.getYesCount(getActivity()).equals("")) {
+            yescount = yescount + 1;
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESCOUNT, yescount + "");
+        } else {
+            yescount = Integer.parseInt(AppUtil.getYesCount(getActivity())) + 1;
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESCOUNT, yescount + "");
         }
 
-        if (exam.equals("1")){
+        if (exam.equals("1")) {
             tvYesCount.setText(AppUtil.getYesCount(getActivity()));
-        }else {
+        } else {
             tv2YesCount.setText(AppUtil.getYesCount(getActivity()));
         }
 
     }
 
     private void NOcount() {
-        if (AppUtil.getNoCount(getActivity()).equals("")){
-            nocount = nocount+1;
-            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOCOUNT,nocount+"" );
-        }else{
-            nocount = Integer.parseInt(AppUtil.getNoCount(getActivity()))+1;
-            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOCOUNT,nocount+"" );
+        if (AppUtil.getNoCount(getActivity()).equals("")) {
+            nocount = nocount + 1;
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOCOUNT, nocount + "");
+        } else {
+            nocount = Integer.parseInt(AppUtil.getNoCount(getActivity())) + 1;
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOCOUNT, nocount + "");
         }
 
-        if (exam.equals("1")){
+        if (exam.equals("1")) {
             tvNoCount.setText(AppUtil.getNoCount(getActivity()));
-        }else {
+        } else {
             tv2NoCount.setText(AppUtil.getNoCount(getActivity()));
         }
     }

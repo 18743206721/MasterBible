@@ -26,7 +26,7 @@ public class ExamResultActivity extends ToolBarActivity {
     @BindView(R.id.iv_bg)
     ImageView ivBg;
     @BindView(R.id.tv_alltime)
-    CountdownView tvAlltime;
+    TextView tvAlltime;
     @BindView(R.id.tv_fenshu)
     TextView tvFenshu;
     @BindView(R.id.tv_fail)
@@ -61,11 +61,12 @@ public class ExamResultActivity extends ToolBarActivity {
 
     private void init() {
         kaoshifenshu = getIntent().getStringExtra("kaoshifenshu");
-//        tvTitle = getIntent().getStringExtra("tvTitle");
-//
-//        if (tvTitle!=null){
-//            tvAlltime.stop();
-//        }
+        tvTitle = getIntent().getStringExtra("tvtime");
+
+
+        if (tvTitle!=null){
+            tvAlltime.setText(tvTitle);
+        }
 
 
         int a = Integer.parseInt(kaoshifenshu); //及格分数
