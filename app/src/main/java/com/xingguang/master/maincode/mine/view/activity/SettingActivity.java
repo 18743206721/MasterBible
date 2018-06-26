@@ -423,7 +423,7 @@ public class SettingActivity extends ToolBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 
 
