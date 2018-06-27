@@ -142,20 +142,6 @@ public class MainActivity extends BaseActivity {
     private DownloadManager downloadManager;
     private long mTaskId;
 
-//    public UpdateHelper helper = new UpdateHelper(MainActivity.this, new UpdateHelper.UpdateCallBack() {
-//        @Override
-//        public void hasNewVersion(boolean hasNew) {
-//            if (!hasNew) {
-//
-//            }
-//        }
-//
-//        @Override
-//        public void cancelUpdate() {
-//
-//        }
-//    });
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -177,11 +163,7 @@ public class MainActivity extends BaseActivity {
 
         Log.e("sdfasdf", "initView: " + (String) SharedPreferencesUtils.get(MainActivity.this,
                 SharedPreferencesUtils.CID, ""));
-
-
         if (id == 1) {
-//            setBg(1);
-//            setToNewsFragment();
         } else if (id == 2) {
             setBg(2);
             setToProjectFragment();
@@ -192,9 +174,7 @@ public class MainActivity extends BaseActivity {
             setBg(4);
             setToInvestmentFragment();
         }
-
         checkAppVersion();
-
     }
 
     @Override
@@ -257,18 +237,20 @@ public class MainActivity extends BaseActivity {
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("VersionName", AppUtil.getVersionCode(MainActivity.this))
+                .params("VersionName", AppUtil.getVersionName(MainActivity.this))
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
                         try {
-                            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                            if (compareVersion(AppUtil.getVersionCode(MainActivity.this), bean.getVersionName()) != 1) {
-                                showDialog(bean);
-                            } else {
-                                ToastUtils.showToast(MainActivity.this, "当前已是最新版本");
+                            if (bean.getData()!=null) {
+                                if (bean.getData().getVersionName()!=null) {
+                                    packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                                    if (compareVersion(AppUtil.getVersionName(MainActivity.this), bean.getData().getVersionName()) != 1) {
+                                        showDialog(bean);
+                                    }
+                                }
                             }
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
@@ -288,36 +270,37 @@ public class MainActivity extends BaseActivity {
         if (version1.equals(version2)) {
             return 0;
         }
+
         String[] version1Array = version1.split("\\.");
         String[] version2Array = version2.split("\\.");
+
         int index = 0;
-        // 获取最小长度值
         int minLen = Math.min(version1Array.length, version2Array.length);
         int diff = 0;
-        // 循环判断每位的大小
-        while (index < minLen
-                && (diff = Integer.parseInt(version1Array[index])
-                - Integer.parseInt(version2Array[index])) == 0) {
-            index++;
+
+        while (index < minLen && (diff = Integer.parseInt(version1Array[index]) - Integer.parseInt(version2Array[index])) == 0) {
+            index ++;
         }
+
         if (diff == 0) {
-            // 如果位数不一致，比较多余位数
-            for (int i = index; i < version1Array.length; i++) {
+            for (int i = index; i < version1Array.length; i ++) {
                 if (Integer.parseInt(version1Array[i]) > 0) {
                     return 1;
                 }
             }
 
-            for (int i = index; i < version2Array.length; i++) {
+            for (int i = index; i < version2Array.length; i ++) {
                 if (Integer.parseInt(version2Array[i]) > 0) {
                     return -1;
                 }
             }
+
             return 0;
         } else {
             return diff > 0 ? 1 : -1;
         }
     }
+
 
     private void showDialog(final UpdateBean bean) {
         final Dialog dialog = new Dialog(this, R.style.update_dialog);
@@ -346,8 +329,8 @@ public class MainActivity extends BaseActivity {
         TextView tv_info = (TextView) view.findViewById(R.id.tv_info);
         TextView tv_version = (TextView) view.findViewById(R.id.tv_version);
 
-        tv_version.setText("版本:" + bean.getVersionName());
-        tv_info.setText(bean.getContent().replace(",", "\n"));
+        tv_version.setText("版本:" + bean.getData().getVersionName());
+        tv_info.setText(bean.getData().getContent().replace(",", "\n"));
 
 
         mTvUpdate.setOnClickListener(new View.OnClickListener() {
@@ -355,7 +338,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 ToastUtils.showToast(MainActivity.this, "正在下载中,请稍后...");
                 dialog.dismiss();
-                downloadAPK(bean.getVersionUrl(), packageInfo.versionName);
+                downloadAPK(bean.getData().getVersionUrl(), packageInfo.versionName);
             }
         });
 

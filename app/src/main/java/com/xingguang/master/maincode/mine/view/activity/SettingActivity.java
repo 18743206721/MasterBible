@@ -127,38 +127,24 @@ public class SettingActivity extends ToolBarActivity {
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("VersionName", AppUtil.getVersionCode(SettingActivity.this))
+                .params("VersionName", AppUtil.getVersionName(SettingActivity.this))
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
-
-                        String curAppVersion = AppUtil.getVersionCode(SettingActivity.this);
-//                        double curVersion = Double.parseDouble(curAppVersion);
-//                        double newVersion = Double.valueOf("4.1.1");
-//                        updateAddress = bean.getVersionUrl();
-
-
                         try {
                             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                            if (compareVersion(AppUtil.getVersionCode(SettingActivity.this), bean.getVersionName()) != 1) {
-                                showDialog(bean);
-                            } else {
-                                ToastUtils.showToast(SettingActivity.this, "当前已是最新版本");
-
-//                            downloadAPK(bean.getVersionUrl(),packageInfo.versionName);
+                            if (bean.getData().getVersionName()!=null) {
+                                if (compareVersion(AppUtil.getVersionName(SettingActivity.this), bean.getData().getVersionName()) != 1) {
+                                    showDialog(bean);
+                                } else {
+                                    ToastUtils.showToast(SettingActivity.this, "当前已是最新版本");
+                                }
                             }
-
-
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
                         }
-
-
-//                        Log.e("curVersion", "onSuccess: " + curVersion + ",," + newVersion);
-
-
                     }
                 });
     }
@@ -289,15 +275,15 @@ public class SettingActivity extends ToolBarActivity {
         TextView tv_info = (TextView) view.findViewById(R.id.tv_info);
         TextView tv_version = (TextView) view.findViewById(R.id.tv_version);
 
-        tv_version.setText("版本:" + bean.getVersionName());
-        tv_info.setText(bean.getContent().replace(",", "\n"));
+        tv_version.setText("版本:" + bean.getData().getVersionName());
+        tv_info.setText(bean.getData().getContent().replace(",", "\n"));
 
 
         mTvUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToastUtils.showToast(SettingActivity.this, "正在下载中,请稍后...");
-                downloadAPK(bean.getVersionUrl(), packageInfo.versionName);
+                downloadAPK(bean.getData().getVersionUrl(), packageInfo.versionName);
             }
         });
 

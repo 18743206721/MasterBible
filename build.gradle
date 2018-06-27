@@ -16,6 +16,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         //Maven URL地址
         maven {
@@ -26,6 +27,7 @@ allprojects {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         //Maven URL地址
         maven {

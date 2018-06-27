@@ -65,7 +65,6 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
         exam = getIntent().getStringExtra("exam");
         count = getIntent().getStringExtra("count");
         exampaperID = getIntent().getStringExtra("exampaperID");
-
         if (exam.equals("2")) {
             tvti2.setVisibility(View.GONE);
             kaoshifenshu = getIntent().getStringExtra("kaoshifenshu");
@@ -77,31 +76,13 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
              */
             if (!tvTitle.isRun()) {
                 tvTitle.start();
-                ToastUtils.showToast(DaTiActivity.this,tvTitle.showTime());
             }
-
         }else {
             tvTitle.setVisibility(View.GONE);
             tvti2.setVisibility(View.VISIBLE);
             tvti2.setText("题库练习");
         }
-
         initViewPage();
-
-//        tvTitle.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
-//            @Override
-//            public void onEnd(CountdownView cv) {
-//                if ("2".equals(exam)) { //跳转到考试完成页面
-//                    startActivity(new Intent(DaTiActivity.this,
-//                            ExamResultActivity.class)
-//                            .putExtra("kaoshifenshu",kaoshifenshu));
-//                    finish();
-//                } else { //跳转到练习完成页面
-//                    startActivity(new Intent(DaTiActivity.this,FiBaodianActivity.class));
-//                    finish();
-//                }
-//            }
-//        });
     }
 
     private void initViewPage() {

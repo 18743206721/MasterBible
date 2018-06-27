@@ -260,11 +260,16 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                                     llD.setVisibility(View.VISIBLE);
                                     tvD.setText(mDatas.get(i).getTitle());
                                 } else {
-                                    ToastUtils.showToast(getActivity(), "暂无题目选项,请联系后台管理员!");
-                                    llA.setVisibility(View.GONE);
-                                    llB.setVisibility(View.GONE);
-                                    llC.setVisibility(View.GONE);
-                                    llD.setVisibility(View.GONE);
+//                                    ToastUtils.showToast(getActivity(), "暂无题目选项,请联系后台管理员!");
+//                                    llA.setVisibility(View.GONE);
+//                                    llB.setVisibility(View.GONE);
+//                                    llC.setVisibility(View.GONE);
+//                                    llD.setVisibility(View.GONE);
+                                    llA.setVisibility(View.VISIBLE);
+                                    llB.setVisibility(View.VISIBLE);
+                                    llC.setVisibility(View.VISIBLE);
+                                    llD.setVisibility(View.VISIBLE);
+                                    tvD.setText(mDatas.get(i).getTitle());
                                 }
                             }
                         } else {

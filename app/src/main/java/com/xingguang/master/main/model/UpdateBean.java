@@ -6,42 +6,74 @@ package com.xingguang.master.main.model;
  * 作者:LiuYu
  */
 public class UpdateBean {
+
     /**
-     * VersionName : V4.1.1
-     * VersionUrl : 版本url
-     * Content : <p>
-     <span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span>
-     </p>
-     <p>
-     <span style="color:#333333;font-family:&quot;">&nbsp;&nbsp;<span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span><span style="color:#333333;font-family:&quot;">版本描述</span></span>
-     </p>
+     * status : 1
+     * msg : SUCCESS
+     * data : {"VersionName":"1.0","VersionUrl":"http://192.168.0.150:8035/down/app-debug.apk","Content":"1、解决崩溃,2、解决发热严重,3、解决卡"}
      */
 
-    private String VersionName;
-    private String VersionUrl;
-    private String Content;
+    private int status;
+    private String msg;
+    private DataBean data;
 
-    public String getVersionName() {
-        return VersionName;
+    public int getStatus() {
+        return status;
     }
 
-    public void setVersionName(String VersionName) {
-        this.VersionName = VersionName;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public String getVersionUrl() {
-        return VersionUrl;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setVersionUrl(String VersionUrl) {
-        this.VersionUrl = VersionUrl;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getContent() {
-        return Content;
+    public DataBean getData() {
+        return data;
     }
 
-    public void setContent(String Content) {
-        this.Content = Content;
+    public void setData(DataBean data) {
+        this.data = data;
+    }
+
+    public static class DataBean {
+        /**
+         * VersionName : 1.0
+         * VersionUrl : http://192.168.0.150:8035/down/app-debug.apk
+         * Content : 1、解决崩溃,2、解决发热严重,3、解决卡
+         */
+
+        private String VersionName;
+        private String VersionUrl;
+        private String Content;
+
+        public String getVersionName() {
+            return VersionName;
+        }
+
+        public void setVersionName(String VersionName) {
+            this.VersionName = VersionName;
+        }
+
+        public String getVersionUrl() {
+            return VersionUrl;
+        }
+
+        public void setVersionUrl(String VersionUrl) {
+            this.VersionUrl = VersionUrl;
+        }
+
+        public String getContent() {
+            return Content;
+        }
+
+        public void setContent(String Content) {
+            this.Content = Content;
+        }
     }
 }

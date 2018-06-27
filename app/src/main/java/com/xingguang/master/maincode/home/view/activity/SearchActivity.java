@@ -249,6 +249,13 @@ public class SearchActivity extends BaseActivity {
                         if (bean.getData() != null) {
                             list.clear();
                             list.addAll(bean.getData());
+                            if (list.size() == 0) {
+                                rl_baokao.setVisibility(View.GONE);
+                                empty.setVisibility(View.VISIBLE);
+                            } else {
+                                empty.setVisibility(View.GONE);
+                                rl_baokao.setVisibility(View.VISIBLE);
+                            }
                             searchAdapter.setList(list);
                         } else {
                             ToastUtils.showToast(SearchActivity.this, bean.getMsg());

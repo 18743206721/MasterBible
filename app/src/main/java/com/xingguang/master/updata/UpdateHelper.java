@@ -82,8 +82,8 @@ public class UpdateHelper {
         TextView tv_info = (TextView) view.findViewById(R.id.tv_info);
         TextView tv_version = (TextView) view.findViewById(R.id.tv_version);
 
-        tv_version.setText("版本:" + bean.getVersionName());
-        tv_info.setText(bean.getContent().replace(",", "\n"));
+        tv_version.setText("版本:" + bean.getData().getVersionName());
+        tv_info.setText(bean.getData().getContent().replace(",", "\n"));
 
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         dialog.getWindow().setWindowAnimations(R.style.AnimBottom);
@@ -110,17 +110,17 @@ public class UpdateHelper {
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("VersionName", AppUtil.getVersionCode(MainActivity.instance))
+                .params("VersionName", AppUtil.getVersionName(MainActivity.instance))
                 .execute(new DialogCallback<String>(MainActivity.instance) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         UpdateBean bean = gson.fromJson(response.body().toString(), UpdateBean.class);
 
-                        String curAppVersion = AppUtil.getVersionCode(mContext);
+                        String curAppVersion = AppUtil.getVersionName(mContext);
                         double curVersion = Double.parseDouble(curAppVersion);
                         double newVersion = Double.parseDouble("2.0");
-                        updateAddress = bean.getVersionUrl();
+                        updateAddress = bean.getData().getVersionUrl();
                         
                         Log.e("curVersion", "onSuccess: " + curVersion + ",," + newVersion);
                         //更新 ,弹窗
