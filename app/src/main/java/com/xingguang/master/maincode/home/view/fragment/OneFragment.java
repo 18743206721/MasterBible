@@ -164,7 +164,7 @@ public class OneFragment extends ToolBarFragment implements RefreshUtil.OnRefres
     @Override
     public void onRefresh() {
         isRefresh = true;
-        load(1);
+        load(page);
     }
 
     @Override

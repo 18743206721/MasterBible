@@ -1,8 +1,11 @@
 package com.xingguang.master.maincode.mine.view.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,6 +74,12 @@ public class WebViewActivity extends ToolBarActivity {
         id = getIntent().getIntExtra("id", 0);
         classid = getIntent().getIntExtra("classid", 0);
 
+//        init();
+
+        webView1.setHorizontalScrollBarEnabled(false);//水平不显示
+        webView1.setVerticalScrollBarEnabled(false); //垂直不显示
+
+
         if (id == 0) { //关于我们
             llBot.setVisibility(View.GONE);
             llTitle.setVisibility(View.GONE);
@@ -89,6 +98,43 @@ public class WebViewActivity extends ToolBarActivity {
         }
 
     }
+
+    private void init() {
+        // 打开页面时， 自适应屏幕：
+        webView1.getSettings().setUseWideViewPort(true);// 设置此属性，可任意比例缩放
+        // //将图片调整到适合webview的大小
+        webView1.getSettings().setLoadWithOverviewMode(true);
+        // 便页面支持缩放：
+        webView1.getSettings().setJavaScriptEnabled(true);
+        // 支持js
+        webView1.getSettings().setBuiltInZoomControls(true);
+        webView1.getSettings().setSupportZoom(true);// 支持缩放
+        // 如果webView中需要用户手动输入用户名、密码或其他，则webview必须设置支持获取手势焦点。
+//        webView1.requestFocusFromTouch();
+        // 优先使用缓存
+        webView1.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+//        webView1.loadUrl(url);
+//        webView1.setWebViewClient(new WebViewClient() {
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+//                // view.loadUrl(url);
+//                view.loadUrl(url);
+//                return true;
+//            }
+//        });
+    }
+
+//    private String getNewContent(String htmltext){
+//
+//        Document doc=Jsoup.parse(htmltext);
+//        Elements elements=doc.getElementsByTag("img");
+//        for (Element element : elements) {
+//            element.attr("width","100%").attr("height","auto");
+//        }
+//
+//        Log.d("VACK", doc.toString());
+//        return doc.toString();
+//    }
 
     /**
      * 焊工
@@ -113,6 +159,7 @@ public class WebViewActivity extends ToolBarActivity {
 
                             String html = bean.getData().getContent();
                             String data = html.replace("%@", html);
+
                             webView1.loadData(data, "text/html; charset=UTF-8", null);
                             tvTitle.setText(bean.getData().getTitle());
                             tvTime.setText(bean.getData().getFormatAddDate());
@@ -169,7 +216,22 @@ public class WebViewActivity extends ToolBarActivity {
 
                             String html = bean.getData().getContent();
                             String data = html.replace("%@", html);
-                            webView1.loadData(data, "text/html; charset=UTF-8", null);
+
+                            webView1.loadUrl("javascript:(function(){" +
+                                    "var objs = document.getElementsByTagName('img'); " +
+                                    "for(var i=0;i<objs.length;i++)  " +
+                                    "{"
+                                    + "var img = objs[i];   " +
+                                    " img.style.maxWidth = '100%';img.style.height='auto';" +
+                                    "}" +
+                                    "})()");
+
+                            String CSS_STYPE = "<head><style>img{max-width:320px !important;}</style></head>";
+                            webView1.loadDataWithBaseURL(null, CSS_STYPE +html, "text/html", "utf-8",null);
+
+
+
+//                            webView1.loadData(data, "text/html; charset=UTF-8", null);
                             tvTitle.setText(bean.getData().getTitle());
                             tvTime.setText(bean.getData().getFormatAddDate());
                         } else {

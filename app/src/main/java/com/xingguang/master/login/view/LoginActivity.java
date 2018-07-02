@@ -201,21 +201,21 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                 .cacheMode(CacheMode.DEFAULT)
                 .params("UserName", etPhone.getText().toString())
                 .params("UserPass", etPwd.getText().toString())
-                .params("IdenCode", code)
+                .params("IdenCode", registerMss.getText().toString())
                 .params("MethodCode", "zc")  //验证码发送：yzm，注册：zc）
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
+                        if (smsBean.getMsg().equals("OK")){
+                            xtabLogin.getTabAt(0).select();   //设置TabLayout选中登录选项。
+                            llVisSms.setVisibility(View.GONE);
+                            llVisForget.setVisibility(View.VISIBLE);
+                            tvLogin.setText("登 录");
+                            type = 0;
+                        }
                         ToastUtils.showToast(LoginActivity.this, smsBean.getResult());
-
-                        xtabLogin.getTabAt(0).select();   //设置TabLayout选中登录选项。
-                        llVisSms.setVisibility(View.GONE);
-                        llVisForget.setVisibility(View.VISIBLE);
-                        tvLogin.setText("登 录");
-                        type = 0;
-
                     }
                 });
     }
@@ -307,8 +307,6 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                         Gson gson = new Gson();
                         SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
                         ToastUtils.showToast(LoginActivity.this, smsBean.getResult());
-
-                        code = smsBean.getIdenCode();
 
                         tvGetmss.setTextColor(Color.rgb(81, 87, 104));
                         rlGetMesss.setBackgroundResource(R.drawable.corners5_solidblack);

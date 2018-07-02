@@ -94,10 +94,13 @@ public class ExamBaoDianActivity extends ToolBarActivity {
 
     @OnClick(R.id.tv_exercises)
     public void onViewClicked() {
+        if (AppUtil.isFastDoubleClick(4000)) {
+            return;
+        }
         loadcommit();
     }
 
-
+    
     private void loadcommit() {
         OkGo.<String>post(HttpManager.ExamineEntry)
                 .tag(this)

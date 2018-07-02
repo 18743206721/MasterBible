@@ -81,8 +81,12 @@ public class ForgetTwoActivity extends ToolBarActivity {
             case R.id.btn_commit:
                 if (TextUtils.isEmpty(etPwd.getText().toString())) {
                     ToastUtils.showToast(ForgetTwoActivity.this, "请输入您的新密码");
+                } else if (etPwd.getText().length()!=6) {
+                    ToastUtils.showToast(ForgetTwoActivity.this, "请输入6位以上密码");
                 } else if (TextUtils.isEmpty(etPwdtwo.getText().toString())) {
                     ToastUtils.showToast(ForgetTwoActivity.this, "请确认您的密码");
+                } else if (etPwdtwo.getText().length()!=6) {
+                    ToastUtils.showToast(ForgetTwoActivity.this, "请输入6位以上密码");
                 } else if (!(etPwd.getText().toString()).equals(etPwdtwo.getText().toString())) {
                     tvNosms.setVisibility(View.VISIBLE);
                     etPwdtwo.setText("");
@@ -109,6 +113,9 @@ public class ForgetTwoActivity extends ToolBarActivity {
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
                         ToastUtils.showToast(ForgetTwoActivity.this, bean.getResult());
                         tvNosms.setVisibility(View.GONE);
+
+
+
                         //跳转到
                         Intent intent = new Intent();
                         intent.setClass(ForgetTwoActivity.this, ForgetThreeActivity.class);

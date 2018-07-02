@@ -194,7 +194,7 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                         Gson gson = new Gson();
                         TextQuestionsBean bean = gson.fromJson(response.body().toString(), TextQuestionsBean.class);
 
-                        if (bean.getData() != null) {
+                        if (bean.getStatus() == 1) {
                             mDatas.addAll(bean.getData().getAata());
                             //判断 IsPic是否是0，是文字，否则是图片 取pic；
                             if (bean.getData().getIsPic() == 0) {
