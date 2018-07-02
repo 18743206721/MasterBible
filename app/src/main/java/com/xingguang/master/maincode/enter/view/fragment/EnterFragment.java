@@ -34,7 +34,9 @@ import com.xingguang.master.maincode.home.model.JsonBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.CountDownRTimerUtil;
 import com.xingguang.master.util.GetJsonDataUtil;
+import com.xingguang.master.util.IdCardCheckUtil;
 import com.xingguang.master.util.ToastUtils;
+import com.xingguang.master.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +95,6 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
     @BindView(R.id.et_gongzhong)
     TextView etGongzhong;
 
-    protected List<String> mDatas = new ArrayList<>();
     private ArrayList<JsonBean> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
@@ -292,7 +293,7 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "yzm")
                 .params("Phone", etPhone.getText().toString())
-                .params("UserName",AppUtil.getUserId(getActivity()))
+                .params("UserName", AppUtil.getUserId(getActivity()))
                 .execute(new DialogCallback<String>(getActivity()) {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -350,6 +351,16 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
                         Gson gson = new Gson();
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
                         ToastUtils.showToast(getActivity(), bean.getResult());
+                        
+                        etName.setText("");
+                        etBumeng.setText("");
+                        etGongzhong.setText("");
+                        etProvince.setText("");
+                        etAds.setText("");
+                        etIdnum.setText("");
+                        etPhone.setText("");
+                        registerMss.setText("");
+
                         MainActivity.instance.setBg(1);
                         MainActivity.instance.setToNewsFragment();
                     }
@@ -464,7 +475,7 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
             ToastUtils.showToast(getActivity(), "请输入身份证!");
             return false;
         } else if (etIdnum.getText().length() != 18) {
-            ToastUtils.showToast(getActivity(), "请输入18位身份证!");
+            ToastUtils.showToast(getActivity(), "请输入18位身份证号!");
             return false;
         } else if (etPhone.getText().length() == 0) {
             ToastUtils.showToast(getActivity(), "请填写联系方式");
@@ -491,20 +502,17 @@ public class EnterFragment extends ToolBarFragment implements CountDownRTimerUti
          *
          * */
         String JsonData = new GetJsonDataUtil().getJson(getActivity(), "province.json");//获取assets目录下的json文件数据
-        Log.e("jsonbeanqqqq", "initJsonData: " + JsonData);
         ArrayList<JsonBean> jsonBean = AppUtil.parseData(JsonData);//用Gson 转成实体
         /**
          * 添加省份数据
          */
         options1Items = jsonBean;
-        Log.e("jsonbean", "initJsonData: " + jsonBean);
         for (int i = 0; i < jsonBean.size(); i++) { //遍历省份
             ArrayList<String> CityList = new ArrayList<>();//该省的城市列表（第二级）
             ArrayList<ArrayList<String>> Province_AreaList = new ArrayList<>();//该省的所有地区列表（第三极）
             for (int c = 0; c < jsonBean.get(i).getCity().size(); c++) {  //遍历该省份的所有城市
                 String cityname = jsonBean.get(i).getCity().get(c).getName();
                 CityList.add(cityname);//添加城市
-                Log.e("jsonbeanddd", "initJsonData: " + cityname);
                 ArrayList<String> City_AreaList = new ArrayList<>();//该城市的所有地区列表
                 //如果无地区数据，建议添加空数据，防止数据为null 导致三个选项长度不匹配造成崩溃
                 if (jsonBean.get(i).getCity().get(c).getArea().size() == 0) {

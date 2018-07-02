@@ -20,9 +20,9 @@ import java.util.List;
 public class TwoMoreAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     private Context mContext;
-    private List<TwoBean.DataBean> list;
+    private List<TwoBean.DataBean.ListBean> list;
 
-    public TwoMoreAdapter(Context mContext, List<TwoBean.DataBean> list) {
+    public TwoMoreAdapter(Context mContext, List<TwoBean.DataBean.ListBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -70,7 +70,7 @@ public class TwoMoreAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         return list.size();
     }
 
-    public void setList(List<TwoBean.DataBean> list) {
+    public void setList(List<TwoBean.DataBean.ListBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }

@@ -8,7 +8,7 @@ package com.xingguang.master.http;
 public class HttpManager {
 
     //线上
-//    public static final String BASE_URL = "http://192.168.0.150:8035/";
+//    public static final String BASE_URL = "http://app.ncsegov.cn/";
     //本地测试
     public static final String BASE_URL = "http://192.168.0.150:8035/";
 

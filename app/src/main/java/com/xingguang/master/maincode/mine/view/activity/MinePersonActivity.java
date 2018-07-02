@@ -132,6 +132,9 @@ public class MinePersonActivity extends ToolBarActivity {
                     setSubTitleColor(R.color.home_bule);
                     mineEtname.setVisibility(View.VISIBLE);
                     mineTvname.setVisibility(View.GONE);
+
+                    mineEtname.setText(AppUtil.getUserNickname(MinePersonActivity.this));
+
                 } else { //完成的时候，点击上传数据，finish
                     if (mineEtname.getText().length() == 0) {
                         ToastUtils.showToast(MinePersonActivity.this, "请输入您的昵称");
@@ -189,7 +192,7 @@ public class MinePersonActivity extends ToolBarActivity {
                         if (bean.getData() != null) {
                             mineDatas.addAll(bean.getData());
                             SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERNAME, mineDatas.get(0).getYEPrice());
-                            SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + mineDatas.get(0).getHeadPic());
+                            SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL+ mineDatas.get(0).getHeadPic());
                             //性别
                             SharedPreferencesUtils.put(MinePersonActivity.this, SharedPreferencesUtils.USERSEX, mineDatas.get(0).getEmail());
                             //地区
@@ -210,7 +213,7 @@ public class MinePersonActivity extends ToolBarActivity {
                 .cacheMode(CacheMode.DEFAULT)
                 .params("UserName", AppUtil.getUserId(this))
                 .params("MethodCode", "modify")
-                .params("HeadSculpture", selectedPhotos.get(0))
+                .params("HeadSculpture",new File(selectedPhotos.get(0)))
                 .params("NickName", mineEtname.getText().toString())
                 .params("Sex", mineTvsex.getText().toString())
                 .params("Address", mineTvarea.getText().toString())

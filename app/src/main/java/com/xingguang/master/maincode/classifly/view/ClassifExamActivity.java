@@ -56,6 +56,11 @@ public class ClassifExamActivity extends ToolBarActivity {
     ImageView tabOneImg;
     @BindView(R.id.tab_one_txt)
     TextView tabOneTxt;
+    @BindView(R.id.tab_two_txt)
+    TextView tab_two_txt;
+    @BindView(R.id.tab_two_img)
+    ImageView tab_two_img;
+
     String name;//名字
     int bumenId;
     int gongzhongId;
@@ -82,9 +87,9 @@ public class ClassifExamActivity extends ToolBarActivity {
         bumenId = getIntent().getIntExtra("bumenId", 0);
         gongzhongId = getIntent().getIntExtra("gongzhongId", 0);
 
-        //设置首页按钮颜色
-        AppUtil.setThemeColor(tabOneImg, ClassifExamActivity.this, R.drawable.home_icon);
-        tabOneTxt.setTextColor(getResources().getColor(R.color.text_color_red));
+        //设置分类页按钮颜色
+        AppUtil.setThemeColor(tab_two_img, ClassifExamActivity.this, R.drawable.classif_icon);
+        tab_two_txt.setTextColor(getResources().getColor(R.color.text_color_red));
         tvName.setText(name);
     }
 
@@ -121,9 +126,15 @@ public class ClassifExamActivity extends ToolBarActivity {
                 ClassifExamActivity.this.finish();
                 break;
             case R.id.iv_baodian: //平常练习
+                if (AppUtil.isFastDoubleClick(5000)) {
+                    return;
+                }
                 loadinfo(1);
                 break;
             case R.id.iv_kaoshi://正规考试
+                if (AppUtil.isFastDoubleClick(5000)) {
+                    return;
+                }
                 loadinfo(2);
                 break;
         }

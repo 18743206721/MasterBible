@@ -6,8 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.model.Response;
@@ -22,6 +26,7 @@ import com.xingguang.master.maincode.home.view.activity.OneDetailsActivity;
 import com.xingguang.master.maincode.home.view.adapter.OneMoreAdapter;
 import com.xingguang.master.maincode.home.view.adapter.TwoMoreAdapter;
 import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
+import com.xingguang.master.refresh.RefreshUtil;
 import com.xingguang.master.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -33,7 +38,7 @@ import butterknife.BindView;
  * 描述:行业资讯列表页面
  * 作者:LiuYu
  */
-public class TwoFragment extends ToolBarFragment {
+public class TwoFragment extends ToolBarFragment implements RefreshUtil.OnRefreshListener{
 
     @BindView(R.id.rv_baokao)
     RecyclerView rvBaokao;
@@ -41,8 +46,16 @@ public class TwoFragment extends ToolBarFragment {
     RelativeLayout rlBaokao;
     @BindView(R.id.empty)
     ImageView empty;
-    private List<TwoBean.DataBean> list = new ArrayList<>();
+    @BindView(R.id.tw_Refresh)
+    TwinklingRefreshLayout tw_refresh;
+
+    int page = 1;
+    private boolean isRefresh = false;
+
+
+    private List<TwoBean.DataBean.ListBean> list = new ArrayList<>();
     private TwoMoreAdapter twoAdapter;
+
 
     @Override
     protected int getLayoutId() {
@@ -51,6 +64,10 @@ public class TwoFragment extends ToolBarFragment {
 
     @Override
     protected void initView() {
+        tw_refresh.setHeaderView(new SinaRefreshView(getActivity()));
+        tw_refresh.setBottomView(new LoadingView(getActivity()));
+        tw_refresh.setOnRefreshListener(new RefreshUtil(this).refreshListenerAdapter());
+
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +77,7 @@ public class TwoFragment extends ToolBarFragment {
         });
         setToolBarTitle("行业资讯");
         init();
-        load();
+        load(1);
         initListener();
     }
 
@@ -71,23 +88,51 @@ public class TwoFragment extends ToolBarFragment {
         rvBaokao.setAdapter(twoAdapter);
     }
 
-    private void load() {
+    private void load(final int page) {
         OkGo.<String>post(HttpManager.Information)
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode","list")
+                .params("PageNum",page)
                 .execute(new DialogCallback<String>(getActivity()) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         TwoBean bean = gson.fromJson(response.body().toString(), TwoBean.class);
                         if (bean.getData()!=null){
-                            list.addAll(bean.getData());
+
+                            if (bean.getData().getList().size() == 0 && page != 1) {
+                                Toast.makeText(getActivity(),
+                                        "只有这么多了~",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (page == 1){
+                                list.clear();
+                            }
+
+                            list.addAll(bean.getData().getList());
+
+                            if (list.size() == 0){
+                                rlBaokao.setVisibility(View.GONE);
+                                empty.setVisibility(View.VISIBLE);
+                            }else {
+                                rlBaokao.setVisibility(View.VISIBLE);
+                                empty.setVisibility(View.GONE);
+                            }
+
                             twoAdapter.setList(list);
                         }else{
                             ToastUtils.showToast(getActivity(),bean.getMsg());
                         }
+
+                        if (isRefresh) {
+                            tw_refresh.finishRefreshing();
+                        } else {
+                            tw_refresh.finishLoadmore();
+                        }
+
                     }
                 });
     }
@@ -113,5 +158,15 @@ public class TwoFragment extends ToolBarFragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+        isRefresh = true;
+        load(1);
+    }
 
+    @Override
+    public void onLoad() {
+        isRefresh = false;
+        load(page++);
+    }
 }

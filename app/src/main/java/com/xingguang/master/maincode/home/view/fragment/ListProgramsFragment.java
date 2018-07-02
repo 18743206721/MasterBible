@@ -551,6 +551,9 @@ public class ListProgramsFragment extends BaseFragment implements CountDownRTime
         if (TextUtils.isEmpty(etBumeng.getText().toString())) {
             ToastUtils.showToast(getActivity(), "请选择部门!");
             return false;
+        } else if (etGongzhong.getText().length() == 0){
+            ToastUtils.showToast(getActivity(), "请选择工种!");
+            return false;
         } else if (etName.getText().length() == 0) {
             ToastUtils.showToast(getActivity(), "请输入您的姓名!");
             return false;
@@ -636,6 +639,7 @@ public class ListProgramsFragment extends BaseFragment implements CountDownRTime
     @Override
     public void countDownTimerFinish() {
         tvGetmss.setEnabled(true);
+        rlGetMesss.setEnabled(true);
         tvGetmss.setTextColor(Color.parseColor("#005FBB"));
         rlGetMesss.setBackgroundResource(R.drawable.btn_register_bg);
     }

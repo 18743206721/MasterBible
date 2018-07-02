@@ -124,6 +124,15 @@ public class HomeBean {
             private String imgpath;
             private int Sort;
             private String AddDate;
+            private String Title;
+
+            public String getTitle() {
+                return Title;
+            }
+
+            public void setTitle(String title) {
+                Title = title;
+            }
 
             public int getID() {
                 return ID;

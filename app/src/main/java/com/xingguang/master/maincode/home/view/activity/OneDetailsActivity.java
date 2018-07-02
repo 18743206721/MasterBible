@@ -22,6 +22,7 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.http.ResultBean;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.OneBean;
 import com.xingguang.master.maincode.home.model.OneDetailsBean;
@@ -231,7 +232,7 @@ public class OneDetailsActivity extends ToolBarActivity {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
-                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        ResultBean bean = gson.fromJson(response.body().toString(), ResultBean.class);
                         ToastUtils.showToast(OneDetailsActivity.this, bean.getResult());
                         finish();
                     }

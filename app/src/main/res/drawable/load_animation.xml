@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_1"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_2"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_3"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_4"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_5"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_6"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_7"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_8"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_9"-->
+        <!--android:duration="50" />-->
+    <!--<item-->
+        <!--android:drawable="@drawable/loading_animation_refresh_10"-->
+        <!--android:duration="50" />-->
+
+</animation-list>

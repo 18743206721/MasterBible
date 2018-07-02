@@ -81,7 +81,7 @@ public class WebViewActivity extends ToolBarActivity {
             llTitle.setVisibility(View.VISIBLE);
             setToolBarTitle("项目");
             loadxieyi();
-        } else { //焊工
+        } else { //焊工，培训项目
             llBot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
             setToolBarTitle("项目");

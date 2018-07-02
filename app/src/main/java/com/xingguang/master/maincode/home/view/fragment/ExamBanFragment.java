@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -98,6 +99,8 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     TextView tvD;
     @BindView(R.id.ll_d)
     LinearLayout llD;
+    @BindView(R.id.rl_content)
+    RelativeLayout rl_content;
 
     NoScrollViewpager viewPager;
     private CountDownTimerUtil util;
@@ -196,22 +199,23 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                             //判断 IsPic是否是0，是文字，否则是图片 取pic；
                             if (bean.getData().getIsPic() == 0) {
                                 iv_content.setVisibility(View.GONE);
-                                tvContent.setVisibility(View.VISIBLE);
+                                rl_content.setVisibility(View.VISIBLE);
 
-                                SpannableStringBuilder spannableString = new SpannableStringBuilder();
-                                spannableString.append("单选题 " + bean.getData().getTitel());
-                                //获取图片
-                                Drawable drawable = getResources().getDrawable(R.mipmap.danxuan);
-                                //设置图片的间距
-                                drawable.setBounds(0, -20, drawable.getIntrinsicWidth() + 20, drawable.getIntrinsicHeight());
-                                ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-                                spannableString.setSpan(span, 0, 3, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                                tvContent.setText(spannableString);
-                                tvContent.setLetterSpacing(0.3f);//设置TextView的字间距，在低版本的手机上无效果
+//                                SpannableStringBuilder spannableString = new SpannableStringBuilder();
+//                                spannableString.append("单选题 " + bean.getData().getTitel());
+//                                //获取图片
+//                                Drawable drawable = getResources().getDrawable(R.mipmap.danxuan);
+//                                //设置图片的间距
+//                                drawable.setBounds(0, -20, drawable.getIntrinsicWidth() + 20, drawable.getIntrinsicHeight());
+//                                ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+//                                spannableString.setSpan(span, 0, 3, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+//                                tvContent.setText(spannableString);
+//                                tvContent.setLetterSpacing(0.3f);//设置TextView的字间距，在低版本的手机上无效果
+                                tvContent.setText("                "+bean.getData().getTitel());
 
                             } else { //是图片
                                 iv_content.setVisibility(View.VISIBLE);
-                                tvContent.setVisibility(View.GONE);
+                                rl_content.setVisibility(View.GONE);
                                 ImageLoader.getInstance().initGlide(getActivity()).loadImage(
                                         HttpManager.BASE_URL + bean.getData().getPIC(), iv_content);
                             }
@@ -260,15 +264,11 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                                     llD.setVisibility(View.VISIBLE);
                                     tvD.setText(mDatas.get(i).getTitle());
                                 } else {
-//                                    ToastUtils.showToast(getActivity(), "暂无题目选项,请联系后台管理员!");
-//                                    llA.setVisibility(View.GONE);
-//                                    llB.setVisibility(View.GONE);
-//                                    llC.setVisibility(View.GONE);
-//                                    llD.setVisibility(View.GONE);
-                                    llA.setVisibility(View.VISIBLE);
-                                    llB.setVisibility(View.VISIBLE);
-                                    llC.setVisibility(View.VISIBLE);
-                                    llD.setVisibility(View.VISIBLE);
+                                    ToastUtils.showToast(getActivity(), "暂无题目选项,请联系后台管理员!");
+                                    llA.setVisibility(View.GONE);
+                                    llB.setVisibility(View.GONE);
+                                    llC.setVisibility(View.GONE);
+                                    llD.setVisibility(View.GONE);
                                     tvD.setText(mDatas.get(i).getTitle());
                                 }
                             }

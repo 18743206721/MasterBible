@@ -177,6 +177,7 @@ public class ForgetOneActivity extends ToolBarActivity implements CountDownRTime
     @Override
     public void countDownTimerFinish() {
         tvGetmss.setEnabled(true);
+        rlGetMesss.setEnabled(true);
         tvGetmss.setTextColor(Color.parseColor("#005FBB"));
         rlGetMesss.setBackgroundResource(R.drawable.btn_register_bg);
     }

@@ -8,15 +8,16 @@ import java.util.List;
  * 作者:LiuYu
  */
 public class OneBean {
+
     /**
      * status : 1
      * msg : SUCCESS
-     * data : [{"ID":1,"JobName":"招聘职位测试01","DiDian":"地点01","DaiYu":"面议","Sort":1,"AddDate":"2018-06-15T13:12:25"},{"ID":2,"JobName":"招聘职位02","DiDian":"地点02","DaiYu":"5000-12000","Sort":2,"AddDate":"2018-06-14T16:19:19"}]
+     * data : {"PageNum":1,"List":[{"ID":1,"JobName":"招聘职位测试01","DiDian":"地点01","DaiYu":"面议","Sort":1,"AddDate":"2018-06-15T13:12:25"},{"ID":2,"JobName":"招聘职位02","DiDian":"地点02","DaiYu":"5000-12000","Sort":2,"AddDate":"2018-06-14T16:19:19"}]}
      */
 
     private int status;
     private String msg;
-    private List<DataBean> data;
+    private DataBean data;
 
     public int getStatus() {
         return status;
@@ -34,77 +35,103 @@ public class OneBean {
         this.msg = msg;
     }
 
-    public List<DataBean> getData() {
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
     public static class DataBean {
         /**
-         * ID : 1
-         * JobName : 招聘职位测试01
-         * DiDian : 地点01
-         * DaiYu : 面议
-         * Sort : 1
-         * AddDate : 2018-06-15T13:12:25
+         * PageNum : 1
+         * List : [{"ID":1,"JobName":"招聘职位测试01","DiDian":"地点01","DaiYu":"面议","Sort":1,"AddDate":"2018-06-15T13:12:25"},{"ID":2,"JobName":"招聘职位02","DiDian":"地点02","DaiYu":"5000-12000","Sort":2,"AddDate":"2018-06-14T16:19:19"}]
          */
 
-        private int ID;
-        private String JobName;
-        private String DiDian;
-        private String DaiYu;
-        private int Sort;
-        private String AddDate;
+        private int PageNum;
+        private java.util.List<ListBean> List;
 
-        public int getID() {
-            return ID;
+        public int getPageNum() {
+            return PageNum;
         }
 
-        public void setID(int ID) {
-            this.ID = ID;
+        public void setPageNum(int PageNum) {
+            this.PageNum = PageNum;
         }
 
-        public String getJobName() {
-            return JobName;
+        public List<ListBean> getList() {
+            return List;
         }
 
-        public void setJobName(String JobName) {
-            this.JobName = JobName;
+        public void setList(List<ListBean> List) {
+            this.List = List;
         }
 
-        public String getDiDian() {
-            return DiDian;
-        }
+        public static class ListBean {
+            /**
+             * ID : 1
+             * JobName : 招聘职位测试01
+             * DiDian : 地点01
+             * DaiYu : 面议
+             * Sort : 1
+             * AddDate : 2018-06-15T13:12:25
+             */
 
-        public void setDiDian(String DiDian) {
-            this.DiDian = DiDian;
-        }
+            private int ID;
+            private String JobName;
+            private String DiDian;
+            private String DaiYu;
+            private int Sort;
+            private String AddDate;
 
-        public String getDaiYu() {
-            return DaiYu;
-        }
+            public int getID() {
+                return ID;
+            }
 
-        public void setDaiYu(String DaiYu) {
-            this.DaiYu = DaiYu;
-        }
+            public void setID(int ID) {
+                this.ID = ID;
+            }
 
-        public int getSort() {
-            return Sort;
-        }
+            public String getJobName() {
+                return JobName;
+            }
 
-        public void setSort(int Sort) {
-            this.Sort = Sort;
-        }
+            public void setJobName(String JobName) {
+                this.JobName = JobName;
+            }
 
-        public String getAddDate() {
-            return AddDate;
-        }
+            public String getDiDian() {
+                return DiDian;
+            }
 
-        public void setAddDate(String AddDate) {
-            this.AddDate = AddDate;
+            public void setDiDian(String DiDian) {
+                this.DiDian = DiDian;
+            }
+
+            public String getDaiYu() {
+                return DaiYu;
+            }
+
+            public void setDaiYu(String DaiYu) {
+                this.DaiYu = DaiYu;
+            }
+
+            public int getSort() {
+                return Sort;
+            }
+
+            public void setSort(int Sort) {
+                this.Sort = Sort;
+            }
+
+            public String getAddDate() {
+                return AddDate;
+            }
+
+            public void setAddDate(String AddDate) {
+                this.AddDate = AddDate;
+            }
         }
     }
 }

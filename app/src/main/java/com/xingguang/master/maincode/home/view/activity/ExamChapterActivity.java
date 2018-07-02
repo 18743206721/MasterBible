@@ -101,7 +101,11 @@ public class ExamChapterActivity extends ToolBarActivity {
 
     @OnClick(R.id.iv_start)
     public void onViewClicked() {
-        loadcommit();
+        if (AppUtil.isFastDoubleClick(3000)) {
+            return;
+        }else {
+            loadcommit();
+        }
     }
 
 

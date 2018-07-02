@@ -107,7 +107,7 @@ public class SearchActivity extends BaseActivity {
         LinearLayoutManager manager = new LinearLayoutManager(SearchActivity.this);
         rvHome.setLayoutManager(manager);
         rvHome.setAdapter(searchAdapter);
-        loadlist();
+        loadlist(content,1);
         initListener();
     }
 
@@ -145,9 +145,9 @@ public class SearchActivity extends BaseActivity {
             MainActivity.instance.setBg(3);
             MainActivity.instance.setToActivityFragment();
         } else if ("6".equals(type)) { //6培训项目
-            startActivity(new Intent(SearchActivity.this, ProgramsActivity.class)
-                    .putExtra("title", "0")
-                    .putExtra("classtype", 3)
+            startActivity(new Intent(SearchActivity.this, WebViewActivity.class)
+                    .putExtra("id", 2)
+                    .putExtra("classid", Integer.parseInt(searchid))
             );
         }
     }
@@ -155,12 +155,17 @@ public class SearchActivity extends BaseActivity {
     /**
      * 搜索列表
      */
-    private void loadlist() {
+    private void loadlist(String con, int type) {
+        if (type == 1){//首页输入的搜索数据
+            con = content;
+        }else if (type == 2){ //本页面输入的搜索数据
+            con = tvPlaySerch.getText().toString();
+        }
         OkGo.<String>post(HttpManager.Search)
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("SearchKeyword", content)
+                .params("SearchKeyword", con)
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -181,9 +186,6 @@ public class SearchActivity extends BaseActivity {
 
                             searchAdapter.setList(list);
 
-
-                        } else {
-//                            ToastUtils.showToast(SearchActivity.this, bean.getMsg());
 
                         }
                     }
@@ -228,41 +230,12 @@ public class SearchActivity extends BaseActivity {
                 if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
                     ToastUtils.showToast(SearchActivity.this, "请输入搜索内容！");
                 } else {
-                    serarchload();
+                    loadlist(content,2);
                 }
                 break;
         }
     }
 
-
-    private void serarchload() {
-        OkGo.<String>post(HttpManager.Search)
-                .tag(this)
-                .cacheKey("cachePostKey")
-                .cacheMode(CacheMode.DEFAULT)
-                .params("SearchKeyword", tvPlaySerch.getText().toString())
-                .execute(new DialogCallback<String>(this) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Gson gson = new Gson();
-                        SearchBean bean = gson.fromJson(response.body().toString(), SearchBean.class);
-                        if (bean.getData() != null) {
-                            list.clear();
-                            list.addAll(bean.getData());
-                            if (list.size() == 0) {
-                                rl_baokao.setVisibility(View.GONE);
-                                empty.setVisibility(View.VISIBLE);
-                            } else {
-                                empty.setVisibility(View.GONE);
-                                rl_baokao.setVisibility(View.VISIBLE);
-                            }
-                            searchAdapter.setList(list);
-                        } else {
-                            ToastUtils.showToast(SearchActivity.this, bean.getMsg());
-                        }
-                    }
-                });
-    }
 
 
 }

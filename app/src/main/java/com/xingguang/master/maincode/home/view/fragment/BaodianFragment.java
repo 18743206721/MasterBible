@@ -129,14 +129,6 @@ public class BaodianFragment extends ToolBarFragment {
                 }
             }
             textView.setText(mTitles[i]);//设置tab上的文字
-
-//            textView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                }
-//            });
-
         }
 
         tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

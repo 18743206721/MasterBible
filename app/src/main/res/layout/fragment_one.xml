@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:background="@color/board"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/toolbar_layout" />
 
     <View
         android:layout_width="match_parent"
@@ -22,10 +22,17 @@
             android:layout_height="match_parent"
             android:visibility="visible">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_baokao"
+            <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+                android:id="@+id/tw_Refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_baokao"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
         </RelativeLayout>
 
 

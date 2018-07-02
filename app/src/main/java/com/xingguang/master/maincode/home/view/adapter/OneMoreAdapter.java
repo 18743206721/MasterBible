@@ -22,9 +22,9 @@ public class OneMoreAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
 
     private Context mContext;
-    private List<OneBean.DataBean> list;
+    private List<OneBean.DataBean.ListBean> list;
 
-    public OneMoreAdapter(Context mContext, List<OneBean.DataBean> list) {
+    public OneMoreAdapter(Context mContext, List<OneBean.DataBean.ListBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -75,7 +75,7 @@ public class OneMoreAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         return list.size();
     }
 
-    public void setList(List<OneBean.DataBean> list) {
+    public void setList(List<OneBean.DataBean.ListBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }

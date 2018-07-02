@@ -60,22 +60,10 @@ public class OnlineFragment extends ToolBarFragment {
             }
         });
         setToolBarTitle("在线留言");
-
-        init();
-
     }
-
-
-    private void init() {
-
-
-    }
-
 
     @Override
-    protected void lazyLoad() {
-
-    }
+    protected void lazyLoad() {}
 
     @OnClick(R.id.btn_commit)
     public void onViewClicked() {
@@ -101,6 +89,11 @@ public class OnlineFragment extends ToolBarFragment {
                         Gson gson = new Gson();
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
                         ToastUtils.showToast(getActivity(),bean.getResult());
+
+                        etPhone.setText("");
+                        etName.setText("");
+                        edContent.setText("");
+
                         MainActivity.instance.setBg(1);
                         MainActivity.instance.setToNewsFragment();
                     }

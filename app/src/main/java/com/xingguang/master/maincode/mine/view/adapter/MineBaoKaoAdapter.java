@@ -28,10 +28,10 @@ public class MineBaoKaoAdapter extends RecyclerView.Adapter<MineBaoKaoAdapter.Vi
     public static final int TYPE_NORMAL=1;
     private View mHeaderView;
     private Context mContext;
-    private List<BaoKaoGuanLiBean.DataBean> list;
+    private List<BaoKaoGuanLiBean.DataBean.ListBean> list;
     int classif;//1是报考记录，2是培训记录
 
-    public MineBaoKaoAdapter(Context mContext, List<BaoKaoGuanLiBean.DataBean> list, int classif) {
+    public MineBaoKaoAdapter(Context mContext, List<BaoKaoGuanLiBean.DataBean.ListBean> list, int classif) {
         this.mContext = mContext;
         this.list = list;
         this.classif = classif;
@@ -101,7 +101,7 @@ public class MineBaoKaoAdapter extends RecyclerView.Adapter<MineBaoKaoAdapter.Vi
         return mHeaderView!=null ? list.size()+1 : list.size();
     }
 
-    public void setList(List<BaoKaoGuanLiBean.DataBean> list) {
+    public void setList(List<BaoKaoGuanLiBean.DataBean.ListBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }

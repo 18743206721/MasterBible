@@ -209,6 +209,13 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                         Gson gson = new Gson();
                         SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
                         ToastUtils.showToast(LoginActivity.this, smsBean.getResult());
+
+                        xtabLogin.getTabAt(0).select();   //设置TabLayout选中登录选项。
+                        llVisSms.setVisibility(View.GONE);
+                        llVisForget.setVisibility(View.VISIBLE);
+                        tvLogin.setText("登 录");
+                        type = 0;
+
                     }
                 });
     }
@@ -228,24 +235,27 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         LoginBean loginBean = gson.fromJson(response.body().toString(), LoginBean.class);
-                        SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERID, loginBean.getData().get(0).getUserName());
-                        if (loginBean.getData().get(0).getYEPrice() != null) {
-                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERNAME, loginBean.getData().get(0).getYEPrice());
-                        }
-                        if (loginBean.getData().get(0).getHeadPic() != null) {
-                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + loginBean.getData().get(0).getHeadPic());
-                        }
-                        //性别
-                        if (loginBean.getData().get(0).getEmail() != null) {
-                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERSEX, loginBean.getData().get(0).getEmail());
-                        }
+                        if (loginBean.getData().size() != 0) {
+                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERID, loginBean.getData().get(0).getUserName());
+                            if (loginBean.getData().get(0).getYEPrice() != null) {
+                                SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERNAME, loginBean.getData().get(0).getYEPrice());
+                            }
+                            if (loginBean.getData().get(0).getHeadPic() != null) {
+                                SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + loginBean.getData().get(0).getHeadPic());
+                            }
+                            //性别
+                            if (loginBean.getData().get(0).getEmail() != null) {
+                                SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERSEX, loginBean.getData().get(0).getEmail());
+                            }
 
-                        //地区
-                        if (loginBean.getData().get(0).getTeam() != null) {
-                            SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
+                            //地区
+                            if (loginBean.getData().get(0).getTeam() != null) {
+                                SharedPreferencesUtils.put(LoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
+                            }
+                            finish();
                         }
                         ToastUtils.showToast(LoginActivity.this, loginBean.getResult());
-                        finish();
+
                     }
                 });
     }
@@ -322,6 +332,7 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
     @Override
     public void countDownTimerFinish() {
         tvGetmss.setEnabled(true);
+        rlGetMesss.setEnabled(true);
         tvGetmss.setTextColor(Color.parseColor("#005FBB"));
         rlGetMesss.setBackgroundResource(R.drawable.btn_register_bg);
     }

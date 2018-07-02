@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80dp"
-            android:text="大工公益宝典"
+            android:text="焊接部落"
             android:textColor="@color/white"
             android:textSize="46sp" />
 

@@ -48,6 +48,7 @@ import com.xingguang.master.util.RoundRectImageView;
 import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.ImageLoader;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,7 @@ public class HomeFragment extends BaseFragment {
     private List<HomeBean.DataBean.InformationBean> twolist = new ArrayList<>();
     private List<HomeBean.DataBean.CultivateBean> threelist = new ArrayList<>();
     private List<String> networkImages = new ArrayList<>();
+    private List<HomeBean.DataBean.BannerimgBean> bannerList = new ArrayList<>();
 
     //广告位
     List<HomeBean.DataBean.Adsense1Bean> adsense1BeanList = new ArrayList<>();
@@ -121,8 +123,22 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView() {
         load();
+        initListener();
     }
 
+    private void initListener() {
+        //轮播图点击事件
+        banner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                for (int i = 0; i < bannerList.size(); i++) {
+                    if (position == i){
+                        intentclassif(bannerList.get(i).getUrl(),bannerList.get(i).getTitle());
+                    }
+                }
+            }
+        });
+    }
 
     private void load() {
         OkGo.<String>get(HttpManager.index)
@@ -135,6 +151,7 @@ public class HomeFragment extends BaseFragment {
                         Gson gson = new Gson();
                         HomeBean bean = gson.fromJson(response.body().toString(), HomeBean.class);
 
+                        bannerList.addAll(bean.getData().getBannerimg());
                         //设置轮播图数据
                         for (int i = 0; i < bean.getData().getBannerimg().size(); i++) {
                             networkImages.add(HttpManager.BASE_URL + bean.getData().getBannerimg().get(i).getImgpath());
@@ -177,7 +194,6 @@ public class HomeFragment extends BaseFragment {
         banner.setDelayTime(3000);
         //banner设置方法全部调用完毕时最后调用
         banner.start();
-
     }
 
     private void initone() {

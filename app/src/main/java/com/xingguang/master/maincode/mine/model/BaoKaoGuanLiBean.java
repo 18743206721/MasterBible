@@ -9,15 +9,16 @@ import java.util.List;
  */
 public class BaoKaoGuanLiBean {
 
+
     /**
      * status : 1
      * msg : SUCCESS
-     * data : [{"ID":4,"UserName":"18743206721","DepartmentID":2,"ProfessionID":14,"DepartmentName":"质监局","ProfessionName":"质监局瓦工","FormatAddDate":"2018-06-20"},{"ID":2,"UserName":"aa","DepartmentID":1,"ProfessionID":11,"DepartmentName":"安监局","ProfessionName":"安监局瓦工","FormatAddDate":"2018-06-19"},{"ID":1,"UserName":"aa","DepartmentID":1,"ProfessionID":11,"DepartmentName":"安监局","ProfessionName":"安监局瓦工","FormatAddDate":"2018-06-19"}]
+     * data : {"PageNum":1,"List":[{"ID":11,"UserName":"aa","DepartmentID":2,"ProfessionID":13,"DepartmentName":"质监局","ProfessionName":"质监局电工","FormatAddDate":"2018-06-28"}]}
      */
 
     private int status;
     private String msg;
-    private List<DataBean> data;
+    private DataBean data;
 
     public int getStatus() {
         return status;
@@ -35,87 +36,113 @@ public class BaoKaoGuanLiBean {
         this.msg = msg;
     }
 
-    public List<DataBean> getData() {
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
     public static class DataBean {
         /**
-         * ID : 4
-         * UserName : 18743206721
-         * DepartmentID : 2
-         * ProfessionID : 14
-         * DepartmentName : 质监局
-         * ProfessionName : 质监局瓦工
-         * FormatAddDate : 2018-06-20
+         * PageNum : 1
+         * List : [{"ID":11,"UserName":"aa","DepartmentID":2,"ProfessionID":13,"DepartmentName":"质监局","ProfessionName":"质监局电工","FormatAddDate":"2018-06-28"}]
          */
 
-        private int ID;
-        private String UserName;
-        private int DepartmentID;
-        private int ProfessionID;
-        private String DepartmentName;
-        private String ProfessionName;
-        private String FormatAddDate;
+        private int PageNum;
+        private java.util.List<ListBean> List;
 
-        public int getID() {
-            return ID;
+        public int getPageNum() {
+            return PageNum;
         }
 
-        public void setID(int ID) {
-            this.ID = ID;
+        public void setPageNum(int PageNum) {
+            this.PageNum = PageNum;
         }
 
-        public String getUserName() {
-            return UserName;
+        public List<ListBean> getList() {
+            return List;
         }
 
-        public void setUserName(String UserName) {
-            this.UserName = UserName;
+        public void setList(List<ListBean> List) {
+            this.List = List;
         }
 
-        public int getDepartmentID() {
-            return DepartmentID;
-        }
+        public static class ListBean {
+            /**
+             * ID : 11
+             * UserName : aa
+             * DepartmentID : 2
+             * ProfessionID : 13
+             * DepartmentName : 质监局
+             * ProfessionName : 质监局电工
+             * FormatAddDate : 2018-06-28
+             */
 
-        public void setDepartmentID(int DepartmentID) {
-            this.DepartmentID = DepartmentID;
-        }
+            private int ID;
+            private String UserName;
+            private int DepartmentID;
+            private int ProfessionID;
+            private String DepartmentName;
+            private String ProfessionName;
+            private String FormatAddDate;
 
-        public int getProfessionID() {
-            return ProfessionID;
-        }
+            public int getID() {
+                return ID;
+            }
 
-        public void setProfessionID(int ProfessionID) {
-            this.ProfessionID = ProfessionID;
-        }
+            public void setID(int ID) {
+                this.ID = ID;
+            }
 
-        public String getDepartmentName() {
-            return DepartmentName;
-        }
+            public String getUserName() {
+                return UserName;
+            }
 
-        public void setDepartmentName(String DepartmentName) {
-            this.DepartmentName = DepartmentName;
-        }
+            public void setUserName(String UserName) {
+                this.UserName = UserName;
+            }
 
-        public String getProfessionName() {
-            return ProfessionName;
-        }
+            public int getDepartmentID() {
+                return DepartmentID;
+            }
 
-        public void setProfessionName(String ProfessionName) {
-            this.ProfessionName = ProfessionName;
-        }
+            public void setDepartmentID(int DepartmentID) {
+                this.DepartmentID = DepartmentID;
+            }
 
-        public String getFormatAddDate() {
-            return FormatAddDate;
-        }
+            public int getProfessionID() {
+                return ProfessionID;
+            }
 
-        public void setFormatAddDate(String FormatAddDate) {
-            this.FormatAddDate = FormatAddDate;
+            public void setProfessionID(int ProfessionID) {
+                this.ProfessionID = ProfessionID;
+            }
+
+            public String getDepartmentName() {
+                return DepartmentName;
+            }
+
+            public void setDepartmentName(String DepartmentName) {
+                this.DepartmentName = DepartmentName;
+            }
+
+            public String getProfessionName() {
+                return ProfessionName;
+            }
+
+            public void setProfessionName(String ProfessionName) {
+                this.ProfessionName = ProfessionName;
+            }
+
+            public String getFormatAddDate() {
+                return FormatAddDate;
+            }
+
+            public void setFormatAddDate(String FormatAddDate) {
+                this.FormatAddDate = FormatAddDate;
+            }
         }
     }
 }
