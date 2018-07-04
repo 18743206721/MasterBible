@@ -2,6 +2,8 @@ package com.xingguang.master.maincode.mine.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +31,9 @@ import com.xingguang.master.maincode.home.model.HomeBean;
 import com.xingguang.master.maincode.home.model.JsonBean;
 import com.xingguang.master.maincode.mine.model.MineBean;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.BitmapUtil;
 import com.xingguang.master.util.GetJsonDataUtil;
+import com.xingguang.master.util.RoundImageView;
 import com.xingguang.master.util.SharedPreferencesUtils;
 import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.ImageLoader;
@@ -51,7 +55,7 @@ import me.iwf.photopicker.PhotoPicker;
 public class MinePersonActivity extends ToolBarActivity {
 
     @BindView(R.id.mine_iv)
-    ImageView mineIv;
+    RoundImageView mineIv;
     @BindView(R.id.rl_header)
     RelativeLayout rlHeader;
     @BindView(R.id.mine_tvname)
@@ -134,6 +138,7 @@ public class MinePersonActivity extends ToolBarActivity {
                     mineTvname.setVisibility(View.GONE);
 
                     mineEtname.setText(AppUtil.getUserNickname(MinePersonActivity.this));
+                    mineTvname.setText(AppUtil.getUserNickname(MinePersonActivity.this));
 
                 } else { //完成的时候，点击上传数据，finish
                     if (mineEtname.getText().length() == 0) {
@@ -142,6 +147,11 @@ public class MinePersonActivity extends ToolBarActivity {
                         a = 0;
                         setSubTitle("编辑");
                         setSubTitleColor(R.color.home_bule);
+                        mineEtname.setVisibility(View.GONE);
+                        mineTvname.setVisibility(View.VISIBLE);
+
+                        mineEtname.setText(AppUtil.getUserNickname(MinePersonActivity.this));
+                        mineTvname.setText(AppUtil.getUserNickname(MinePersonActivity.this));
                         load();
                     }
                 }
@@ -156,7 +166,8 @@ public class MinePersonActivity extends ToolBarActivity {
      * 回显数据
      */
     private void Edit() {
-        ImageLoader.loadCircleImage(MinePersonActivity.this, AppUtil.getUserImage(this), mineIv);
+        String huixianurl = AppUtil.getUserImage(this);
+        ImageLoader.loadCircleImage(MinePersonActivity.this, huixianurl, mineIv);
         mineTvname.setText(AppUtil.getUserNickname(this));
         mineTvsex.setText(AppUtil.getUsersex(this));
         mineTvarea.setText(AppUtil.getUserads(this));
@@ -213,7 +224,7 @@ public class MinePersonActivity extends ToolBarActivity {
                 .cacheMode(CacheMode.DEFAULT)
                 .params("UserName", AppUtil.getUserId(this))
                 .params("MethodCode", "modify")
-                .params("HeadSculpture",new File(selectedPhotos.get(0)))
+                .params("HeadSculpture",new File(img))
                 .params("NickName", mineEtname.getText().toString())
                 .params("Sex", mineTvsex.getText().toString())
                 .params("Address", mineTvarea.getText().toString())
@@ -340,9 +351,16 @@ public class MinePersonActivity extends ToolBarActivity {
             if (data != null) {
                 selectedPhotos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                 if (selectedPhotos.size() != 0) {
-                    img = selectedPhotos.get(0);
+                    img = BitmapUtil.compressImage(selectedPhotos.get(0));
                 }
-                ImageLoader.getInstance().initGlide(MinePersonActivity.this).loadImage(selectedPhotos.get(0), mineIv);
+
+                ImageLoader.loadCircleImage(MinePersonActivity.this,img,mineIv);
+
+//                Bitmap bmp = BitmapFactory.decodeFile(new File(selectedPhotos.get(0)).toString());//filePath
+//                Bitmap bmp= BitmapFactory.decodeResource(res, R.mipmap.flower);
+//                AppUtil.qualityCompress(bmp,);
+
+
             }
 
         }
@@ -353,7 +371,6 @@ public class MinePersonActivity extends ToolBarActivity {
         /**
          * 注意：assets 目录下的Json文件仅供参考，实际使用可自行替换文件
          * 关键逻辑在于循环体
-         *
          * */
         String JsonData = new GetJsonDataUtil().getJson(MinePersonActivity.this, "province.json");//获取assets目录下的json文件数据
         Log.e("jsonbeanqqqq", "initJsonData: " + JsonData);

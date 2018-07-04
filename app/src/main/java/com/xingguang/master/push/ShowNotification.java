@@ -12,20 +12,51 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import com.xingguang.master.R;
 import com.xingguang.master.main.view.activity.MainActivity;
+import com.xingguang.master.maincode.home.view.activity.OneDetailsActivity;
+import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
 
 
 public class ShowNotification {
 
     private Notification notification;
     private NotificationManager nManager;
+    Intent mainIntent;
 
     public void showIsAppLive(Context context, String title, int id,
-                              String text, String showType, String arg1, String arg2, String arg3) {
+                              String text, String showType, String arg1, int arg2, int arg3) {
         nManager = (NotificationManager) context
                 .getSystemService(context.NOTIFICATION_SERVICE);
 
-        Intent mainIntent = new Intent(context, MainActivity.class);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+        if (arg2 == 1){//1招工信息
+
+            mainIntent = new Intent(context, OneDetailsActivity.class);
+            mainIntent.putExtra("id", arg3);
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        }else if (arg2 == 2){//行业资讯
+
+            mainIntent = new Intent(context, WebViewActivity.class);
+            mainIntent.putExtra("id", 1)
+                    .putExtra("classid", arg3);
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        }else if (arg2 == 6){ //项目培训
+            mainIntent = new Intent(context, WebViewActivity.class);
+            mainIntent.putExtra("id", 2)
+                    .putExtra("classid", arg3);
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(mainIntent);
+//            context.startActivity(new Intent(context, WebViewActivity.class)
+//                    .putExtra("id", 2)
+//                    .putExtra("classid", arg3)
+//            );
+
+        }
+//        mainIntent = new Intent(context, MainActivity.class);
+//        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 
         // 创建一个PendingIntent，和Intent类似，不同的是由于不是马上调用，需要在下拉状态条出发的activity，所以采用的是PendingIntent,即点击Notification跳转启动到哪个Activity
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id,
@@ -53,7 +84,7 @@ public class ShowNotification {
     }
 
     public void showIsNotApplive(Context context, String title, int id,
-                                 String text, String showType, String arg1, String arg2, String arg3) {
+                                 String text, String showType, String arg1, int arg2, int arg3) {
 
         Bitmap bit = BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_logo);
 

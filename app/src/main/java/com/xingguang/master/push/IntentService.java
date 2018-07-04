@@ -2,6 +2,7 @@ package com.xingguang.master.push;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
@@ -9,7 +10,15 @@ import com.igexin.sdk.message.FeedbackCmdMessage;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.model.Response;
 import com.xingguang.master.R;
+import com.xingguang.master.http.DialogCallback;
+import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.http.TouChuanBean;
+import com.xingguang.master.main.model.TuisongBean;
+import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.LogUtils;
 import com.xingguang.master.util.SharedPreferencesUtils;
@@ -30,6 +39,8 @@ public class IntentService extends GTIntentService {
     @Override
     public void onReceiveMessageData(Context context, GTTransmitMessage msg) {
 
+
+
         String appId = msg.getAppid();
         String taskId = msg.getTaskId();
         String messageId = msg.getMessageId();
@@ -39,7 +50,10 @@ public class IntentService extends GTIntentService {
 
         // 第三方回执调用接口，actionId范围为90000-90999，可根据业务场景执行
         boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskId, messageId, 90001);
+
         LogUtils.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
+
+        LogUtils.d("IntentService", "payload" +msg.getPayload());
 
         LogUtils.d(TAG, "onReceiveMessageData -> " + "appId = " + appId + "\ntaskId = " + taskId + "\nmessageId = " + messageId + "\npkg = " + pkg
                 + "\ncid = " + cid);
@@ -80,6 +94,10 @@ public class IntentService extends GTIntentService {
         } else if ((action == PushConsts.THIRDPART_FEEDBACK)) {
             feedbackResult((FeedbackCmdMessage) cmdMessage);
         }
+
+
+
+
     }
 
     private void setTagResult(SetTagCmdMessage setTagCmdMsg) {
@@ -149,6 +167,17 @@ public class IntentService extends GTIntentService {
 
     public static boolean isRunningForeground(Context context, String data) {
 
+        Gson gson = new Gson();
+        TouChuanBean bean = gson.fromJson(data.toString(), TouChuanBean.class);
+
+        String title = bean.getData().getTitle();
+        String text = bean.getData().getText();
+        int InfoID = bean.getData().getInfoID();
+        int TypeID = bean.getData().getTypeID();
+
+
+
+        LogUtils.d("IntentService", "isRunningForeground" + data);
 //        String[] resultInfo = data.split("\\&");
 //        String status = resultInfo[1];
 //        String text = resultInfo[0];
@@ -156,16 +185,27 @@ public class IntentService extends GTIntentService {
         notificationNum = notificationNum + 1;
         // app运行
         if (SystemUtils.isAppAlive(context, AppUtil.getPackageName(context))) {
-            new ShowNotification().showIsAppLive(context, context.getResources().getString(com.xingguang.master.R.string.app_name),
-                    notificationNum, data, "", "",
-                    "", "");
+            new ShowNotification().showIsAppLive(context,
+//                    context.getResources().getString(com.xingguang.master.R.string.app_name),
+                    title,
+                    notificationNum,
+                    text,
+//                    data,
+                    "", "",
+                    TypeID, InfoID);
             return false;
 
             // app 被kill
         } else {
-            new ShowNotification().showIsNotApplive(context,context.getResources().getString(com.xingguang.master.R.string.app_name),
-                    notificationNum, data, "", "",
-                    "", "");
+            new ShowNotification().showIsNotApplive(context,
+                    title,
+//                    context,context.getResources().getString(com.xingguang.master.R.string.app_name),
+                    notificationNum,
+                    text,
+//                    data,
+                    "",
+                     "",
+                    TypeID, InfoID);
             return false;
 
         }

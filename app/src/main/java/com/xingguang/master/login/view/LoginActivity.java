@@ -63,6 +63,8 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
     LinearLayout llVisSms;
     @BindView(R.id.iv_visgone)
     ImageView iv_visgone;
+    @BindView(R.id.iv_finish)
+    ImageView iv_finish;
 
     int type = 0;
     private boolean isshow;
@@ -130,7 +132,7 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
     }
 
 
-    @OnClick({R.id.ll_yes, R.id.tv_login, R.id.rl_get_messs, R.id.iv_visgone, R.id.tv_forget})
+    @OnClick({R.id.ll_yes, R.id.tv_login, R.id.rl_get_messs, R.id.iv_visgone, R.id.tv_forget,R.id.iv_finish})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_yes: //勾选记住密码
@@ -177,6 +179,9 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                 break;
             case R.id.tv_forget://忘记密码
                 startActivity(new Intent(LoginActivity.this, ForgetOneActivity.class));
+                break;
+            case R.id.iv_finish:
+                finish();
                 break;
         }
     }
@@ -315,8 +320,6 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                         msgs.sendToTarget();
                         tvGetmss.setEnabled(false);
                         rlGetMesss.setEnabled(false);
-
-
                     }
                 });
     }

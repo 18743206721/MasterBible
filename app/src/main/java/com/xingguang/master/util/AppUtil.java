@@ -11,6 +11,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -48,10 +50,16 @@ import com.xingguang.master.view.BasicDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -969,6 +977,33 @@ public class AppUtil {
         return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.NOCOUNT, "");
     }
 
+    /**
+     * 答题数量
+     *
+     * @param context
+     */
+    public static String getCount(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.COUNT, "");
+    }
+
+    /**
+     * 答题数量,记录对的题数
+     *
+     * @param context
+     */
+    public static String getYesJilu(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.YESJILU, "");
+    }
+
+    /**
+     * 答题数量,记录错的题数
+     *
+     * @param context
+     */
+    public static String getNoJilu(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.NOJILU, "");
+    }
+
 
 
     /**
@@ -1020,7 +1055,30 @@ public class AppUtil {
         }
     }
 
-
+    /**
+     * 3.质量压缩
+     * 设置bitmap options属性，降低图片的质量，像素不会减少
+     * 第一个参数为需要压缩的bitmap图片对象，第二个参数为压缩后图片保存的位置
+     * 设置options 属性0-100，来实现压缩
+     *
+     * @param bmp
+     * @param file
+     */
+    public static void qualityCompress(Bitmap bmp, File file) {
+        // 0-100 100为不压缩
+        int quality = 20;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 把压缩后的数据存放到baos中
+        bmp.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(baos.toByteArray());
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

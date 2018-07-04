@@ -37,7 +37,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     private void initDialog(Activity activity) {
         dialog = new ProgressDialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setProgressStyle(R.style.CustomProgressDialog);
         dialog.setMessage("正在加载中...");
     }

@@ -3,14 +3,18 @@ package com.xingguang.master.maincode.home.view.activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.ikidou.fragmentBackHandler.BackHandlerHelper;
 import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.base.FragAdapter;
 import com.xingguang.master.maincode.home.view.fragment.ExamBanFragment;
+import com.xingguang.master.util.AppManager;
+import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.CountDownTimerUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
 import com.xingguang.master.util.ToastUtils;
@@ -22,10 +26,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
+import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * 创建日期：2018/5/26
@@ -53,6 +60,17 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
     String exampaperID;
     private long timea;
     private String kaoshifenshu; //考试分数
+    private int currentcount; //当前答题的数量
+    private int yesjilu = 0;
+    private int nojilu = 0;
+    private int biaoshi;
+    //声明内部定义的回调接口
+   CallBackListener callBackListener;
+    private int ivdianji = 0;
+
+    public void setCallBackListener(CallBackListener callBackListener) {
+        this.callBackListener = callBackListener;
+    }
 
     @Override
     protected int getLayoutId() {
@@ -65,6 +83,11 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
         exam = getIntent().getStringExtra("exam");
         count = getIntent().getStringExtra("count");
         exampaperID = getIntent().getStringExtra("exampaperID");
+        currentcount = getIntent().getIntExtra("currentcount", 0);
+        yesjilu = getIntent().getIntExtra("yesjilu",0);
+        nojilu = getIntent().getIntExtra("nojilu",0);
+        biaoshi=getIntent().getIntExtra("biaoshi",0);
+
         if (exam.equals("2")) {
             tvti2.setVisibility(View.GONE);
             kaoshifenshu = getIntent().getStringExtra("kaoshifenshu");
@@ -77,42 +100,99 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
             if (!tvTitle.isRun()) {
                 tvTitle.start();
             }
-        }else {
+        } else {
             tvTitle.setVisibility(View.GONE);
             tvti2.setVisibility(View.VISIBLE);
             tvti2.setText("题库练习");
+
         }
         initViewPage();
     }
 
     private void initViewPage() {
         mFragments = new ArrayList<>();
-        if (count.equals("")){
-            ToastUtils.showToast(DaTiActivity.this,"暂无题目!");
-        }else {
-
+        if (count.equals("")) {
+            ToastUtils.showToast(DaTiActivity.this, "暂无题目!");
+        } else {
             for (int i = 0; i < Integer.parseInt(count); i++) {
-                listFragment = new ExamBanFragment(i+1, count, exam, vp_exters,exampaperID,kaoshifenshu,tvTitle);
+                listFragment = new ExamBanFragment(i + 1, count, exam, vp_exters, exampaperID, kaoshifenshu,
+                        tvTitle, currentcount,yesjilu,nojilu,biaoshi);
                 mFragments.add(listFragment);
             }
+
             FragAdapter adapter = new FragAdapter(getSupportFragmentManager(), mFragments);
             vp_exters.setAdapter(adapter);
             vp_exters.setOffscreenPageLimit(0);
             vp_exters.setScanScroll(false); //设置Viewpager禁止滑动
+            if (!AppUtil.getCount(DaTiActivity.this).equals("")) {
+                if (ivdianji == 0){
+                    vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this)));
+                }else {
+                    vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this))+1);
+                }
+
+            }
+
+
         }
     }
 
 
     @Override
-    public void countDownTimerListener(String time) {date = time;}
+    public void countDownTimerListener(String time) {
+        date = time;
+    }
 
     @Override
-    public void countDownTimerFinish() {}
+    public void countDownTimerFinish() {
+    }
 
 
     @OnClick(R.id.ivback)
     public void onViewClicked() {
-        finish();
+            ivdianji = 1;
+        if (callBackListener != null) {
+//            holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+                    callBackListener.cancleSelect(ivback);
+//                }
+//            });
+        }
+
+//        if (listFragment != null) {
+//            if (listFragment instanceof ExamBanFragment) {
+//                listFragment.cancleSelect();
+//                //保存当前答对的题，和打错的题，和当前的页数；
+//            }
+//        }
+    }
+
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+//            if (listFragment instanceof ExamBanFragment) {
+//                listFragment.cancleSelect();
+//                //保存当前答对的题，和打错的题，和当前的页数；
+////                ToastUtils.showToast(this, "已为您保存当前的答题数!");
+////                finish();
+//                return true;
+//            }
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!BackHandlerHelper.handleBackPress(this)) {
+            super.onBackPressed();
+        }
+    }
+
+    public  interface CallBackListener{
+       void cancleSelect(ImageView ivback);
     }
 
 

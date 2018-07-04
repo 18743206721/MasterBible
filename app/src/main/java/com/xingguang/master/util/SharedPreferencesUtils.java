@@ -75,6 +75,15 @@ public class SharedPreferencesUtils {
     //nocount
     public static final String NOCOUNT = "nocount";
 
+    //当前答到了第几题
+    public static final String COUNT = "count";
+
+    //当前答到了第几题时，保存对的题
+    public static final String YESJILU = "yesjilu";
+
+    //当前答到了第几题时，保存错的题。
+    public static final String NOJILU = "nojilu";
+
     //cid
     public static final String CID = "cid";
 

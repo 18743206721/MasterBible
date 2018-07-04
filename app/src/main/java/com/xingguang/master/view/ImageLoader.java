@@ -121,18 +121,19 @@ public class ImageLoader {
     }
 
     public static void loadCircleImage(Context context, String url, ImageView mImageView) {
-        Glide.with(context).load(url).error(errorImageView).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
+        Glide.with(context).load(url).override(100,100).
+                dontAnimate().error(errorImageView).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
     }
 
     public static void loadCircleImage(Context context, Integer resourceId, ImageView mImageView) {
-        Glide.with(context).load(resourceId).error(errorImageView).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
+        Glide.with(context).load(resourceId).override(100,100).dontAnimate().error(errorImageView).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
     }
 
     public static void loadCircleImage(Context context, String url, ImageView mImageView, int errorImage) {
-        Glide.with(context).load(url).error(errorImage).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
+        Glide.with(context).load(url).dontAnimate().error(errorImage).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
     }
     public static void loadCircleImage(Context context, Integer resourceId, ImageView mImageView, int errorImage) {
-        Glide.with(context).load(resourceId).error(errorImage).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
+        Glide.with(context).load(resourceId).dontAnimate().error(errorImage).animate(android.R.anim.fade_in).transform(new GlideCircleTransform(context)).into(mImageView);
     }
 
     public static void loadRoundImage(Context context, String url, ImageView mImageView, int round) {

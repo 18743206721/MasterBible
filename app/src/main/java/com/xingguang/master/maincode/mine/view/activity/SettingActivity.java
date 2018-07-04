@@ -111,7 +111,9 @@ public class SettingActivity extends ToolBarActivity {
                 break;
             case R.id.ll_about:
                 startActivity(new Intent(SettingActivity.this, WebViewActivity.class)
-                        .putExtra("id", 0));
+                        .putExtra("id", 0)
+                        .putExtra("title",0)//title 1是全国考试机构，0是关于我们
+                );
                 break;
             case R.id.ll_backlogin: //退出登录
                 loadback();
@@ -138,9 +140,9 @@ public class SettingActivity extends ToolBarActivity {
                             if (bean.getData().getVersionName()!=null) {
                                 if (compareVersion(AppUtil.getVersionName(SettingActivity.this), bean.getData().getVersionName()) != 1) {
                                     showDialog(bean);
-                                } else {
-                                    ToastUtils.showToast(SettingActivity.this, "当前已是最新版本");
                                 }
+                            }else {
+                                ToastUtils.showToast(SettingActivity.this, "当前已是最新版本");
                             }
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
@@ -282,6 +284,7 @@ public class SettingActivity extends ToolBarActivity {
         mTvUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 ToastUtils.showToast(SettingActivity.this, "正在下载中,请稍后...");
                 downloadAPK(bean.getData().getVersionUrl(), packageInfo.versionName);
             }

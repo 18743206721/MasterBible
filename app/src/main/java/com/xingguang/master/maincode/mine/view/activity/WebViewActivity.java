@@ -18,6 +18,7 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.TwoDetailsBean;
 import com.xingguang.master.maincode.mine.model.AboutBean;
 import com.xingguang.master.util.ToastUtils;
@@ -55,6 +56,8 @@ public class WebViewActivity extends ToolBarActivity {
     int LastID;//上一篇
     int NextId;//下一篇
     private String url;
+    public static WebViewActivity instance;
+    private int title;//title 1是全国考试机构，0是关于我们
 
     @Override
     protected int getLayoutId() {
@@ -69,11 +72,11 @@ public class WebViewActivity extends ToolBarActivity {
                 finish();
             }
         });
-
+        instance = this;
 
         id = getIntent().getIntExtra("id", 0);
         classid = getIntent().getIntExtra("classid", 0);
-
+        title = getIntent().getIntExtra("title",0);
 //        init();
 
         webView1.setHorizontalScrollBarEnabled(false);//水平不显示
@@ -83,8 +86,13 @@ public class WebViewActivity extends ToolBarActivity {
         if (id == 0) { //关于我们
             llBot.setVisibility(View.GONE);
             llTitle.setVisibility(View.GONE);
-            setToolBarTitle("关于我们");
-            loadabout();
+
+            if (title == 0){
+                setToolBarTitle("关于我们");
+            }else{
+                setToolBarTitle("全国考试机构");
+            }
+            loadabout(title);
         } else if (id == 1) { //资讯详情信息
             llBot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
@@ -124,18 +132,6 @@ public class WebViewActivity extends ToolBarActivity {
 //        });
     }
 
-//    private String getNewContent(String htmltext){
-//
-//        Document doc=Jsoup.parse(htmltext);
-//        Elements elements=doc.getElementsByTag("img");
-//        for (Element element : elements) {
-//            element.attr("width","100%").attr("height","auto");
-//        }
-//
-//        Log.d("VACK", doc.toString());
-//        return doc.toString();
-//    }
-
     /**
      * 焊工
      */
@@ -171,27 +167,50 @@ public class WebViewActivity extends ToolBarActivity {
     }
 
     /**
-     * 关于我们
+     * 关于我们和首页广告位2
+     * @param title
      */
-    private void loadabout() {
-        OkGo.<String>post(HttpManager.TemplateForm)
-                .tag(this)
-                .cacheKey("cachePostKey")
-                .cacheMode(CacheMode.DEFAULT)
-                .execute(new DialogCallback<String>(this) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Gson gson = new Gson();
-                        AboutBean bean = gson.fromJson(response.body().toString(), AboutBean.class);
-                        if (bean.getData() != null) {
-                            String html = bean.getData().getContent();
-                            String data = html.replace("%@", html);
-                            webView1.loadData(data, "text/html; charset=UTF-8", null);
-                        } else {
-                            ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
+    private void loadabout(int title) {
+        if (title == 0){
+            OkGo.<String>post(HttpManager.TemplateForm)
+                    .tag(this)
+                    .cacheKey("cachePostKey")
+                    .cacheMode(CacheMode.DEFAULT)
+                    .execute(new DialogCallback<String>(this) {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Gson gson = new Gson();
+                            AboutBean bean = gson.fromJson(response.body().toString(), AboutBean.class);
+                            if (bean.getData() != null) {
+                                String html = bean.getData().getContent();
+                                String data = html.replace("%@", html);
+                                webView1.loadData(data, "text/html; charset=UTF-8", null);
+                            } else {
+                                ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
+                            }
                         }
-                    }
-                });
+                    });
+        }else {
+            OkGo.<String>post(HttpManager.TemplateForm)
+                    .tag(this)
+                    .cacheKey("cachePostKey")
+                    .cacheMode(CacheMode.DEFAULT)
+                    .params("InfoID", 0)
+                    .execute(new DialogCallback<String>(this) {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            Gson gson = new Gson();
+                            AboutBean bean = gson.fromJson(response.body().toString(), AboutBean.class);
+                            if (bean.getData() != null) {
+                                String html = bean.getData().getContent();
+                                String data = html.replace("%@", html);
+                                webView1.loadData(data, "text/html; charset=UTF-8", null);
+                            } else {
+                                ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
+                            }
+                        }
+                    });
+        }
 
     }
 

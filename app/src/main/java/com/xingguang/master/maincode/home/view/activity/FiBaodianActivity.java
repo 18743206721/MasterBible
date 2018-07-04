@@ -40,6 +40,8 @@ public class FiBaodianActivity extends ToolBarActivity {
     @BindView(R.id.tv_back)
     TextView tvBack;
     int yescount = 0;
+    private int yesjilu = 0;
+    private int nojilu = 0;
 
     @Override
     protected int getLayoutId() {
@@ -56,29 +58,63 @@ public class FiBaodianActivity extends ToolBarActivity {
         });
         setToolBarTitle("考试宝典");
 
+        if (!AppUtil.getYesJilu(FiBaodianActivity.this).equals("")){
+            yesjilu = Integer.parseInt(AppUtil.getYesJilu(FiBaodianActivity.this));
+        }
+
         if (AppUtil.getYesCount(FiBaodianActivity.this).equals("")){
             tvYescount.setText(yescount+"");
         }else {
-            tvYescount.setText(AppUtil.getYesCount(FiBaodianActivity.this));
+            tvYescount.setText(
+                    Integer.parseInt(AppUtil.getYesCount(FiBaodianActivity.this))
+                    + yesjilu + "" );
         }
+
+
+
+        if (!AppUtil.getNoJilu(FiBaodianActivity.this).equals("")){
+            nojilu = Integer.parseInt(AppUtil.getNoJilu(FiBaodianActivity.this));
+        }
+
 
         if (AppUtil.getNoCount(FiBaodianActivity.this).equals("")){
             tvNocount.setText(yescount+"");
         }else {
-            tvNocount.setText(AppUtil.getNoCount(FiBaodianActivity.this));
+            tvNocount.setText(
+                    Integer.parseInt(AppUtil.getNoCount(FiBaodianActivity.this))
+                    + nojilu + ""
+                    );
         }
+
+        SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.COUNT);
+        SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.YESJILU);
+        SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.NOJILU);
+
     }
 
     @OnClick({R.id.ll_restart, R.id.tv_back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_restart:
+                SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.COUNT);
+                SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.YESJILU);
+                SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.NOJILU);
+
                 FiBaodianActivity.this.finish();
+                ExamBaoDianActivity.instance.finish();
+
                 break;
             case R.id.tv_back:
+                SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.COUNT);
+                SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.YESJILU);
+                SharedPreferencesUtils.remove(FiBaodianActivity.this,SharedPreferencesUtils.NOJILU);
+
                 Intent intent = new Intent();
                 intent.setClass(FiBaodianActivity.this, MainActivity.class);
                 FiBaodianActivity.this.finish();
+                ExamBaoDianActivity.instance.finish();
+
+
                 break;
         }
     }

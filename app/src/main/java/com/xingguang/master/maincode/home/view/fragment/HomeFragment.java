@@ -310,14 +310,14 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_sousuo://搜索按钮
-                if (AppUtil.isExamined(getActivity())) {
+//                if (AppUtil.isExamined(getActivity())) {
                     if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
                         ToastUtils.showToast(getActivity(), "请输入搜索内容！");
                     } else {
                         startActivity(new Intent(getActivity(), SearchActivity.class)
                                 .putExtra("content", tvPlaySerch.getText().toString()));
                     }
-                }
+//                }
                 break;
             case R.id.ll_login: //登录
                 if (AppUtil.getUserId(getActivity()).equals("")) {
@@ -325,10 +325,8 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_main_baodian: //考试宝典,练习
-                if (AppUtil.isExamined(getActivity())){
                     MainActivity.instance.setBg(1);
                     MainActivity.instance.setToBaodianFragment();
-                }
                 break;
             case R.id.ll_main_database://考试题库，考试
                 if (AppUtil.isExamined(getActivity())) {
@@ -343,10 +341,8 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_online://在线留言
-                if (AppUtil.isExamined(getActivity())) {
                     MainActivity.instance.setBg(1);
                     MainActivity.instance.setOnLineFragment();
-                }
                 break;
             case R.id.iv_home_helpse://帮我选考点
                 if (AppUtil.isExamined(getActivity())) {
@@ -356,11 +352,16 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.iv_home_botm1://底部图片1
-                if (AppUtil.isExamined(getActivity())) {
-                    if (adsense2BeanList.size() != 0) {
-                        intentclassif(adsense2BeanList.get(0).getUrl(), adsense2BeanList.get(0).getTitle());
-                    }
-                }
+//                if (AppUtil.isExamined(getActivity())) {
+//                    if (adsense2BeanList.size() != 0) {
+//                        intentclassif(adsense2BeanList.get(0).getUrl(), adsense2BeanList.get(0).getTitle());
+//                    }
+//                }
+                startActivity(new Intent(getActivity(),WebViewActivity.class)
+                        .putExtra("id",0)
+                        .putExtra("title",1) //title 1是全国考试机构，0是关于我们
+                ); //传1显示上下翻页按钮,0不显示
+
                 break;
             case R.id.iv_home_botm2://底部图片2
                 if (AppUtil.isExamined(getActivity())) {

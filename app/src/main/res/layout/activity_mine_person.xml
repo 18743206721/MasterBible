@@ -36,12 +36,12 @@
                 android:textColor="@color/textBlack"
                 android:textSize="14sp" />
 
-            <ImageView
+            <com.xingguang.master.util.RoundImageView
                 android:src="@mipmap/mine_header"
                 android:id="@+id/mine_iv"
-                android:text="h-zy8888"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:scaleType="centerCrop"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp" />

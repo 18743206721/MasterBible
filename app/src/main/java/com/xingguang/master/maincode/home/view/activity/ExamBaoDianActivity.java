@@ -47,6 +47,11 @@ public class ExamBaoDianActivity extends ToolBarActivity {
     int bumenId;
     int gongzhongId;
     private String count;
+    private int currentcount = 0;//当前答题数量
+    private int yesjilu = 0;
+    private int nojilu = 0;
+    private int biaoshi = 0; //对错标示，0是没有保存上回对错的记录，1是保存了对错的记录
+    public static ExamBaoDianActivity instance;
 
     @Override
     protected int getLayoutId() {
@@ -55,6 +60,7 @@ public class ExamBaoDianActivity extends ToolBarActivity {
 
     @Override
     protected void initView() {
+        instance = this;
         getToolbarBack().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,19 +124,42 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
 
                         if (!AppUtil.getYesCount(ExamBaoDianActivity.this).equals("")){
-                            //清除答题数量
-                            SharedPreferencesUtils.remove(ExamBaoDianActivity.this,SharedPreferencesUtils.YESCOUNT);
+                                //清除答题数量
+                                SharedPreferencesUtils.remove(ExamBaoDianActivity.this,SharedPreferencesUtils.YESCOUNT);
                         }
 
                         if (!AppUtil.getNoCount(ExamBaoDianActivity.this).equals("")){
-                            //清除答题数量
-                            SharedPreferencesUtils.remove(ExamBaoDianActivity.this,SharedPreferencesUtils.NOCOUNT);
+                                //清除答题数量
+                                SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.NOCOUNT);
+                        }
+
+
+                        if (!AppUtil.getCount(ExamBaoDianActivity.this).equals("")) {
+                            currentcount = Integer.parseInt(AppUtil.getCount(ExamBaoDianActivity.this));
+                        }
+
+                        if (!AppUtil.getYesJilu(ExamBaoDianActivity.this).equals("")) {
+                            yesjilu = Integer.parseInt(AppUtil.getYesJilu(ExamBaoDianActivity.this));
+                            biaoshi = 1;
+                        }else {
+                            biaoshi = 0;
+                        }
+
+                        if (!AppUtil.getNoJilu(ExamBaoDianActivity.this).equals("")) {
+                            nojilu = Integer.parseInt(AppUtil.getNoJilu(ExamBaoDianActivity.this));
+                            biaoshi = 1;
+                        }else {
+                            biaoshi = 0;
                         }
 
                             startActivity(new Intent(ExamBaoDianActivity.this,DaTiActivity.class)
                                     .putExtra("exam","1")
                                     .putExtra("count",count)//传过去的答题数量
                                     .putExtra("exampaperID",bean.getExampaperID())
+                                    .putExtra("currentcount",currentcount)
+                                    .putExtra("yesjilu",yesjilu)
+                                    .putExtra("nojilu",nojilu)
+                                    .putExtra("biaoshi",biaoshi)
                             );
                     }
                 });

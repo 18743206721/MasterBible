@@ -11,12 +11,15 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.ikidou.fragmentBackHandler.BackHandlerHelper;
+import com.github.ikidou.fragmentBackHandler.FragmentBackHandler;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
@@ -27,8 +30,10 @@ import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.maincode.home.model.TextQuestionsBean;
 import com.xingguang.master.maincode.home.view.activity.DaTiActivity;
+import com.xingguang.master.maincode.home.view.activity.ExamBaoDianActivity;
 import com.xingguang.master.maincode.home.view.activity.ExamResultActivity;
 import com.xingguang.master.maincode.home.view.activity.FiBaodianActivity;
+import com.xingguang.master.util.AppManager;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.CountDownTimerUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
@@ -40,10 +45,13 @@ import com.xingguang.master.view.TimerTextView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
+import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * 创建日期：2018/5/26
@@ -51,8 +59,10 @@ import cn.iwgang.countdownview.CountdownView;
  * 作者:LiuYu
  */
 @SuppressLint("ValidFragment")
-public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.CountDownTimerListener {
+public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.CountDownTimerListener,
+        FragmentBackHandler {
 
+    private final int curren;
     @BindView(R.id.tv_yes_count)
     TextView tvYesCount;
     @BindView(R.id.tv_no_count)
@@ -125,12 +135,20 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     private String answer; //正确答案
     int yescount = 0; //答对题数
     int nocount = 0; //答错题数
-    private final String kaoshifenshu; //考试分数
+    private String kaoshifenshu; //考试分数
     TimerTextView tvTitle;
+    private int count = 0;//当前答题数量
+    private int yesjilu = 0;
+    private int nojilu = 0;
+    private int biaoshi;
 
     public ExamBanFragment(int type, String sum, String exam,
                            NoScrollViewpager vp_exters,
-                           String exampaperID, String kaoshifenshu, TimerTextView tvTitle) {
+                           String exampaperID, String kaoshifenshu, TimerTextView tvTitle,
+                           int currentcount,
+                           int yesjilu,
+                           int nojilu,
+                           int biaoshi) {
         this.type = type;
         this.sum = sum;
         this.exam = exam;
@@ -138,6 +156,10 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
         this.exampaperID = exampaperID;
         this.kaoshifenshu = kaoshifenshu;
         this.tvTitle = tvTitle;
+        this.curren = currentcount;
+        this.yesjilu = yesjilu;
+        this.nojilu = nojilu;
+        this.biaoshi = biaoshi;
     }
 
     @Override
@@ -150,15 +172,13 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initView() {
-        if ("1".equals(exam)) { //练习
-            llLianxi.setVisibility(View.VISIBLE);
-            llExam.setVisibility(View.GONE);
-            allCount.setText(type + "/" + sum);
-        } else { //考试
-            llLianxi.setVisibility(View.GONE);
-            llExam.setVisibility(View.VISIBLE);
-            all2Count.setText(type + "/" + sum);
+
+        if (type-1 == curren){
+
+            tvYesCount.setText(yesjilu+"");
+            tvNoCount.setText(nojilu+"");
         }
+
         util = new CountDownTimerUtil(getActivity(), this);
 
 
@@ -176,6 +196,52 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
             }
         }
 
+        initListener();
+
+//        if (!AppUtil.getCount(getActivity()).equals("")) {
+//            viewPager.setCurrentItem(Integer.parseInt(AppUtil.getCount(getActivity())));
+//        }
+
+    }
+
+    private void initListener() {
+        DaTiActivity.instance.setCallBackListener(new DaTiActivity.CallBackListener() {
+            @Override
+            public void cancleSelect(ImageView ivback) {
+
+                if (exam.equals("1")) {
+                    ToastUtils.showToast(getActivity(), "已为您保存当前的答题数!");
+                    if (!AppUtil.getCount(getActivity()).equals("")) {
+                        SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.COUNT);
+                    }
+                    SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.COUNT, type - curren + "");
+
+                    if (!AppUtil.getYesJilu(getActivity()).equals("")){
+                        SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.YESJILU);
+                    }
+
+                    if (!AppUtil.getNoJilu(getActivity()).equals("")){
+                        SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.NOJILU);
+                    }
+
+                    //保存对的题和错的题
+                    if (!AppUtil.getYesCount(getActivity()).equals("")) {
+                        SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESJILU,
+                                yesjilu + Integer.parseInt(AppUtil.getYesCount(getActivity())) + ""
+                        );
+                    }
+
+                    if (!AppUtil.getNoCount(getActivity()).equals("")) {
+                        SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOJILU,
+                                nojilu + Integer.parseInt(AppUtil.getNoCount(getActivity())) + ""
+                        );
+                    }
+
+                }
+                getActivity().finish();
+
+            }
+        });
 
     }
 
@@ -211,7 +277,7 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
 //                                spannableString.setSpan(span, 0, 3, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 //                                tvContent.setText(spannableString);
 //                                tvContent.setLetterSpacing(0.3f);//设置TextView的字间距，在低版本的手机上无效果
-                                tvContent.setText("                "+bean.getData().getTitel());
+                                tvContent.setText("                " + bean.getData().getTitel());
 
                             } else { //是图片
                                 iv_content.setVisibility(View.VISIBLE);
@@ -225,18 +291,83 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
 
                             if (!AppUtil.getYesCount(getActivity()).equals("")) {
                                 if (exam.equals("1")) {
-                                    tvYesCount.setText(AppUtil.getYesCount(getActivity()));
+                                    if (biaoshi == 1) {
+                                        tvYesCount.setText(yesjilu+
+                                                Integer.parseInt(AppUtil.getYesCount(getActivity()))+"");
+                                    }else{
+                                        tvYesCount.setText(AppUtil.getYesCount(getActivity()));
+
+                                    }
+
                                 } else {
                                     tv2YesCount.setText(AppUtil.getYesCount(getActivity()));
                                 }
+                            }else { //如果答对的题为空0；
+
+                                if (exam.equals("1")) {
+                                    if (biaoshi == 1) {
+                                        tvYesCount.setText(yesjilu+ "");
+                                    }
+                                }
+
                             }
+
+
+
                             if (!AppUtil.getNoCount(getActivity()).equals("")) {
                                 if (exam.equals("1")) {
-                                    tvNoCount.setText(AppUtil.getNoCount(getActivity()));
+
+                                    if (biaoshi == 1) {
+                                        tvNoCount.setText(nojilu+
+                                                Integer.parseInt(AppUtil.getNoCount(getActivity()))+"");
+                                    }else {
+                                        tvNoCount.setText(AppUtil.getNoCount(getActivity()));
+                                    }
+
                                 } else {
                                     tv2NoCount.setText(AppUtil.getNoCount(getActivity()));
                                 }
+                            } else {
+
+                                if (exam.equals("1")) {
+                                    if (biaoshi == 1) {
+                                        tvNoCount.setText(nojilu+ "");
+                                    }
+                                }
+
                             }
+
+
+                            if ("1".equals(exam)) { //练习
+                                llLianxi.setVisibility(View.VISIBLE);
+                                llExam.setVisibility(View.GONE);
+                                if (AppUtil.getCount(getActivity()).equals("")) {
+                                    allCount.setText(type + "/" + sum);
+                                } else {
+                                    int c = Integer.parseInt(AppUtil.getCount(getActivity())) + 1;
+                                    allCount.setText(c + "/" + sum);
+                                }
+
+
+//                                if (!AppUtil.getYesJilu(getActivity()).equals("")) {
+//                                    if (biaoshi == 1) {
+//                                        tvYesCount.setText(yesjilu+"");
+//                                    }
+//                                }
+////
+//                                if (!AppUtil.getNoCount(getActivity()).equals("")) {
+//                                    if (biaoshi == 1) {
+//                                        tvNoCount.setText(nojilu+"");
+//                                    }
+//                                }
+
+
+                            } else { //考试
+                                llLianxi.setVisibility(View.GONE);
+                                llExam.setVisibility(View.VISIBLE);
+                                all2Count.setText(type + "/" + sum);
+                            }
+
 
                             for (int i = 0; i < mDatas.size(); i++) {
                                 if (i == 0) {
@@ -323,15 +454,30 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_a:
+                if (AppUtil.isFastDoubleClick(3000)) {
+                    return;
+                }
                 setbg(1);
                 break;
             case R.id.ll_b:
+
+                if (AppUtil.isFastDoubleClick(3000)) {
+                    return;
+                }
                 setbg(2);
                 break;
             case R.id.ll_c:
+
+                if (AppUtil.isFastDoubleClick(3000)) {
+                    return;
+                }
                 setbg(3);
                 break;
             case R.id.ll_d:
+
+                if (AppUtil.isFastDoubleClick(3000)) {
+                    return;
+                }
                 setbg(4);
                 break;
             case R.id.ll_jiaojuan://交卷
@@ -494,6 +640,10 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
             llC.setClickable(false);
         }
         a = viewPager.getCurrentItem();
+
+
+        Count();
+
         Message msgs = mHandler.obtainMessage();
         msgs.what = 1;
         msgs.sendToTarget();
@@ -501,38 +651,141 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
 
     }
 
+    private void Count() {
+        if (AppUtil.getCount(getActivity()).equals("")) {
+            count = type;
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.COUNT, count + "");
+        } else {
+            count = Integer.parseInt(AppUtil.getCount(getActivity())) + 1;
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.COUNT, count + "");
+        }
+
+        if (exam.equals("1")) {
+            allCount.setText(AppUtil.getCount(getActivity()) + "/" + sum);
+        }
+
+
+    }
+
     private void YesCount() {
         if (AppUtil.getYesCount(getActivity()).equals("")) {
-            yescount = yescount + 1;
+//                if (biaoshi == 1) {
+//                    yescount = yesjilu + 1;
+////                    tvYesCount.setText(yesjilu+ "");
+//
+//                }else {
+                    yescount = yescount + 1;
+//                }
+
             SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESCOUNT, yescount + "");
         } else {
-            yescount = Integer.parseInt(AppUtil.getYesCount(getActivity())) + 1;
+
+//            if (biaoshi == 1) {
+//                yescount = yesjilu + 1;
+////                    tvYesCount.setText(yesjilu+ "");
+//
+//            }else {
+                yescount = Integer.parseInt(AppUtil.getYesCount(getActivity())) + 1;
+//            }
+
+
             SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESCOUNT, yescount + "");
         }
 
         if (exam.equals("1")) {
-            tvYesCount.setText(AppUtil.getYesCount(getActivity()));
+            if (biaoshi == 1) {
+                tvYesCount.setText(yesjilu+
+                        Integer.parseInt(AppUtil.getYesCount(getActivity()))+"");
+            }else{
+                tvYesCount.setText(AppUtil.getYesCount(getActivity()));
+
+            }
+
         } else {
             tv2YesCount.setText(AppUtil.getYesCount(getActivity()));
         }
+
+
+//        if (exam.equals("1")) {
+//            tvYesCount.setText(AppUtil.getYesCount(getActivity()));
+//        } else {
+//            tv2YesCount.setText(AppUtil.getYesCount(getActivity()));
+//        }
 
     }
 
     private void NOcount() {
         if (AppUtil.getNoCount(getActivity()).equals("")) {
-            nocount = nocount + 1;
+
+//            if (biaoshi == 1) {
+//                nocount = nocount + 1;
+//            }else {
+                nocount = nocount + 1;
+//            }
+
+
             SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOCOUNT, nocount + "");
         } else {
             nocount = Integer.parseInt(AppUtil.getNoCount(getActivity())) + 1;
             SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOCOUNT, nocount + "");
         }
 
+//        if (exam.equals("1")) {
+//            tvNoCount.setText(AppUtil.getNoCount(getActivity()));
+//        } else {
+//            tv2NoCount.setText(AppUtil.getNoCount(getActivity()));
+//        }
+
         if (exam.equals("1")) {
-            tvNoCount.setText(AppUtil.getNoCount(getActivity()));
+
+            if (biaoshi == 1) {
+                tvNoCount.setText(nojilu+
+                        Integer.parseInt(AppUtil.getNoCount(getActivity()))+"");
+            }else {
+                tvNoCount.setText(AppUtil.getNoCount(getActivity()));
+            }
+
         } else {
             tv2NoCount.setText(AppUtil.getNoCount(getActivity()));
         }
+
+
     }
+
+
+    @Override
+    public boolean onBackPressed() {
+
+        if (exam.equals("1")) {
+            ToastUtils.showToast(getActivity(), "已为您保存当前的答题数!");
+            if (!AppUtil.getCount(getActivity()).equals("")) {
+                SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.COUNT);
+            }
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.COUNT, type - 1 + "");
+
+            if (!AppUtil.getYesJilu(getActivity()).equals("")){
+                SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.YESJILU);
+            }
+
+            if (!AppUtil.getNoJilu(getActivity()).equals("")){
+                SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.NOJILU);
+            }
+
+            //保存对的题和错的题
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESJILU,
+                                    tvYesCount.getText().toString());
+            SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOJILU,
+                            tvNoCount.getText().toString());
+
+        }
+        getActivity().finish();
+
+        return BackHandlerHelper.handleBackPress(this);
+//        return false;
+    }
+
+
+
 
 
 }
