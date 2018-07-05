@@ -214,7 +214,7 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                     if (!AppUtil.getCount(getActivity()).equals("")) {
                         SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.COUNT);
                     }
-                    SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.COUNT, type - curren + "");
+                    SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.COUNT, type-2  + "");
 
                     if (!AppUtil.getYesJilu(getActivity()).equals("")){
                         SharedPreferencesUtils.remove(getActivity(), SharedPreferencesUtils.YESJILU);
@@ -229,13 +229,29 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                         SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESJILU,
                                 yesjilu + Integer.parseInt(AppUtil.getYesCount(getActivity())) + ""
                         );
+                    }else{
+                        SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESJILU,
+                                yesjilu +"");
                     }
 
                     if (!AppUtil.getNoCount(getActivity()).equals("")) {
                         SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOJILU,
                                 nojilu + Integer.parseInt(AppUtil.getNoCount(getActivity())) + ""
                         );
+                    }else {
+                        SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOJILU,
+                                nojilu + "");
                     }
+
+
+                    SharedPreferencesUtils.put(getActivity(),SharedPreferencesUtils.CLASSTYPE,1+"");
+
+                    //保存对的题和错的题
+//                    SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.YESJILU,
+//                            tvYesCount.getText().toString());
+//                    SharedPreferencesUtils.put(getActivity(), SharedPreferencesUtils.NOJILU,
+//                            tvNoCount.getText().toString());
+
 
                 }
                 getActivity().finish();

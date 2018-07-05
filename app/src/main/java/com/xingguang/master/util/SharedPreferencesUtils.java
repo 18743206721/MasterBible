@@ -84,6 +84,8 @@ public class SharedPreferencesUtils {
     //当前答到了第几题时，保存错的题。
     public static final String NOJILU = "nojilu";
 
+    public static final String CLASSTYPE = "classtype";
+
     //cid
     public static final String CID = "cid";
 

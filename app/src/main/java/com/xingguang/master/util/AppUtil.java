@@ -1005,6 +1005,11 @@ public class AppUtil {
     }
 
 
+    public static String getClassType(Context context) {
+        return (String) SharedPreferencesUtils.get(context, SharedPreferencesUtils.CLASSTYPE, "");
+    }
+
+
 
     /**
      * 是否登录

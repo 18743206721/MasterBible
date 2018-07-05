@@ -190,16 +190,26 @@ public class ClassifExamActivity extends ToolBarActivity {
                         Gson gson = new Gson();
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
                         if (!AppUtil.getYesCount(ClassifExamActivity.this).equals("")) {
-//                            if (AppUtil.getCount(ClassifExamActivity.this).equals("")) {
+                            if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
+                                //为空，就是返回键
+
                                 //清除答题数量
                                 SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.YESCOUNT);
-//                            }
+                            }else { //不为空，就是系统建
+
+
+                            }
+
                         }
                         if (!AppUtil.getNoCount(ClassifExamActivity.this).equals("")) {
-//                            if (AppUtil.getCount(ClassifExamActivity.this).equals("")) {
-                                //清除答题数量
-                                SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.NOCOUNT);
-//                            }
+                          if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
+                                //为空，就是返回键
+                              //清除答题数量
+                              SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.NOCOUNT);
+
+                            }else { //不为空，就是系统建
+
+                            }
                         }
 
 

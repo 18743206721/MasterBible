@@ -128,7 +128,7 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
                 if (ivdianji == 0){
                     vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this)));
                 }else {
-                    vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this))+1);
+                    vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this))-2);
                 }
 
             }

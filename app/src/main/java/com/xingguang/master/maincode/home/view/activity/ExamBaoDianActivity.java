@@ -16,6 +16,7 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
 import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.model.ExambaoDianBean;
 import com.xingguang.master.util.AppUtil;
@@ -124,13 +125,25 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
 
                         if (!AppUtil.getYesCount(ExamBaoDianActivity.this).equals("")){
+//                            if (AppUtil.getClassType(ExamBaoDianActivity.this).equals("")) {
+                                //为空，就是返回键
+
                                 //清除答题数量
-                                SharedPreferencesUtils.remove(ExamBaoDianActivity.this,SharedPreferencesUtils.YESCOUNT);
+                                SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.YESCOUNT);
+//                            }else { //不为空，就是系统建
+//
+//                            }
                         }
 
                         if (!AppUtil.getNoCount(ExamBaoDianActivity.this).equals("")){
+//                            if (AppUtil.getClassType(ExamBaoDianActivity.this).equals("")) {
+                                //为空，就是返回键
                                 //清除答题数量
                                 SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.NOCOUNT);
+
+//                            }else { //不为空，就是系统建
+//
+//                            }
                         }
 
 
