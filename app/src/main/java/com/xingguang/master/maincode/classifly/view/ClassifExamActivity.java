@@ -190,26 +190,26 @@ public class ClassifExamActivity extends ToolBarActivity {
                         Gson gson = new Gson();
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
                         if (!AppUtil.getYesCount(ClassifExamActivity.this).equals("")) {
-                            if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
+//                            if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
                                 //为空，就是返回键
 
                                 //清除答题数量
                                 SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.YESCOUNT);
-                            }else { //不为空，就是系统建
+//                            }else { //不为空，就是系统建
 
 
-                            }
+//                            }
 
                         }
                         if (!AppUtil.getNoCount(ClassifExamActivity.this).equals("")) {
-                          if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
+//                          if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
                                 //为空，就是返回键
                               //清除答题数量
                               SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.NOCOUNT);
 
-                            }else { //不为空，就是系统建
+//                            }else { //不为空，就是系统建
 
-                            }
+//                            }
                         }
 
 
@@ -241,14 +241,18 @@ public class ClassifExamActivity extends ToolBarActivity {
                                     .putExtra("yesjilu",yesjilu)
                                     .putExtra("nojilu",nojilu)
                                     .putExtra("biaoshi",biaoshi)
+                                    .putExtra("kaoshi",0)
                             );
                         } else { //考试提交
-                            startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
-                                    .putExtra("exam", "2")
-                                    .putExtra("count", count)//传过去的答题数量
-                                    .putExtra("exampaperID", bean.getExampaperID())
-                                    .putExtra("kaoshiTime", kaoshiTime)
-                                    .putExtra("kaoshifenshu", kaoshifenshu));
+                            if (AppUtil.isExamined(ClassifExamActivity.this)) {
+                                startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
+                                        .putExtra("exam", "2")
+                                        .putExtra("count", count)//传过去的答题数量
+                                        .putExtra("exampaperID", bean.getExampaperID())
+                                        .putExtra("kaoshiTime", kaoshiTime)
+                                        .putExtra("kaoshifenshu", kaoshifenshu)
+                                        .putExtra("kaoshi", 1));
+                            }
                         }
                     }
                 });

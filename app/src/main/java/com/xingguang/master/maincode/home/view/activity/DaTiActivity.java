@@ -67,6 +67,7 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
     //声明内部定义的回调接口
    CallBackListener callBackListener;
     private int ivdianji = 0;
+    private int kaoshi = 0;//考试提交的标示 0练习，1考试
 
     public void setCallBackListener(CallBackListener callBackListener) {
         this.callBackListener = callBackListener;
@@ -87,6 +88,8 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
         yesjilu = getIntent().getIntExtra("yesjilu",0);
         nojilu = getIntent().getIntExtra("nojilu",0);
         biaoshi=getIntent().getIntExtra("biaoshi",0);
+        kaoshi = getIntent().getIntExtra("kaoshi",0);
+
 
         if (exam.equals("2")) {
             tvti2.setVisibility(View.GONE);
@@ -124,14 +127,20 @@ public class DaTiActivity extends BaseActivity implements CountDownTimerUtil.Cou
             vp_exters.setAdapter(adapter);
             vp_exters.setOffscreenPageLimit(0);
             vp_exters.setScanScroll(false); //设置Viewpager禁止滑动
-            if (!AppUtil.getCount(DaTiActivity.this).equals("")) {
-                if (ivdianji == 0){
-                    vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this)));
-                }else {
-                    vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this))-2);
-                }
+                    if (kaoshi == 0) { //练习
+                        if (!AppUtil.getCount(DaTiActivity.this).equals("")) {
+                            if (ivdianji == 0) {
+                                vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this)) - 1);
+                            } else {
+                                vp_exters.setCurrentItem(Integer.parseInt(AppUtil.getCount(DaTiActivity.this)) - 2);
+                            }
 
-            }
+                        }
+                    }else{ //1是考试
+
+                        vp_exters.setCurrentItem(1);
+                    }
+
 
 
         }

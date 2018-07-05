@@ -29,9 +29,9 @@
 
             <ImageView
                 android:id="@+id/iv_bg"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:src="@mipmap/result_blueflunk"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <!--用时-->

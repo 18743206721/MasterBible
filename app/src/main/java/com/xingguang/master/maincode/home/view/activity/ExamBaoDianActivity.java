@@ -173,6 +173,7 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                                     .putExtra("yesjilu",yesjilu)
                                     .putExtra("nojilu",nojilu)
                                     .putExtra("biaoshi",biaoshi)
+                                    .putExtra("kaoshi",0)
                             );
                     }
                 });

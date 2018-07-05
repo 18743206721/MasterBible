@@ -113,13 +113,11 @@ public class ClassifFragment extends ToolBarFragment {
             @Override
             public void onItemClick(View view, int position) {
                 //跳转到考试宝典
-                if (AppUtil.isExamined(getActivity())) {
                     startActivity(new Intent(getActivity(), ClassifExamActivity.class)
                             .putExtra("gongzhongId", listgongzhong.get(position).getID())
                             .putExtra("name", listgongzhong.get(position).getName())
                             .putExtra("bumenId", bumenId)
                     );
-                }
             }
         });
 

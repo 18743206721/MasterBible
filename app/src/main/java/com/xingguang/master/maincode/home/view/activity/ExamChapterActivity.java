@@ -141,6 +141,7 @@ public class ExamChapterActivity extends ToolBarActivity {
                                 .putExtra("exampaperID",bean.getExampaperID())
                                 .putExtra("kaoshiTime",kaoshiTime)
                                 .putExtra("kaoshifenshu",kaoshifenshu)
+                                .putExtra("kaoshi",1)
                         );
                     }
                 });
