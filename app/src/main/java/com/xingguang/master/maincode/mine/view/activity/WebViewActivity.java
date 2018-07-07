@@ -1,11 +1,9 @@
 package com.xingguang.master.maincode.mine.view.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,7 +16,6 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
-import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.TwoDetailsBean;
 import com.xingguang.master.maincode.mine.model.AboutBean;
 import com.xingguang.master.util.ToastUtils;
@@ -77,7 +74,7 @@ public class WebViewActivity extends ToolBarActivity {
         id = getIntent().getIntExtra("id", 0);
         classid = getIntent().getIntExtra("classid", 0);
         title = getIntent().getIntExtra("title",0);
-//        init();
+
 
         webView1.setHorizontalScrollBarEnabled(false);//水平不显示
         webView1.setVerticalScrollBarEnabled(false); //垂直不显示
@@ -105,31 +102,24 @@ public class WebViewActivity extends ToolBarActivity {
             loadhangong();
         }
 
+//        init();
+
     }
 
     private void init() {
-        // 打开页面时， 自适应屏幕：
-        webView1.getSettings().setUseWideViewPort(true);// 设置此属性，可任意比例缩放
-        // //将图片调整到适合webview的大小
-        webView1.getSettings().setLoadWithOverviewMode(true);
-        // 便页面支持缩放：
-        webView1.getSettings().setJavaScriptEnabled(true);
-        // 支持js
-        webView1.getSettings().setBuiltInZoomControls(true);
-        webView1.getSettings().setSupportZoom(true);// 支持缩放
-        // 如果webView中需要用户手动输入用户名、密码或其他，则webview必须设置支持获取手势焦点。
-//        webView1.requestFocusFromTouch();
-        // 优先使用缓存
-        webView1.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-//        webView1.loadUrl(url);
-//        webView1.setWebViewClient(new WebViewClient() {
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-//                // view.loadUrl(url);
-//                view.loadUrl(url);
-//                return true;
-//            }
-//        });
+        WebSettings webSettings = webView1.getSettings();
+        // 设置与Js交互的权限
+        webSettings.setJavaScriptEnabled(true);
+        // 设置允许JS弹窗
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        //防止中文乱码
+        webView1.getSettings().setDefaultTextEncodingName("UTF-8");
+        // 先载入JS代码
+        // 格式规定为:file:///android_asset/文件名.html
+//        mWebView.loadUrl("file:///android_asset/image.html");
+        webView1.loadUrl("http://www.toutiao.com/a6401738581286682881/#p=1");
+        //载入js
+//        webView1.addJavascriptInterface(new JavascriptInterface(this), "imagelistner");
     }
 
     /**
@@ -247,8 +237,6 @@ public class WebViewActivity extends ToolBarActivity {
 
                             String CSS_STYPE = "<head><style>img{max-width:320px !important;}</style></head>";
                             webView1.loadDataWithBaseURL(null, CSS_STYPE +html, "text/html", "utf-8",null);
-
-
 
 //                            webView1.loadData(data, "text/html; charset=UTF-8", null);
                             tvTitle.setText(bean.getData().getTitle());
