@@ -175,7 +175,6 @@ public class LoginActivity extends BaseActivity implements CountDownRTimerUtil.C
                     iv_visgone.setImageResource(R.mipmap.login_vis);
                     etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
-
                 break;
             case R.id.tv_forget://忘记密码
                 startActivity(new Intent(LoginActivity.this, ForgetOneActivity.class));
