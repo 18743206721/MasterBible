@@ -2,6 +2,7 @@ package com.xingguang.master.maincode.home.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,8 +17,6 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
-import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
-import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.model.ExambaoDianBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
@@ -45,6 +44,11 @@ public class ExamBaoDianActivity extends ToolBarActivity {
     TextView tvBaodianJieshao;
     @BindView(R.id.tv_exercises)
     TextView tvExercises;
+    @BindView(R.id.tv_chang)
+    TextView tv_chang;
+    @BindView(R.id.tv_select)
+    TextView tv_select;
+
     int bumenId;
     int gongzhongId;
     private String count;
@@ -53,6 +57,8 @@ public class ExamBaoDianActivity extends ToolBarActivity {
     private int nojilu = 0;
     private int biaoshi = 0; //对错标示，0是没有保存上回对错的记录，1是保存了对错的记录
     public static ExamBaoDianActivity instance;
+
+    private int selected = 1; // 1常规题库，2精选题库
 
     @Override
     protected int getLayoutId() {
@@ -99,15 +105,32 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                 });
     }
 
-    @OnClick(R.id.tv_exercises)
-    public void onViewClicked() {
-        if (AppUtil.isFastDoubleClick(4000)) {
-            return;
+    @OnClick({R.id.tv_chang, R.id.tv_select,R.id.tv_exercises})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_chang:
+                selected = 1;
+                tv_chang.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_blue));
+                tv_chang.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.home_bule));
+                tv_select.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_white));
+                tv_select.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.textBlack));
+                break;
+            case R.id.tv_select:
+                selected = 2;
+                tv_chang.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_white));
+                tv_chang.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.textBlack));
+                tv_select.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_blue));
+                tv_select.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.home_bule));
+                break;
+            case R.id.tv_exercises:
+                if (AppUtil.isFastDoubleClick(4000)) {
+                    return;
+                }
+                loadcommit();
+                break;
         }
-        loadcommit();
     }
 
-    
     private void loadcommit() {
         OkGo.<String>post(HttpManager.ExamineEntry)
                 .tag(this)
@@ -124,26 +147,14 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                         Gson gson = new Gson();
                         CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
 
-                        if (!AppUtil.getYesCount(ExamBaoDianActivity.this).equals("")){
-//                            if (AppUtil.getClassType(ExamBaoDianActivity.this).equals("")) {
-                                //为空，就是返回键
-
-                                //清除答题数量
-                                SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.YESCOUNT);
-//                            }else { //不为空，就是系统建
-//
-//                            }
+                        if (!AppUtil.getYesCount(ExamBaoDianActivity.this).equals("")) {
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.YESCOUNT);
                         }
 
-                        if (!AppUtil.getNoCount(ExamBaoDianActivity.this).equals("")){
-//                            if (AppUtil.getClassType(ExamBaoDianActivity.this).equals("")) {
-                                //为空，就是返回键
-                                //清除答题数量
-                                SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.NOCOUNT);
-
-//                            }else { //不为空，就是系统建
-//
-//                            }
+                        if (!AppUtil.getNoCount(ExamBaoDianActivity.this).equals("")) {
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ExamBaoDianActivity.this, SharedPreferencesUtils.NOCOUNT);
                         }
 
 
@@ -154,27 +165,27 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                         if (!AppUtil.getYesJilu(ExamBaoDianActivity.this).equals("")) {
                             yesjilu = Integer.parseInt(AppUtil.getYesJilu(ExamBaoDianActivity.this));
                             biaoshi = 1;
-                        }else {
+                        } else {
                             biaoshi = 0;
                         }
 
                         if (!AppUtil.getNoJilu(ExamBaoDianActivity.this).equals("")) {
                             nojilu = Integer.parseInt(AppUtil.getNoJilu(ExamBaoDianActivity.this));
                             biaoshi = 1;
-                        }else {
+                        } else {
                             biaoshi = 0;
                         }
 
-                            startActivity(new Intent(ExamBaoDianActivity.this,DaTiActivity.class)
-                                    .putExtra("exam","1")
-                                    .putExtra("count",count)//传过去的答题数量
-                                    .putExtra("exampaperID",bean.getExampaperID())
-                                    .putExtra("currentcount",currentcount)
-                                    .putExtra("yesjilu",yesjilu)
-                                    .putExtra("nojilu",nojilu)
-                                    .putExtra("biaoshi",biaoshi)
-                                    .putExtra("kaoshi",0)
-                            );
+                        startActivity(new Intent(ExamBaoDianActivity.this, DaTiActivity.class)
+                                .putExtra("exam", "1")
+                                .putExtra("count", count)//传过去的答题数量
+                                .putExtra("exampaperID", bean.getExampaperID())
+                                .putExtra("currentcount", currentcount)
+                                .putExtra("yesjilu", yesjilu)
+                                .putExtra("nojilu", nojilu)
+                                .putExtra("biaoshi", biaoshi)
+                                .putExtra("kaoshi", 0)
+                        );
                     }
                 });
     }

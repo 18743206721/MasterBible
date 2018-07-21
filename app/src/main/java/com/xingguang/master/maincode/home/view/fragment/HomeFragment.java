@@ -352,11 +352,6 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.iv_home_botm1://底部图片1
-//                if (AppUtil.isExamined(getActivity())) {
-//                    if (adsense2BeanList.size() != 0) {
-//                        intentclassif(adsense2BeanList.get(0).getUrl(), adsense2BeanList.get(0).getTitle());
-//                    }
-//                }
                 startActivity(new Intent(getActivity(),WebViewActivity.class)
                         .putExtra("id",0)
                         .putExtra("title",1) //title 1是全国考试机构，0是关于我们

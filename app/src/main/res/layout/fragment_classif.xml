@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent">
 
@@ -8,34 +9,74 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="5dp"
         android:background="@color/board" />
 
     <LinearLayout
+        android:layout_marginTop="@dimen/dp10"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/left_listview"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@color/bg_classif"
-            android:divider="@null"
-            android:scrollbars="none" />
+        <LinearLayout
+            android:background="@color/white"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/right_listView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:layout_weight="6"
-            android:background="@android:color/white"
-            android:divider="@null" />
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:tabSelectedTextColor="@color/white"
+                app:tabMode="fixed"
+                app:tabGravity="fill"
+                app:tabTextColor="@color/textBlack"
+                app:tabIndicatorHeight="0dp"/>
+
+        </LinearLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/fengexian" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/mPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/left_listview"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="2"-->
+            <!--android:background="@color/bg_classif"-->
+            <!--android:divider="@null"-->
+            <!--android:scrollbars="none" />-->
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/right_listView"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:paddingRight="5dp"-->
+            <!--android:paddingLeft="5dp"-->
+            <!--android:layout_weight="6"-->
+            <!--android:background="@android:color/white"-->
+            <!--android:divider="@null" />-->
+    <!--</LinearLayout>-->
 
 
 </LinearLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/board"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/ll_sousuo_serch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="13dp"
+        android:background="@drawable/bg_grey"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/steward_capital_search" />
+
+        <EditText
+            android:id="@+id/tv_play_serch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="4"
+            android:background="@null"
+            android:maxLines="1"
+            android:gravity="center|left"
+            android:hint="请输入搜索内容"
+            android:textColor="@color/textBlack"
+            android:textColorHint="@color/textLightGray"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_sousuo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="|  搜索"
+            android:textColor="@color/textBlack"
+            android:textColorHint="@color/textBlack"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/my_deco_fg_apply"
+        android:layout_below="@+id/ll_sousuo_serch"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--<com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout-->
+        <!--android:id="@+id/tw_mydeco_apply"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_looksp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <!--</com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>-->
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/empty"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/nomessage"
+        android:visibility="gone" />
+
+</RelativeLayout>
