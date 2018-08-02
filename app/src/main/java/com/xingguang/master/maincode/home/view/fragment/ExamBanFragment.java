@@ -696,6 +696,7 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
             }
         }
 
+
         NOcount();
 
         llA.setClickable(false);
