@@ -28,6 +28,10 @@ public class SharedPreferencesUtils {
 
     //USERID
     public static final String USERID = "userId";
+
+    //身份系统登录
+    public static final String SHENFENID = "shenfenId";
+
     //头像
     public static final String USERIMAGE = "userimage";
     //昵称

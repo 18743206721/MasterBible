@@ -65,6 +65,7 @@ public class BaodianFragment extends ToolBarFragment {
 
     }
 
+
     /**
      * 工种数据
      */
@@ -90,7 +91,6 @@ public class BaodianFragment extends ToolBarFragment {
                 });
     }
 
-
     @Override
     protected void lazyLoad() {
     }
@@ -101,7 +101,7 @@ public class BaodianFragment extends ToolBarFragment {
         //list转换成数组
         mTitles = list.toArray(new String[list.size()]);
 
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < mTitles.length; i++) {
             listFragment = BaodianItemFragment.newInstance(i + 1);
             mFragments.add(listFragment);
         }
@@ -109,7 +109,7 @@ public class BaodianFragment extends ToolBarFragment {
         mPager.setAdapter(adapter);
         tab_layout.setupWithViewPager(mPager);
 
-        for (int i = 0; i < adapter.getCount(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             TabLayout.Tab tab = tab_layout.getTabAt(i);//获得每一个tab
             if (tab != null) {
                 tab.setCustomView(R.layout.item_tab);//给每一个tab设置view
@@ -125,21 +125,30 @@ public class BaodianFragment extends ToolBarFragment {
             }
             if (tab != null) {
                 if (tab.getCustomView() != null) {
-                    textView = (TextView) tab.getCustomView().findViewById(R.id.tab_text);
+                    textView = tab.getCustomView().findViewById(R.id.tab_text);
                 }
             }
-            textView.setText(mTitles[i]);//设置tab上的文字
+
+//            if (textView == null){
+//                textView = tab.getCustomView().findViewById(R.id.tab_text);
+//            }
+            String be = mTitles[i];
+            textView.setText(be);//设置tab上的文字
         }
 
         tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                tab.getCustomView().findViewById(R.id.tab_text).setSelected(true);
-                mPager.setCurrentItem(tab.getPosition());
+                if (tab.getCustomView() != null) {
+                    tab.getCustomView().findViewById(R.id.tab_text).setSelected(true);
+                    mPager.setCurrentItem(tab.getPosition());
+                }
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tab.getCustomView().findViewById(R.id.tab_text).setSelected(false);
+                if (tab.getCustomView() != null) {
+                    tab.getCustomView().findViewById(R.id.tab_text).setSelected(false);
+                }
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {

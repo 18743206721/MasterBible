@@ -17,6 +17,7 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.http.MsgBean;
 import com.xingguang.master.maincode.home.model.ExambaoDianBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
@@ -58,7 +59,7 @@ public class ExamBaoDianActivity extends ToolBarActivity {
     private int biaoshi = 0; //对错标示，0是没有保存上回对错的记录，1是保存了对错的记录
     public static ExamBaoDianActivity instance;
 
-    private int selected = 1; // 1常规题库，2精选题库
+    private int selected = 0; // 0常规题库，1精选题库
 
     @Override
     protected int getLayoutId() {
@@ -86,7 +87,7 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "info")
-                .params("UserName", AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getShenFenId(this))
                 .params("ExamType", 1) //考试类型：1:练习,2:考试(必填)
                 .params("DepartmentID", bumenId) //部门ID
                 .params("ProfessionID", gongzhongId) //工种ID
@@ -109,24 +110,26 @@ public class ExamBaoDianActivity extends ToolBarActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_chang:
-                selected = 1;
+                selected = 0;
                 tv_chang.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_blue));
                 tv_chang.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.home_bule));
                 tv_select.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_white));
                 tv_select.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.textBlack));
                 break;
             case R.id.tv_select:
-                selected = 2;
+                selected = 1;
                 tv_chang.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_white));
                 tv_chang.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.textBlack));
                 tv_select.setBackground(ContextCompat.getDrawable(ExamBaoDianActivity.this,R.drawable.bg_view_blue));
                 tv_select.setTextColor(ContextCompat.getColor(ExamBaoDianActivity.this,R.color.home_bule));
                 break;
             case R.id.tv_exercises:
-                if (AppUtil.isFastDoubleClick(4000)) {
-                    return;
+                if (AppUtil.isShenFened(ExamBaoDianActivity.this)) {
+                    if (AppUtil.isFastDoubleClick(4000)) {
+                        return;
+                    }
+                    loadcommit();
                 }
-                loadcommit();
                 break;
         }
     }
@@ -137,15 +140,16 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "submit")
-                .params("UserName", AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getShenFenId(this))
                 .params("ExamType", 1) //考试类型：1:练习,2:考试(必填)
                 .params("DepartmentID", bumenId) //部门ID
                 .params("ProfessionID", gongzhongId) //工种ID
+                .params("IsChoice",selected ) //考试类型为1时必填（0：常规题；1：精选题）
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
-                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        MsgBean bean = gson.fromJson(response.body().toString(), MsgBean.class);
 
                         if (!AppUtil.getYesCount(ExamBaoDianActivity.this).equals("")) {
                             //清除答题数量
@@ -179,7 +183,7 @@ public class ExamBaoDianActivity extends ToolBarActivity {
                         startActivity(new Intent(ExamBaoDianActivity.this, DaTiActivity.class)
                                 .putExtra("exam", "1")
                                 .putExtra("count", count)//传过去的答题数量
-                                .putExtra("exampaperID", bean.getExampaperID())
+                                .putExtra("exampaperID", bean.getData().getExampaperID())
                                 .putExtra("currentcount", currentcount)
                                 .putExtra("yesjilu", yesjilu)
                                 .putExtra("nojilu", nojilu)

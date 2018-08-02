@@ -48,7 +48,6 @@ import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.main.model.TuisongBean;
 import com.xingguang.master.main.model.UpdateBean;
-import com.xingguang.master.maincode.classifly.view.fragment.ClassifExamFragment;
 import com.xingguang.master.maincode.classifly.view.fragment.ClassifFragment;
 import com.xingguang.master.maincode.enter.view.fragment.EnterFragment;
 import com.xingguang.master.maincode.home.view.fragment.BaodianFragment;
@@ -131,7 +130,7 @@ public class MainActivity extends BaseActivity {
     BaodianFragment baodianFragment;  //考试宝典
     ExamChapterFragment examchapterFragment; //模拟考试
     OnlineFragment onlineFragment;//在线留言
-    ClassifExamFragment classifExamFragment; //考试宝典
+//    ClassifExamFragment classifExamFragment; //考试宝典
     OneFragment oneFragment; //更多页面的招工信息
     TwoFragment twoFragment; // 资讯更多
     ThreeFragment threeFragment; //焊工更多
@@ -713,9 +712,9 @@ public class MainActivity extends BaseActivity {
         if (onlineFragment != null) {
             transaction.hide(onlineFragment);
         }
-        if (classifExamFragment != null) {
-            transaction.hide(classifExamFragment);
-        }
+//        if (classifExamFragment != null) {
+//            transaction.hide(classifExamFragment);
+//        }
         if (oneFragment != null) {
             transaction.hide(oneFragment);
         }

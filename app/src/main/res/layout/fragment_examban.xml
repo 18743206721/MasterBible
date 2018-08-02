@@ -41,6 +41,7 @@
                         android:visibility="visible" />
 
                     <TextView
+                        android:id="@+id/tv_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="单选题"
@@ -179,8 +180,69 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
+                <!--e-->
+                <LinearLayout
+                    android:id="@+id/ll_e"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/iv_e"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/exam_4"
+                        android:visibility="visible" />
+                    <TextView
+                        android:id="@+id/tv_e"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text=""
+                        android:textColor="@color/textBlack"
+                        android:textSize="13sp" />
+                </LinearLayout>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_answer"
+                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="25dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textColor="@color/textDarkGray"
+                    android:textSize="14sp"
+                    android:text="答案:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_duoxuan_answer"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/textDarkGray"
+                    android:textSize="14sp"
+                    android:text="A,B,C"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/iv_dati"
+                android:visibility="gone"
+                android:layout_marginTop="80dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/dati_commit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>

@@ -16,6 +16,7 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.http.MsgBean;
 import com.xingguang.master.maincode.home.model.ExambaoDianBean;
 import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.SharedPreferencesUtils;
@@ -76,7 +77,7 @@ public class ExamChapterActivity extends ToolBarActivity {
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "info")
-                .params("UserName", AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getShenFenId(this))
                 .params("ExamType", 2) //考试类型：1:练习,2:考试(必填)
                 .params("DepartmentID", bumenId) //部门ID
                 .params("ProfessionID", gongzhongId) //工种ID
@@ -115,7 +116,7 @@ public class ExamChapterActivity extends ToolBarActivity {
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "submit")
-                .params("UserName", AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getShenFenId(this))
                 .params("ExamType", 2) //考试类型：1:练习,2:考试(必填)
                 .params("DepartmentID", bumenId) //部门ID
                 .params("ProfessionID", gongzhongId) //工种ID
@@ -123,7 +124,7 @@ public class ExamChapterActivity extends ToolBarActivity {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
-                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        MsgBean bean = gson.fromJson(response.body().toString(), MsgBean.class);
 
                         if (!AppUtil.getYesCount(ExamChapterActivity.this).equals("")){
                             //清除答题数量
@@ -138,7 +139,7 @@ public class ExamChapterActivity extends ToolBarActivity {
                         startActivity(new Intent(ExamChapterActivity.this, DaTiActivity.class)
                                 .putExtra("exam", "2")
                                 .putExtra("count", count)//传过去的答题数量
-                                .putExtra("exampaperID",bean.getExampaperID())
+                                .putExtra("exampaperID",bean.getData().getExampaperID())
                                 .putExtra("kaoshiTime",kaoshiTime)
                                 .putExtra("kaoshifenshu",kaoshifenshu)
                                 .putExtra("kaoshi",1)

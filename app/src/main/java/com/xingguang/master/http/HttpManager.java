@@ -8,13 +8,19 @@ package com.xingguang.master.http;
 public class HttpManager {
 
     //线上
-    public static final String BASE_URL = "http://app.ncsegov.cn/";
+//    public static final String BASE_URL = "http://app.ncsegov.cn/";
     //本地测试
-//    public static final String BASE_URL = "http://192.168.0.150:8035/";
+    public static final String BASE_URL = "http://192.168.0.150:8035/";
 
 
     //登录接口
     public static final String Login= BASE_URL+"UserLogin.aspx";
+
+    //身份登录接口
+    public static final String ShenLogin= BASE_URL+"ExamUserLogin.aspx";
+
+    //身份注册接口
+    public static final String ShenRGS= BASE_URL+"Login_Examzc.aspx";
 
     //注册发送验证码
     public static final String sendSms= BASE_URL+"Login_zc.aspx";
@@ -66,5 +72,11 @@ public class HttpManager {
 
     //个推送
     public static final String PushMessageInterface = BASE_URL+"PushMessageInterface.aspx";
+
+    //考试项目分类搜索
+    public static final String ProjectSearch = BASE_URL+"ProjectSearch.aspx";
+
+    //考试机构
+    public static final String ExaminingBody = BASE_URL+"ExaminingBody.aspx";
 
 }

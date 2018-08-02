@@ -16,6 +16,7 @@ import com.xingguang.master.base.ToolBarActivity;
 import com.xingguang.master.http.CommonBean;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.http.MsgBean;
 import com.xingguang.master.main.view.activity.MainActivity;
 import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.model.ExambaoDianBean;
@@ -143,14 +144,17 @@ public class ClassifExamActivity extends ToolBarActivity {
                 break;
         }
     }
-    /**先走详情接口，获取时间，题数*/
+
+    /**
+     * 先走详情接口，获取时间，题数
+     */
     private void loadinfo(final int type) {
         OkGo.<String>post(HttpManager.ExamineEntry)
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "info")
-                .params("UserName", AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getShenFenId(this))
                 .params("ExamType", type) //考试类型：1:练习,2:考试(必填)
                 .params("DepartmentID", bumenId) //部门ID
                 .params("ProfessionID", gongzhongId) //工种ID
@@ -173,43 +177,33 @@ public class ClassifExamActivity extends ToolBarActivity {
                 });
     }
 
-    /**再走提交接口，传过去exampaperID*/
+    /**
+     * 再走提交接口，传过去exampaperID
+     */
     private void loadsubmit(final int classif) {
         OkGo.<String>post(HttpManager.ExamineEntry)
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "submit")
-                .params("UserName", AppUtil.getUserId(this))
+                .params("UserName", AppUtil.getShenFenId(this))
                 .params("ExamType", classif) //考试类型：1:练习,2:考试(必填)
                 .params("DepartmentID", bumenId) //部门ID
                 .params("ProfessionID", gongzhongId) //工种ID
+                .params("IsChoice", 0) //考试类型为1时必填（0：常规题；1：精选题）
                 .execute(new DialogCallback<String>(this) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
-                        CommonBean bean = gson.fromJson(response.body().toString(), CommonBean.class);
+                        MsgBean bean = gson.fromJson(response.body().toString(), MsgBean.class);
                         if (!AppUtil.getYesCount(ClassifExamActivity.this).equals("")) {
-//                            if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
-                                //为空，就是返回键
-
-                                //清除答题数量
-                                SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.YESCOUNT);
-//                            }else { //不为空，就是系统建
-
-
-//                            }
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.YESCOUNT);
 
                         }
                         if (!AppUtil.getNoCount(ClassifExamActivity.this).equals("")) {
-//                          if (AppUtil.getClassType(ClassifExamActivity.this).equals("")) {
-                                //为空，就是返回键
-                              //清除答题数量
-                              SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.NOCOUNT);
-
-//                            }else { //不为空，就是系统建
-
-//                            }
+                            //清除答题数量
+                            SharedPreferencesUtils.remove(ClassifExamActivity.this, SharedPreferencesUtils.NOCOUNT);
                         }
 
 
@@ -220,14 +214,14 @@ public class ClassifExamActivity extends ToolBarActivity {
                         if (!AppUtil.getYesJilu(ClassifExamActivity.this).equals("")) {
                             yesjilu = Integer.parseInt(AppUtil.getYesJilu(ClassifExamActivity.this));
                             biaoshi = 1;
-                        }else {
+                        } else {
                             biaoshi = 0;
                         }
 
                         if (!AppUtil.getNoJilu(ClassifExamActivity.this).equals("")) {
                             nojilu = Integer.parseInt(AppUtil.getNoJilu(ClassifExamActivity.this));
                             biaoshi = 1;
-                        }else {
+                        } else {
                             biaoshi = 0;
                         }
 
@@ -236,19 +230,19 @@ public class ClassifExamActivity extends ToolBarActivity {
                             startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
                                     .putExtra("exam", "1")
                                     .putExtra("count", count)//传过去的答题数量
-                                    .putExtra("currentcount",currentcount)
-                                    .putExtra("exampaperID", bean.getExampaperID())
-                                    .putExtra("yesjilu",yesjilu)
-                                    .putExtra("nojilu",nojilu)
-                                    .putExtra("biaoshi",biaoshi)
-                                    .putExtra("kaoshi",0)
+                                    .putExtra("currentcount", currentcount)
+                                    .putExtra("exampaperID", bean.getData().getExampaperID())
+                                    .putExtra("yesjilu", yesjilu)
+                                    .putExtra("nojilu", nojilu)
+                                    .putExtra("biaoshi", biaoshi)
+                                    .putExtra("kaoshi", 0)
                             );
                         } else { //考试提交
-                            if (AppUtil.isExamined(ClassifExamActivity.this)) {
+                            if (AppUtil.isShenFened(ClassifExamActivity.this)) {
                                 startActivity(new Intent(ClassifExamActivity.this, DaTiActivity.class)
                                         .putExtra("exam", "2")
                                         .putExtra("count", count)//传过去的答题数量
-                                        .putExtra("exampaperID", bean.getExampaperID())
+                                        .putExtra("exampaperID", bean.getData().getExampaperID())
                                         .putExtra("kaoshiTime", kaoshiTime)
                                         .putExtra("kaoshifenshu", kaoshifenshu)
                                         .putExtra("kaoshi", 1));

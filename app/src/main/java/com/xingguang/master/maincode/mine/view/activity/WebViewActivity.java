@@ -18,6 +18,7 @@ import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
 import com.xingguang.master.maincode.home.model.TwoDetailsBean;
 import com.xingguang.master.maincode.mine.model.AboutBean;
+import com.xingguang.master.maincode.mine.model.KaoShiInfoBean;
 import com.xingguang.master.util.ToastUtils;
 
 import butterknife.BindView;
@@ -95,14 +96,52 @@ public class WebViewActivity extends ToolBarActivity {
             llTitle.setVisibility(View.VISIBLE);
             setToolBarTitle("项目");
             loadxieyi();
-        } else { //焊工，培训项目
+        } else if (id == 2){ //焊工，培训项目
             llBot.setVisibility(View.VISIBLE);
             llTitle.setVisibility(View.VISIBLE);
             setToolBarTitle("项目");
             loadhangong();
+        }else if (id == 3){
+            llBot.setVisibility(View.VISIBLE);
+            llTitle.setVisibility(View.VISIBLE);
+            setToolBarTitle("考试机构");
+            loadkaoshi();
         }
 
 //        init();
+
+    }
+
+    /**
+     * 考试机构详情页面
+     * */
+    private void loadkaoshi() {
+        OkGo.<String>post(HttpManager.ExaminingBody)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("MethodCode", "info")
+                .params("InfoID", classid)
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        KaoShiInfoBean bean = gson.fromJson(response.body(), KaoShiInfoBean.class);
+
+                        if (bean.getData() != null) {
+
+                            LastID = bean.getData().getLastID();
+                            NextId = bean.getData().getNextID();
+
+                            String html = bean.getData().getContent();
+                            String data = html.replace("%@", html);
+                            webView1.loadData(data, "text/html; charset=UTF-8", null);
+                        } else {
+                            ToastUtils.showToast(WebViewActivity.this, bean.getMsg());
+                        }
+                    }
+                });
+
 
     }
 
@@ -255,8 +294,10 @@ public class WebViewActivity extends ToolBarActivity {
                 if (LastID != 0) {
                     if (id == 1) {//资讯详情信息
                         url = HttpManager.Information;
-                    } else {//焊工
+                    } else if (id == 2){//焊工
                         url = HttpManager.ProjectTraining;
+                    }else if (id == 3){
+                        url = HttpManager.ExaminingBody;
                     }
                     loadlast(url, LastID);
                 } else {
@@ -268,8 +309,10 @@ public class WebViewActivity extends ToolBarActivity {
 
                     if (id == 1) {//资讯详情信息
                         url = HttpManager.Information;
-                    } else {//焊工
+                    } else if (id == 2){//焊工
                         url = HttpManager.ProjectTraining;
+                    }else if (id == 3){
+                        url = HttpManager.ExaminingBody;
                     }
 
                     loadnext(url, NextId);

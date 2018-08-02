@@ -23,6 +23,8 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseActivity;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.login.model.KaoShiBean;
+import com.xingguang.master.login.model.KaoShiLoginBean;
 import com.xingguang.master.login.model.LoginBean;
 import com.xingguang.master.login.model.SmsBean;
 import com.xingguang.master.util.AppUtil;
@@ -159,14 +161,14 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
                 break;
             case R.id.rl_log_messs://获取登录验证码
                 if (type == 0) {
-                    if (validates1()) {
+                    if (validatessms()) {
                         tvLogmss.setEnabled(false);
                         sendSMSClient(etPhone.getText().toString());
                     }
-                }else if (type == 1){
-                    if (validates1()) {
+                } else if (type == 1) {
+                    if (validatessms()) {
                         tvRgsmss.setEnabled(false);
-                        sendSMSClient(etRgsphone.getText().toString());
+                        sendSMSClientrgs(etRgsphone.getText().toString());
                     }
                 }
                 break;
@@ -176,72 +178,9 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
         }
     }
 
-    //注册
-    private void loadregister() {
-        OkGo.<String>post(HttpManager.sendSms)
-                .tag(this)
-                .cacheKey("cachePostKey")
-                .cacheMode(CacheMode.DEFAULT)
-                .params("UserName", etPhone.getText().toString())
-                .params("UserPass", etRgsphone.getText().toString())
-                .params("IdenCode", rgsMss.getText().toString())
-                .params("MethodCode", "zc")  //验证码发送：yzm，注册：zc）
-                .execute(new DialogCallback<String>(this) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Gson gson = new Gson();
-                        SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
-                        if (smsBean.getMsg().equals("OK")){
-                            xtabLogin.getTabAt(0).select();   //设置TabLayout选中登录选项。
-                            llVisSms.setVisibility(View.GONE);
-                            tvLogin.setText("登 录");
-                            type = 0;
-                        }
-                        ToastUtils.showToast(KaoshiLoginActivity.this, smsBean.getResult());
-                    }
-                });
-
-    }
-
-    //登录
-    private void loadlogin() {
-        OkGo.<String>post(HttpManager.Login)
-                .tag(this)
-                .cacheKey("cachePostKey")
-                .cacheMode(CacheMode.DEFAULT)
-                .params("UserName", etPhone.getText().toString())
-                .params("UserPass", logMss.getText().toString())
-                .execute(new DialogCallback<String>(this) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Gson gson = new Gson();
-                        LoginBean loginBean = gson.fromJson(response.body().toString(), LoginBean.class);
-                        if (loginBean.getData().size() != 0) {
-                            SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERID, loginBean.getData().get(0).getUserName());
-                            if (loginBean.getData().get(0).getYEPrice() != null) {
-                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERNAME, loginBean.getData().get(0).getYEPrice());
-                            }
-                            if (loginBean.getData().get(0).getHeadPic() != null) {
-                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERIMAGE, HttpManager.BASE_URL + loginBean.getData().get(0).getHeadPic());
-                            }
-                            //性别
-                            if (loginBean.getData().get(0).getEmail() != null) {
-                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERSEX, loginBean.getData().get(0).getEmail());
-                            }
-                            //地区
-                            if (loginBean.getData().get(0).getTeam() != null) {
-                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
-                            }
-                            finish();
-                        }
-                        ToastUtils.showToast(KaoshiLoginActivity.this, loginBean.getResult());
-                    }
-                });
-    }
-
-    //登录验证码
-    private void sendSMSClient(String text) {
-        OkGo.<String>post(HttpManager.sendSms)
+    //注册时候发送验证码
+    private void sendSMSClientrgs(String text) {
+        OkGo.<String>post(HttpManager.ShenRGS)
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
@@ -251,39 +190,107 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
-                        SmsBean smsBean = gson.fromJson(response.body().toString(), SmsBean.class);
-                        ToastUtils.showToast(KaoshiLoginActivity.this, smsBean.getResult());
+                        KaoShiBean smsBean = gson.fromJson(response.body().toString(), KaoShiBean.class);
+                        ToastUtils.showToast(KaoshiLoginActivity.this, smsBean.getMsg());
+                        tvRgsmss.setTextColor(Color.rgb(81, 87, 104));
+                        rlRgsMesss.setBackgroundResource(R.drawable.corners5_solidblack);
+                        Message msgs = mHandler.obtainMessage();
+                        msgs.what = 1;
+                        msgs.sendToTarget();
+                        tvRgsmss.setEnabled(false);
+                        rlRgsMesss.setEnabled(false);
+                    }
+                });
+    }
 
-                        if (type == 0){
-                            tvLogmss.setTextColor(Color.rgb(81, 87, 104));
-                            rlLogMesss.setBackgroundResource(R.drawable.corners5_solidblack);
-                            Message msgs = mHandler.obtainMessage();
-                            msgs.what = 1;
-                            msgs.sendToTarget();
-                            tvLogmss.setEnabled(false);
-                            rlLogMesss.setEnabled(false);
-                        }else if (type == 1){
-                            tvRgsmss.setTextColor(Color.rgb(81, 87, 104));
-                            rlRgsMesss.setBackgroundResource(R.drawable.corners5_solidblack);
-                            Message msgs = mHandler.obtainMessage();
-                            msgs.what = 1;
-                            msgs.sendToTarget();
-                            tvRgsmss.setEnabled(false);
-                            rlRgsMesss.setEnabled(false);
+    //注册
+    private void loadregister() {
+        OkGo.<String>post(HttpManager.ShenRGS)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", etPhone.getText().toString())
+                .params("MethodCode", "zc")  //验证码发送：yzm，注册：zc）
+                .params("Name", etRgsname.getText().toString())
+                .params("IDnumber", etRgsidcard.getText().toString())
+                .params("IdenCode", rgsMss.getText().toString())
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        KaoShiBean smsBean = gson.fromJson(response.body().toString(), KaoShiBean.class);
+                        if (smsBean.getStatus() == 1) {
+                            xtabLogin.getTabAt(0).select();   //设置TabLayout选中登录选项。
+                            llVisSms.setVisibility(View.GONE);
+                            tvLogin.setText("登 录");
+                            type = 0;
                         }
+                        ToastUtils.showToast(KaoshiLoginActivity.this, smsBean.getMsg());
+                    }
+                });
+
+    }
+
+    //登录
+    private void loadlogin() {
+        OkGo.<String>post(HttpManager.ShenLogin)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", etPhone.getText().toString())
+                .params("MethodCode", "Login")
+                .params("IdenCode", logMss.getText().toString())
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        KaoShiLoginBean loginBean = gson.fromJson(response.body().toString(), KaoShiLoginBean.class);
+                        if (loginBean.getData().size() != 0) {
+                            SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.SHENFENID, loginBean.getData().get(0).getUserName());
+//                            if (loginBean.getData().get(0).getTeam() != null) {
+//                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
+//                            }
+                            finish();
+                        }
+                        ToastUtils.showToast(KaoshiLoginActivity.this, loginBean.getMsg());
+                    }
+                });
+    }
+
+    //登录验证码
+    private void sendSMSClient(String text) {
+        OkGo.<String>post(HttpManager.ShenLogin)
+                .tag(this)
+                .cacheKey("cachePostKey")
+                .cacheMode(CacheMode.DEFAULT)
+                .params("UserName", text)
+                .params("MethodCode", "yzm")
+                .execute(new DialogCallback<String>(this) {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Gson gson = new Gson();
+                        KaoShiBean smsBean = gson.fromJson(response.body().toString(), KaoShiBean.class);
+                        ToastUtils.showToast(KaoshiLoginActivity.this, smsBean.getMsg());
+                        tvLogmss.setTextColor(Color.rgb(81, 87, 104));
+                        rlLogMesss.setBackgroundResource(R.drawable.corners5_solidblack);
+                        Message msgs = mHandler.obtainMessage();
+                        msgs.what = 1;
+                        msgs.sendToTarget();
+                        tvLogmss.setEnabled(false);
+                        rlLogMesss.setEnabled(false);
 
                     }
                 });
     }
 
     private boolean validatesRegister() {
-        if (etRgsname.getText().length() == 0){
+        if (etRgsname.getText().length() == 0) {
             ToastUtils.showToast(KaoshiLoginActivity.this, "请输入您的姓名");
             return false;
-        }else if(etRgsidcard.getText().length() == 0){
+        } else if (etRgsidcard.getText().length() == 0) {
             ToastUtils.showToast(KaoshiLoginActivity.this, "请输入您的18位身份证号");
             return false;
-        }else if (etRgsphone.getText().length() == 0){
+        } else if (etRgsphone.getText().length() == 0) {
             ToastUtils.showToast(KaoshiLoginActivity.this, "请输入您的手机号");
             return false;
         } else if (etRgsphone.getText().length() != 11) {
@@ -298,28 +305,37 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
     }
 
     private boolean validates1() {
-        if (type == 0){
+        if (etPhone.getText().length() == 0) {
+            ToastUtils.showToast(KaoshiLoginActivity.this, "请输入您的手机号");
+            return false;
+        } else if (etPhone.getText().length() != 11) {
+            ToastUtils.showToast(KaoshiLoginActivity.this, "请填写11位手机号");
+            return false;
+        } else if (logMss.getText().length() == 0) {
+            ToastUtils.showToast(KaoshiLoginActivity.this, "请输入验证码");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean validatessms() {
+        if (type == 0) {
             if (etPhone.getText().length() == 0) {
                 ToastUtils.showToast(KaoshiLoginActivity.this, "请输入您的手机号");
                 return false;
             } else if (etPhone.getText().length() != 11) {
                 ToastUtils.showToast(KaoshiLoginActivity.this, "请填写11位手机号");
                 return false;
-            } else if (logMss.getText().length() == 0) {
-                ToastUtils.showToast(KaoshiLoginActivity.this, "请输入验证码");
-                return false;
             } else {
                 return true;
             }
-        }else {
+        } else {
             if (etRgsphone.getText().length() == 0) {
                 ToastUtils.showToast(KaoshiLoginActivity.this, "请输入您的手机号");
                 return false;
             } else if (etRgsphone.getText().length() != 11) {
                 ToastUtils.showToast(KaoshiLoginActivity.this, "请填写11位手机号");
-                return false;
-            } else if (rgsMss.getText().length() == 0) {
-                ToastUtils.showToast(KaoshiLoginActivity.this, "请输入验证码");
                 return false;
             } else {
                 return true;
@@ -330,9 +346,9 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
 
     @Override
     public void countDownTimerListener(String time) {
-        if (type == 0){
+        if (type == 0) {
             tvLogmss.setText(time);
-        }else if (type == 1){
+        } else if (type == 1) {
             tvRgsmss.setText(time);
         }
 
@@ -340,21 +356,18 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
 
     @Override
     public void countDownTimerFinish() {
-        if (type == 0){
+        if (type == 0) {
             tvLogmss.setEnabled(true);
             rlLogMesss.setEnabled(true);
             tvLogmss.setTextColor(Color.parseColor("#005FBB"));
             rlLogMesss.setBackgroundResource(R.drawable.btn_register_bg);
-        }else if (type == 1){
+        } else if (type == 1) {
             tvRgsmss.setEnabled(true);
             rlRgsMesss.setEnabled(true);
             tvRgsmss.setTextColor(Color.parseColor("#005FBB"));
             rlRgsMesss.setBackgroundResource(R.drawable.btn_register_bg);
         }
     }
-
-
-
 
 
 }

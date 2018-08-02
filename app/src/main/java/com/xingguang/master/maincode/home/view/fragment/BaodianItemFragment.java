@@ -77,15 +77,10 @@ public class BaodianItemFragment extends BaseFragment {
     private void initAdapter() {
         adapter = new BaoDianItemAdapter(getActivity(), listgongzhong, type);
         GridLayoutManager mgr = new GridLayoutManager(getActivity(), 2);
-//        rvLooksp.addItemDecoration(//为recycleview设置分割线
-//                new GridSpaceItemDecoration.Builder(rvLooksp)
-//                        .setColNum(2) //列数
-//                        .setSpaceSize(13) //设置间距
-//                        .build()
-//        );
         rvLooksp.setLayoutManager(mgr);
         rvLooksp.setAdapter(adapter);
     }
+
     /**
      * 工种数据
      */
@@ -115,18 +110,20 @@ public class BaodianItemFragment extends BaseFragment {
     }
 
     private void initListener() {
-        adapter.setOnItemClickListener(new BaoDianItemAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
+            adapter.setOnItemClickListener(new BaoDianItemAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
                     startActivity(new Intent(getActivity(), ExamBaoDianActivity.class)
-                    .putExtra("bumenId",bumenID)
-                                    .putExtra("gongzhongId",listgongzhong.get(position).getID())
+                            .putExtra("bumenId", bumenID)
+                            .putExtra("gongzhongId", listgongzhong.get(position).getID())
                     ); //跳转到练习入口
-            }
-        });
+                }
+            });
     }
+
     @Override
-    protected void lazyLoad() {}
+    protected void lazyLoad() {
+    }
 
 
 }

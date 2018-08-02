@@ -11,6 +11,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,8 +133,8 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void OnBannerClick(int position) {
                 for (int i = 0; i < bannerList.size(); i++) {
-                    if (position == i){
-                        intentclassif(bannerList.get(i).getUrl(),bannerList.get(i).getTitle());
+                    if (position == i) {
+                        intentclassif(bannerList.get(i).getUrl(), bannerList.get(i).getTitle());
                     }
                 }
             }
@@ -310,14 +311,12 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_sousuo://搜索按钮
-//                if (AppUtil.isExamined(getActivity())) {
-                    if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
-                        ToastUtils.showToast(getActivity(), "请输入搜索内容！");
-                    } else {
-                        startActivity(new Intent(getActivity(), SearchActivity.class)
-                                .putExtra("content", tvPlaySerch.getText().toString()));
-                    }
-//                }
+                if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
+                    ToastUtils.showToast(getActivity(), "请输入搜索内容！");
+                } else {
+                    startActivity(new Intent(getActivity(), SearchActivity.class)
+                            .putExtra("content", tvPlaySerch.getText().toString()));
+                }
                 break;
             case R.id.ll_login: //登录
                 if (AppUtil.getUserId(getActivity()).equals("")) {
@@ -325,11 +324,11 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_main_baodian: //考试宝典,练习
-                    MainActivity.instance.setBg(1);
-                    MainActivity.instance.setToBaodianFragment();
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setToBaodianFragment();
                 break;
             case R.id.ll_main_database://考试题库，考试
-                if (AppUtil.isExamined(getActivity())) {
+                if (AppUtil.isShenFened(getActivity())) {
                     MainActivity.instance.setBg(1);
                     MainActivity.instance.setToExamChapterFragment();
                 }
@@ -341,8 +340,8 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_online://在线留言
-                    MainActivity.instance.setBg(1);
-                    MainActivity.instance.setOnLineFragment();
+                MainActivity.instance.setBg(1);
+                MainActivity.instance.setOnLineFragment();
                 break;
             case R.id.iv_home_helpse://帮我选考点
                 if (AppUtil.isExamined(getActivity())) {
@@ -352,9 +351,9 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case R.id.iv_home_botm1://底部图片1
-                startActivity(new Intent(getActivity(),WebViewActivity.class)
-                        .putExtra("id",0)
-                        .putExtra("title",1) //title 1是全国考试机构，0是关于我们
+                startActivity(new Intent(getActivity(), WebViewActivity.class)
+                        .putExtra("id", 0)
+                        .putExtra("title", 1) //title 1是全国考试机构，0是关于我们
                 ); //传1显示上下翻页按钮,0不显示
 
                 break;

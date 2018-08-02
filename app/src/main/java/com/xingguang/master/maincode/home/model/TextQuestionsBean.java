@@ -9,10 +9,11 @@ import java.util.List;
  */
 public class TextQuestionsBean {
 
+
     /**
      * status : 1
      * msg : SUCCESS
-     * data : {"IsPic":0,"Titel":"洁具产品非人为损坏质保期为10年","PIC":"","Answer":"A","SelectAnswer":"","Aata":[{"IsPic":0,"Title":"正确","Pic":null,"OptionHead":"A"},{"IsPic":0,"Title":"错误","Pic":null,"OptionHead":"B"}]}
+     * data : {"IsPic":0,"Titel":"您的家庭支出的主要项目是","PIC":"","Answer":"BC","SelectAnswer":"","QuestionTypes":"1","Aata":[{"IsPic":0,"Title":"子女的婚姻","Pic":null,"OptionHead":"A"},{"IsPic":0,"Title":"子女的教育","Pic":null,"OptionHead":"B"},{"IsPic":0,"Title":"医疗","Pic":null,"OptionHead":"C"},{"IsPic":0,"Title":"房子","Pic":null,"OptionHead":"D"},{"IsPic":0,"Title":"E选项","Pic":null,"OptionHead":"E"}]}
      */
 
     private int status;
@@ -46,11 +47,12 @@ public class TextQuestionsBean {
     public static class DataBean {
         /**
          * IsPic : 0
-         * Titel : 洁具产品非人为损坏质保期为10年
+         * Titel : 您的家庭支出的主要项目是
          * PIC :
-         * Answer : A
+         * Answer : BC
          * SelectAnswer :
-         * Aata : [{"IsPic":0,"Title":"正确","Pic":null,"OptionHead":"A"},{"IsPic":0,"Title":"错误","Pic":null,"OptionHead":"B"}]
+         * QuestionTypes : 1
+         * Aata : [{"IsPic":0,"Title":"子女的婚姻","Pic":null,"OptionHead":"A"},{"IsPic":0,"Title":"子女的教育","Pic":null,"OptionHead":"B"},{"IsPic":0,"Title":"医疗","Pic":null,"OptionHead":"C"},{"IsPic":0,"Title":"房子","Pic":null,"OptionHead":"D"},{"IsPic":0,"Title":"E选项","Pic":null,"OptionHead":"E"}]
          */
 
         private int IsPic;
@@ -58,6 +60,7 @@ public class TextQuestionsBean {
         private String PIC;
         private String Answer;
         private String SelectAnswer;
+        private String QuestionTypes;
         private List<AataBean> Aata;
 
         public int getIsPic() {
@@ -100,6 +103,14 @@ public class TextQuestionsBean {
             this.SelectAnswer = SelectAnswer;
         }
 
+        public String getQuestionTypes() {
+            return QuestionTypes;
+        }
+
+        public void setQuestionTypes(String QuestionTypes) {
+            this.QuestionTypes = QuestionTypes;
+        }
+
         public List<AataBean> getAata() {
             return Aata;
         }
@@ -111,7 +122,7 @@ public class TextQuestionsBean {
         public static class AataBean {
             /**
              * IsPic : 0
-             * Title : 正确
+             * Title : 子女的婚姻
              * Pic : null
              * OptionHead : A
              */
