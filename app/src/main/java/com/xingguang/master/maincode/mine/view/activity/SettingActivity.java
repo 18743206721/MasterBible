@@ -102,10 +102,10 @@ public class SettingActivity extends ToolBarActivity {
                         //申请WRITE_EXTERNAL_STORAGE权限
                         ActivityCompat.requestPermissions(SettingActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
                     } else {
-                        loadcheck();
+//                        loadcheck();
                     }
                 } else {
-                    loadcheck();
+//                    loadcheck();
                 }
 
                 break;
@@ -162,7 +162,7 @@ public class SettingActivity extends ToolBarActivity {
             if (grantResults.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    loadcheck();
+//                    loadcheck();
 
                 } else {
                     // Permission Denied

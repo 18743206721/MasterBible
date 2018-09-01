@@ -68,6 +68,18 @@ public class ClassifFragment extends ToolBarFragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadgongzhong();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        loadgongzhong();
+    }
+
     /**
      * 工种数据
      */
@@ -140,7 +152,6 @@ public class ClassifFragment extends ToolBarFragment {
                     tab.getCustomView().findViewById(R.id.tab_class_text).setSelected(true);
                     mPager.setCurrentItem(tab.getPosition());
                 }
-
             }
 
             @Override

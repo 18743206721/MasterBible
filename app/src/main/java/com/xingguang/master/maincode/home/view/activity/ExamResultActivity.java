@@ -92,12 +92,12 @@ public class ExamResultActivity extends ToolBarActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_restart:
-                ExamResultActivity.this.finish();
+               finish();
                 break;
             case R.id.tv_back:
                 Intent intent = new Intent();
                 intent.setClass(ExamResultActivity.this, MainActivity.class);
-                ExamResultActivity.this.finish();
+                finish();
                 break;
         }
     }

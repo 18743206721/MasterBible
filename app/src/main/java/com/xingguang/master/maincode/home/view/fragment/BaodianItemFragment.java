@@ -24,6 +24,7 @@ import com.xingguang.master.maincode.home.view.activity.ExamBaoDianActivity;
 import com.xingguang.master.maincode.home.view.activity.ExamChapterActivity;
 import com.xingguang.master.maincode.home.view.adapter.BaoDianItemAdapter;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,13 @@ public class BaodianItemFragment extends BaseFragment {
         rvLooksp.setAdapter(adapter);
     }
 
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        loadbumen();
+    }
+
     /**
      * 工种数据
      */
@@ -90,13 +98,14 @@ public class BaodianItemFragment extends BaseFragment {
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "list")
+                .params("UserName", AppUtil.getShenFenId(getActivity()))
                 .execute(new DialogCallback<String>(getActivity()) {
                     @Override
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         BuMengBean bean = gson.fromJson(response.body().toString(), BuMengBean.class);
                         if (bean.getData() != null) {
-
+                            listgongzhong.clear();
                             for (int i = 0; i < bean.getData().size(); i++) {
                                 if (type - 1 == i) {
                                     bumenID = bean.getData().get(i).getID();
@@ -113,10 +122,16 @@ public class BaodianItemFragment extends BaseFragment {
             adapter.setOnItemClickListener(new BaoDianItemAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    startActivity(new Intent(getActivity(), ExamBaoDianActivity.class)
-                            .putExtra("bumenId", bumenID)
-                            .putExtra("gongzhongId", listgongzhong.get(position).getID())
-                    ); //跳转到练习入口
+                    if (AppUtil.isShenFened(getActivity())) {
+                        if (listgongzhong.get(position).getIsEnabled() == 1) {
+                            startActivity(new Intent(getActivity(), ExamBaoDianActivity.class)
+                                    .putExtra("bumenId", bumenID)
+                                    .putExtra("gongzhongId", listgongzhong.get(position).getID())
+                            ); //跳转到练习入口
+                        } else {
+                            ToastUtils.showToast(getActivity(), "请选择正确的工种进行答题!");
+                        }
+                    }
                 }
             });
     }

@@ -317,9 +317,7 @@ public class ExamBanFragment extends BaseFragment implements CountDownTimerUtil.
                                                 Integer.parseInt(AppUtil.getYesCount(getActivity())) + "");
                                     } else {
                                         tvYesCount.setText(AppUtil.getYesCount(getActivity()));
-
                                     }
-
                                 } else {
                                     tv2YesCount.setText(AppUtil.getYesCount(getActivity()));
                                 }

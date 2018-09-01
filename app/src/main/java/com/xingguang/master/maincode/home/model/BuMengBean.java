@@ -89,6 +89,15 @@ public class BuMengBean {
             private String Name;
             private String ClassPic;
             private String PIC;
+            private int IsEnabled;
+
+            public int getIsEnabled() {
+                return IsEnabled;
+            }
+
+            public void setIsEnabled(int isEnabled) {
+                IsEnabled = isEnabled;
+            }
 
             public String getPIC() {
                 return PIC;

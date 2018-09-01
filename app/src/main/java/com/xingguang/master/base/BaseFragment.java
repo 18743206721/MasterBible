@@ -43,7 +43,6 @@ public abstract class BaseFragment extends Fragment {
         if (mFragmentView == null) {
             mFragmentView = inflater.inflate(getLayoutId(), container, false);
             ButterKnife.bind(this, mFragmentView);
-
         }
         isInit = true;
         isCanLoadData();
@@ -119,7 +118,6 @@ public abstract class BaseFragment extends Fragment {
         isInit = false;
         isLoad = false;
     }
-
 
 
 }

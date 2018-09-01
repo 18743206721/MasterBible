@@ -105,6 +105,7 @@
                 <LinearLayout
                     android:id="@+id/ll_vis_sms"
                     android:orientation="vertical"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -130,7 +131,6 @@
                             android:textCursorDrawable="@drawable/color_cursor"
                             android:textSize="14sp"
                             android:theme="@style/MyEditText" />
-
 
                         <LinearLayout
                             android:id="@+id/rl_log_messs"

@@ -62,9 +62,13 @@ public class BaodianFragment extends ToolBarFragment {
         tab_layout = getActivity().findViewById(R.id.tab_layout);
 
         loadgongzhong();
-
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadgongzhong();
+    }
 
     /**
      * 工种数据

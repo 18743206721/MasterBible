@@ -115,12 +115,14 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
                 String text = (String) tab.getText();
                 if (text.equals("登录")) {
                     llLogin.setVisibility(View.VISIBLE);
+                    llVisSms.setVisibility(View.VISIBLE);
                     llRgs.setVisibility(View.GONE);
                     tvLogin.setText("登 录");
                     type = 0;
                 } else {
                     llLogin.setVisibility(View.GONE);
                     llRgs.setVisibility(View.VISIBLE);
+                    llVisSms.setVisibility(View.GONE);
                     tvLogin.setText("注 册");
                     type = 1;
                 }
@@ -139,7 +141,7 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
 
     }
 
-    @OnClick({R.id.tv_login, R.id.rl_log_messs, R.id.iv_finish})
+    @OnClick({R.id.tv_login, R.id.rl_log_messs, R.id.iv_finish,R.id.rl_rgs_messs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_login://登录或者注册
@@ -165,15 +167,16 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
                         tvLogmss.setEnabled(false);
                         sendSMSClient(etPhone.getText().toString());
                     }
-                } else if (type == 1) {
-                    if (validatessms()) {
-                        tvRgsmss.setEnabled(false);
-                        sendSMSClientrgs(etRgsphone.getText().toString());
-                    }
                 }
                 break;
             case R.id.iv_finish:
                 finish();
+                break;
+            case R.id.rl_rgs_messs:
+                if (validatessms()) {
+                    tvRgsmss.setEnabled(false);
+                    sendSMSClientrgs(etRgsphone.getText().toString());
+                }
                 break;
         }
     }
@@ -209,7 +212,7 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
                 .tag(this)
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
-                .params("UserName", etPhone.getText().toString())
+                .params("UserName", etRgsphone.getText().toString())
                 .params("MethodCode", "zc")  //验证码发送：yzm，注册：zc）
                 .params("Name", etRgsname.getText().toString())
                 .params("IDnumber", etRgsidcard.getText().toString())
@@ -245,14 +248,18 @@ public class KaoshiLoginActivity extends BaseActivity implements CountDownRTimer
                     public void onSuccess(Response<String> response) {
                         Gson gson = new Gson();
                         KaoShiLoginBean loginBean = gson.fromJson(response.body().toString(), KaoShiLoginBean.class);
-                        if (loginBean.getData().size() != 0) {
-                            SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.SHENFENID, loginBean.getData().get(0).getUserName());
+                        if (loginBean.getData() != null) {
+                            if (loginBean.getData().size() != 0) {
+                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.SHENFENID, loginBean.getData().get(0).getUserName());
 //                            if (loginBean.getData().get(0).getTeam() != null) {
 //                                SharedPreferencesUtils.put(KaoshiLoginActivity.this, SharedPreferencesUtils.USERADS, loginBean.getData().get(0).getTeam());
 //                            }
-                            finish();
+                                finish();
+                            }
+                            ToastUtils.showToast(KaoshiLoginActivity.this, loginBean.getMsg());
+                        }else {
+                            ToastUtils.showToast(KaoshiLoginActivity.this, loginBean.getMsg());
                         }
-                        ToastUtils.showToast(KaoshiLoginActivity.this, loginBean.getMsg());
                     }
                 });
     }

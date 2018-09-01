@@ -38,6 +38,7 @@ import com.xingguang.master.maincode.home.view.activity.ExamBaoDianActivity;
 import com.xingguang.master.maincode.home.view.activity.SearchActivity;
 import com.xingguang.master.maincode.mine.view.activity.WebViewActivity;
 import com.xingguang.master.refresh.RefreshUtil;
+import com.xingguang.master.util.AppUtil;
 import com.xingguang.master.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -78,11 +79,11 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
     int type;
     private int bumenID;
     ItemSearchAdapter searchAdapter;
-    private final int size;
+    public int size;
 
     //考试机构列表
-    private List<KaoshiJIgouBean.DataBean.ListBean> kaoshilist = new ArrayList<>();
-    private KaoShiAdapter kaoshiadapter;
+//    private List<KaoshiJIgouBean.DataBean.ListBean> kaoshilist = new ArrayList<>();
+//    private KaoShiAdapter kaoshiadapter;
 
     private boolean isRefresh = false;
     private int page = 1;
@@ -92,6 +93,9 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
         this.size = size;
     }
 
+    public ItemFragment() {
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_item;
@@ -99,73 +103,72 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
 
     @Override
     protected void initView() {
-
         tw_refresh.setHeaderView(new SinaRefreshView(getActivity()));
         tw_refresh.setBottomView(new LoadingView(getActivity()));
         tw_refresh.setOnRefreshListener(new RefreshUtil(this).refreshListenerAdapter());
 
 
-        if (size - 1 >= type) {
-            initAdapter();
-            loadbumen();
-            initListener();
-        } else { //考试机构
+//        if (size - 1 >= type) {
+        initAdapter();
+        loadbumen();
+        initListener();
+//        } else { //考试机构
 
-            LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
-            rvLooksp.setLayoutManager(mgr);
-            kaoshiadapter = new KaoShiAdapter(getActivity(), kaoshilist, type);
-            rvLooksp.setAdapter(kaoshiadapter);
-            loadkaoshi(1);
-            kaoshiadapter.setOnItemClickListener(new KaoShiAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    startActivity(new Intent(getActivity(), WebViewActivity.class)
-                            .putExtra("id", 3)
-                            .putExtra("classid", kaoshilist.get(position).getID())
-                    );
-                }
-            });
+//            LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
+//            rvLooksp.setLayoutManager(mgr);
+//            kaoshiadapter = new KaoShiAdapter(getActivity(), kaoshilist, type);
+//            rvLooksp.setAdapter(kaoshiadapter);
+//            loadkaoshi(1);
+//            kaoshiadapter.setOnItemClickListener(new KaoShiAdapter.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(View view, int position) {
+//                    startActivity(new Intent(getActivity(), WebViewActivity.class)
+//                            .putExtra("id", 3)
+//                            .putExtra("classid", kaoshilist.get(position).getID())
+//                    );
+//                }
+//            });
 
-        }
+//        }
     }
 
     //考试机构
-    private void loadkaoshi(final int page) {
-        OkGo.<String>post(HttpManager.ExaminingBody)
-                .tag(this)
-                .cacheKey("cachePostKey")
-                .cacheMode(CacheMode.DEFAULT)
-                .params("MethodCode", "list")
-                .params("PageNum", page)
-                .execute(new DialogCallback<String>(getActivity()) {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Gson gson = new Gson();
-                        KaoshiJIgouBean bean = gson.fromJson(response.body().toString(), KaoshiJIgouBean.class);
-                        if (bean.getData() != null) {
-                            if (page == 1) {
-                                kaoshilist.clear();
-                            }
-                            kaoshilist.addAll(bean.getData().getList());
-
-                            if (bean.getData().getList().size() == 0) {
-                                ToastUtils.showToast(getActivity(), "暂无更多!");
-                            } else {
-                                kaoshiadapter.setList(kaoshilist);
-                            }
-
-                            if (isRefresh) {
-                                tw_refresh.finishRefreshing();
-                            } else {
-                                tw_refresh.finishLoadmore();
-                            }
-
-                        }
-
-
-                    }
-                });
-    }
+//    private void loadkaoshi(final int page) {
+//        OkGo.<String>post(HttpManager.ExaminingBody)
+//                .tag(this)
+//                .cacheKey("cachePostKey")
+//                .cacheMode(CacheMode.DEFAULT)
+//                .params("MethodCode", "list")
+//                .params("PageNum", page)
+//                .execute(new DialogCallback<String>(getActivity()) {
+//                    @Override
+//                    public void onSuccess(Response<String> response) {
+//                        Gson gson = new Gson();
+//                        KaoshiJIgouBean bean = gson.fromJson(response.body().toString(), KaoshiJIgouBean.class);
+//                        if (bean.getData() != null) {
+//                            if (page == 1) {
+//                                kaoshilist.clear();
+//                            }
+//                            kaoshilist.addAll(bean.getData().getList());
+//
+//                            if (bean.getData().getList().size() == 0) {
+////                                ToastUtils.showToast(getActivity(), "暂无更多!");
+//                            } else {
+//                                kaoshiadapter.setList(kaoshilist);
+//                            }
+//
+//                            if (isRefresh) {
+//                                tw_refresh.finishRefreshing();
+//                            } else {
+//                                tw_refresh.finishLoadmore();
+//                            }
+//
+//                        }
+//
+//
+//                    }
+//                });
+//    }
 
     private void initAdapter() {
         adapter = new ItemAdapter(getActivity(), listgongzhong, type);
@@ -174,6 +177,12 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
         rvLooksp.setAdapter(adapter);
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        loadbumen();
+        initListener();
+    }
 
     /**
      * 工种数据
@@ -184,6 +193,7 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "list")
+                .params("UserName", AppUtil.getShenFenId(getActivity()))
                 .execute(new DialogCallback<String>(getActivity()) {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -217,11 +227,17 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(new Intent(getActivity(), ClassifExamActivity.class)
-                        .putExtra("name", listgongzhong.get(position).getName())
-                        .putExtra("bumenId", bumenID)
-                        .putExtra("gongzhongId", listgongzhong.get(position).getID())
-                );//跳转到练习入口
+                if (AppUtil.isShenFened(getActivity())) {
+                    if (listgongzhong.get(position).getIsEnabled() == 1) {
+                        startActivity(new Intent(getActivity(), ClassifExamActivity.class)
+                                .putExtra("name", listgongzhong.get(position).getName())
+                                .putExtra("bumenId", bumenID)
+                                .putExtra("gongzhongId", listgongzhong.get(position).getID())
+                        );//跳转到练习入口
+                    } else {
+                        ToastUtils.showToast(getActivity(), "请选择正确的工种进行答题!");
+                    }
+                }
             }
         });
     }
@@ -236,13 +252,11 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
         if (TextUtils.isEmpty(tvPlaySerch.getText().toString())) {
             ToastUtils.showToast(getActivity(), "请输入搜索内容！");
         } else {
-            if (type == size) { // 考试机构
-                loadkaoshisearch();
-
-            } else {
+//            if (type == size) { // 考试机构
+//                loadkaoshisearch();
+//            } else {
                 loadlist();
-
-            }
+//            }
 
         }
     }
@@ -262,12 +276,12 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
                         Gson gson = new Gson();
                         KaoshiJIgouBean bean = gson.fromJson(response.body().toString(), KaoshiJIgouBean.class);
                         if (bean.getData() != null) {
-                            kaoshilist.clear();
-                            kaoshilist.addAll(bean.getData().getList());
+//                            kaoshilist.clear();
+//                            kaoshilist.addAll(bean.getData().getList());
                             if (bean.getData().getList().size() == 0) {
                                 ToastUtils.showToast(getActivity(), "暂无搜索数据!");
                             } else {
-                                kaoshiadapter.setList(kaoshilist);
+//                                kaoshiadapter.setList(kaoshilist);
                             }
 
 
@@ -339,23 +353,23 @@ public class ItemFragment extends BaseFragment implements RefreshUtil.OnRefreshL
     @Override
     public void onLoad() {
         isRefresh = false;
-        if (type == size) {
-            page++;
-            loadkaoshi(page);
-        } else {
+//        if (type == size) {
+//            page++;
+//            loadkaoshi(page);
+//        } else {
             loadbumen();
-        }
+//        }
 
     }
 
     @Override
     public void onRefresh() {
         isRefresh = true;
-        if (type == size) {
-            loadkaoshi(page);
-        } else {
+//        if (type == size) {
+//            loadkaoshi(page);
+//        } else {
             loadbumen();
-        }
+//        }
 
     }
 

@@ -16,10 +16,12 @@ import com.xingguang.master.R;
 import com.xingguang.master.base.BaseFragment;
 import com.xingguang.master.http.DialogCallback;
 import com.xingguang.master.http.HttpManager;
+import com.xingguang.master.maincode.classifly.view.ClassifExamActivity;
 import com.xingguang.master.maincode.home.model.BuMengBean;
 import com.xingguang.master.maincode.home.view.activity.ExamChapterActivity;
 import com.xingguang.master.maincode.home.view.adapter.BaoDianItemAdapter;
 import com.xingguang.master.util.AppUtil;
+import com.xingguang.master.util.ToastUtils;
 import com.xingguang.master.view.GridItemDecoration;
 
 import java.util.ArrayList;
@@ -87,6 +89,7 @@ public class ExamChapterItemFragment extends BaseFragment {
                 .cacheKey("cachePostKey")
                 .cacheMode(CacheMode.DEFAULT)
                 .params("MethodCode", "list")
+                .params("UserName", AppUtil.getShenFenId(getActivity()))
                 .execute(new DialogCallback<String>(getActivity()) {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -110,10 +113,17 @@ public class ExamChapterItemFragment extends BaseFragment {
         adapter.setOnItemClickListener(new BaoDianItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(new Intent(getActivity(), ExamChapterActivity.class)
-                        .putExtra("bumenId",bumenID)
-                        .putExtra("gongzhongId",listgongzhong.get(position).getID())
-                ); //跳转到模拟考试
+                if (AppUtil.isShenFened(getActivity())) {
+                    if (listgongzhong.get(position).getIsEnabled() == 1) {
+                        startActivity(new Intent(getActivity(), ExamChapterActivity.class)
+                                .putExtra("bumenId",bumenID)
+                                .putExtra("gongzhongId",listgongzhong.get(position).getID())
+                        ); //跳转到模拟考试
+                    } else {
+                        ToastUtils.showToast(getActivity(), "请选择正确的工种进行答题!");
+                    }
+                }
+
             }
         });
     }

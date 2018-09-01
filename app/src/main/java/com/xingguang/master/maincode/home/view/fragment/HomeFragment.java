@@ -181,7 +181,10 @@ public class HomeFragment extends BaseFragment {
                         inittwo();
 
                         //焊工培训
-                        threelist.addAll(bean.getData().getCultivate());
+                        if (bean.getData().getCultivate()!=null){
+                            threelist.addAll(bean.getData().getCultivate());
+                        }
+
                         initthree();
                     }
                 });
